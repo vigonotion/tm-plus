@@ -1,17 +1,12 @@
-import React from "react";
-import { useQuery } from "react-query";
-import { Game, conn } from "./conn";
-import { Placement } from "./client/placements";
+import { useGames, usePlacements } from "./hooks/use-placements";
 
 function Placements({ game }: { game: string }) {
-  const { isLoading, data } = useQuery(["placements", game], () =>
-    conn.collection("placements").getFullList<Placement>({
-      sort: "placement",
+
+  const { isLoading, data } = usePlacements({
+    sort: "placement",
       expand: "player",
-      filter: 'game.id = "' + game + '"',
-      $cancelKey: game,
-    })
-  );
+      filter: 'game.id = "' + game + '"'
+  });
 
   if (isLoading || data === undefined) return <span>loading...</span>;
 
@@ -21,7 +16,7 @@ function Placements({ game }: { game: string }) {
         const plc = x.placement;
 
         return (
-          <span>
+          <span key={x.player}>
             {plc === 1 ? "🥇" : plc === 2 ? "🥈" : plc === 3 ? "🥉" : "🔘"}
             {x.expand?.player?.name}
           </span>
@@ -32,11 +27,7 @@ function Placements({ game }: { game: string }) {
 }
 
 function Games() {
-  const { isLoading, data } = useQuery("games", () =>
-    conn
-      .collection("games")
-      .getFullList<Game>({ sort: "-date", expand: "placements" })
-  );
+  const { isLoading, data } = useGames({ sort: "-date", expand: "placements" });
 
   if (isLoading || !data) {
     return <div>loading...</div>;
@@ -52,6 +43,7 @@ function Games() {
             <th>Placements</th>
           </tr>
         </thead>
+        <tbody>
         {data.map((game) => (
           <tr key={game.id}>
             <td>{game.name}</td>
@@ -60,6 +52,7 @@ function Games() {
             </td>
           </tr>
         ))}
+        </tbody>
       </table>
     </div>
   );

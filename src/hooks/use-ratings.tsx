@@ -1,9 +1,7 @@
-import { useQuery } from "react-query";
-import { Placement } from "../client/placements";
-import { conn } from "../conn";
-import { useId, useMemo } from "react";
+import { useMemo } from "react";
 import { rate, rating, ordinal } from "openskill";
 import groupBy from "just-group-by";
+import { usePlacements } from "./use-placements";
 
 function isWin(placement: number, players: number) {
     if(players == 5)
@@ -15,15 +13,10 @@ function isWin(placement: number, players: number) {
 }
 
 export function useRatings() {
-    const cancelKey = useId();
-
-    const { isLoading, data, ...other } = useQuery(["placements+game"], () =>
-        conn.collection("placements").getFullList<Placement>({
-            sort: "placement",
-            expand: "player,game",
-            $cancelKey: cancelKey
-        })
-    );
+    const { isLoading, data, ...other } = usePlacements({
+        sort: "placement",
+        expand: "player,game",
+    });
 
     const ratings = useMemo(() => {
 

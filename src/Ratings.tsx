@@ -18,7 +18,7 @@ function Ratings()
                 {ratings.map(r => {
                     const total = r.wins + r.losses;
 
-                    return <li>{r.playerName}: {r.rating} ({r.wins} wins / {r.losses} losses,  winrate {Math.round(r.wins / total * 100)} %, {total} total)</li>;
+                    return <li key={r.playerId}>{r.playerName}: {r.rating} ({r.wins} wins / {r.losses} losses,  winrate {Math.round(r.wins / total * 100)} %, {total} total)</li>;
                 })}
             </ul>
         </div>
