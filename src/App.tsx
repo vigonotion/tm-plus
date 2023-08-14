@@ -7,6 +7,10 @@ import Games from "./Games";
 import Ratings from "./Ratings";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import CorpRates from "./CorpRates";
+import Demo from "./Demo";
+import View from "./View";
+
+import "./app.css";
 
 function App() {
   const queryClient = new QueryClient();
@@ -18,7 +22,9 @@ function App() {
           <Games />
           <Ratings />
           <CorpRates />
+          <Demo />
         </div>
+        {/* <View /> */}
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </>
