@@ -1,0 +1,57 @@
+import React, { useMemo } from "react";
+import { usePlacements } from "./hooks/use-placements";
+import groupBy from "just-group-by";
+import { isWin } from "./utils";
+
+function CorpRates() {
+  const { isLoading, data } = usePlacements({
+    expand: "corp",
+  });
+
+  const ratings = useMemo(() => {
+    if (data === undefined) return [];
+
+    // only includes games that have corp information for all placements
+    const games = Object.values(groupBy(data, (d) => d.game))
+      .filter((x) => x.every((p) => p.corp !== ""))
+      .map((p) =>
+        p.map((x) => ({
+          corp: x.expand?.corp?.id ?? "",
+          corpName: x.expand?.corp?.name,
+          wins: isWin(x.placement, p.length) ? 1 : 0,
+          losses: !isWin(x.placement, p.length) ? 1 : 0,
+        }))
+      )
+      .flat();
+
+    const stats = Object.values(groupBy(games, (x) => x.corp))
+      .map((gr) => ({
+        corp: gr[0].corp,
+        corpName: gr[0].corpName,
+        wins: gr.map((o) => o.wins).reduce((a, b) => a + b),
+        losses: gr.map((o) => o.losses).reduce((a, b) => a + b),
+      }))
+      .sort((a, b) => -a.wins + b.wins);
+
+    return stats;
+  }, [data]);
+
+  return (
+    <div>
+      <h1>Corporation win rates</h1>
+      <ul>
+        {ratings.map((r) => {
+          const total = r.wins + r.losses;
+          return (
+            <li key={r.corp}>
+              {r.corpName} ({r.wins} wins / {r.losses} losses, winrate{" "}
+              {Math.round((r.wins / total) * 100)} %, {total} total)
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+export default CorpRates;

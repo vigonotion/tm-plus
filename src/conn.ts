@@ -9,3 +9,8 @@ export type Game = {
     generations: number;
     map: string;
 };
+
+export type Corporation = {
+    id: string;
+    name: string;
+}

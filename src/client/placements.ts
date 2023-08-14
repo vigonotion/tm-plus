@@ -1,14 +1,16 @@
-import { Game } from "../conn"
+import { Corporation, Game } from "../conn"
 
 export type Placement = {
     player: string
     placement: number,
     score: number,
-    game: string
+    game: string,
+    corp?: string,
 
     expand?: {
         player?: Player,
-        game?: Game
+        game?: Game,
+        corp?: Corporation
     }
 }
 
