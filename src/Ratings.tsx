@@ -10,11 +10,16 @@ function Ratings()
         return <div>loading ratings...</div>;
       }
 
+
     return (
         <div>
             <h1>Ratings</h1>
             <ul>
-                {ratings.map(r => <li>{r.playerName}: {r.rating} ({r.wins} wins / {r.losses} losses, {r.wins + r.losses} total)</li>)}
+                {ratings.map(r => {
+                    const total = r.wins + r.losses;
+
+                    return <li>{r.playerName}: {r.rating} ({r.wins} wins / {r.losses} losses,  winrate {Math.round(r.wins / total * 100)} %, {total} total)</li>;
+                })}
             </ul>
         </div>
     );
