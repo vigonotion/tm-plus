@@ -14,7 +14,6 @@ function Placements({ game }: { game: string }) {
   );
 
   if (isLoading || data === undefined) return <span>loading...</span>;
-  console.log(data);
 
   return (
     <span style={{ display: "flex", gap: 4, flexDirection: "column" }}>
@@ -45,7 +44,7 @@ function Games() {
 
   return (
     <div>
-      <div>Recent games</div>
+      <h1>Recent games</h1>
       <table border={1}>
         <thead>
           <tr>

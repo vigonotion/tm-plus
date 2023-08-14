@@ -1,10 +1,14 @@
+import { Game } from "../conn"
+
 export type Placement = {
     player: string
     placement: number,
     score: number,
+    game: string
 
     expand?: {
-        player?: Player
+        player?: Player,
+        game?: Game
     }
 }
 
