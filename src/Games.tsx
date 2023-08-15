@@ -1,11 +1,18 @@
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "./components/ui/table";
 import { useGames, usePlacements } from "./hooks/use-placements";
 
 function Placements({ game }: { game: string }) {
-
   const { isLoading, data } = usePlacements({
     sort: "placement",
-      expand: "player",
-      filter: 'game.id = "' + game + '"'
+    expand: "player",
+    filter: 'game.id = "' + game + '"',
   });
 
   if (isLoading || data === undefined) return <span>loading...</span>;
@@ -36,24 +43,25 @@ function Games() {
   return (
     <div>
       <h1>Recent games</h1>
-      <table border={1}>
-        <thead>
-          <tr>
-            <th>Game</th>
-            <th>Placements</th>
-          </tr>
-        </thead>
-        <tbody>
-        {data.map((game) => (
-          <tr key={game.id}>
-            <td>{game.name}</td>
-            <td>
-              <Placements game={game.id} />
-            </td>
-          </tr>
-        ))}
-        </tbody>
-      </table>
+
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Game</TableHead>
+            <TableHead>Placements</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {data.map((game) => (
+            <TableRow key={game.id}>
+              <TableCell>{game.name}</TableCell>
+              <TableCell>
+                <Placements game={game.id} />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </div>
   );
 }

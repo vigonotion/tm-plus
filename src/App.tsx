@@ -9,20 +9,23 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import CorpRates from "./CorpRates";
 
 import "./global.css"
+import { ThemeProvider } from "./components/theme-provider";
 
 function App() {
   const queryClient = new QueryClient();
 
   return (
     <>
-      <QueryClientProvider client={queryClient}>
-        <div style={{ display: "flex", gap: 20 }}>
-          <Games />
-          <Ratings />
-          <CorpRates />
-        </div>
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+        <QueryClientProvider client={queryClient}>
+          <div style={{ display: "flex", gap: 20 }}>
+            <Games />
+            <Ratings />
+            <CorpRates />
+          </div>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+      </ThemeProvider>
     </>
   );
 }
