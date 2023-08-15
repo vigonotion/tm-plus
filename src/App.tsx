@@ -21,14 +21,14 @@ function App() {
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <QueryClientProvider client={queryClient}>
           <Navbar />
-
           <Content>
-            <div style={{ display: "flex", gap: 20 }}>
+            <Games />
+          </Content>
+          {/* <div style={{ display: "flex", gap: 20 }}>
               <Games />
               <Ratings />
               <CorpRates />
-            </div>
-          </Content>
+            </div> */}
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </ThemeProvider>

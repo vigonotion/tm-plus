@@ -1,3 +1,4 @@
+import { Headline } from "./components/Headline";
 import {
   Table,
   TableBody,
@@ -42,7 +43,7 @@ function Games() {
 
   return (
     <div>
-      <h1 className="font-head text-4xl">Recent games</h1>
+      <Headline>Recent games</Headline>
 
       <Table>
         <TableHeader>
