@@ -8,6 +8,8 @@ import Ratings from "./Ratings";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import CorpRates from "./CorpRates";
 
+import "./global.css"
+
 function App() {
   const queryClient = new QueryClient();
 
