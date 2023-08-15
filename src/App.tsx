@@ -20,6 +20,7 @@ import {
   Route,
   RootRoute,
 } from "@tanstack/react-router";
+import { TooltipProvider } from "./components/ui/tooltip";
 
 // Create a root route
 const rootRoute = new RootRoute({
@@ -71,18 +72,20 @@ function Root() {
   return (
     <>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-        <QueryClientProvider client={queryClient}>
-          <Navbar />
-          <Content>
-            <Outlet />
-          </Content>
-          {/* <div style={{ display: "flex", gap: 20 }}>
-              <Games />
-              <Ratings />
-              <CorpRates />
-            </div> */}
-          <ReactQueryDevtools initialIsOpen={false} />
-        </QueryClientProvider>
+        <TooltipProvider delayDuration={200}>
+          <QueryClientProvider client={queryClient}>
+            <Navbar />
+            <Content>
+              <Outlet />
+            </Content>
+            {/* <div style={{ display: "flex", gap: 20 }}>
+                <Games />
+                <Ratings />
+                <CorpRates />
+              </div> */}
+            <ReactQueryDevtools initialIsOpen={false} />
+          </QueryClientProvider>
+        </TooltipProvider>
       </ThemeProvider>
     </>
   );

@@ -13,4 +13,5 @@ export type Game = {
 export type Corporation = {
     id: string;
     name: string;
+    description?: string;
 }

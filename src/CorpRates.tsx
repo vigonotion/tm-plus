@@ -11,6 +11,12 @@ import {
   TableBody,
   TableCell,
 } from "./components/ui/table";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "./components/ui/tooltip";
+import { Info } from "lucide-react";
 
 function CorpRates() {
   const { isLoading, data } = usePlacements({
@@ -27,6 +33,7 @@ function CorpRates() {
         p.map((x) => ({
           corp: x.expand?.corp?.id ?? "",
           corpName: x.expand?.corp?.name,
+          corpDesc: x.expand?.corp?.description,
           wins: isWin(x.placement, p.length) ? 1 : 0,
           losses: !isWin(x.placement, p.length) ? 1 : 0,
         }))
@@ -37,6 +44,7 @@ function CorpRates() {
       .map((gr) => ({
         corp: gr[0].corp,
         corpName: gr[0].corpName,
+        corpDesc: gr[0].corpDesc,
         wins: gr.map((o) => o.wins).reduce((a, b) => a + b),
         losses: gr.map((o) => o.losses).reduce((a, b) => a + b),
       }))
@@ -64,7 +72,23 @@ function CorpRates() {
             const total = r.wins + r.losses;
             return (
               <TableRow key={r.corp}>
-                <TableCell>{r.corpName}</TableCell>
+                <TableCell>
+                  <span className="flex items-center gap-2">
+                    {r.corpName}{" "}
+                    {r.corpDesc && (
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <Info size={16} className="text-gray-300" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <div
+                            dangerouslySetInnerHTML={{ __html: r.corpDesc }}
+                          ></div>
+                        </TooltipContent>
+                      </Tooltip>
+                    )}
+                  </span>
+                </TableCell>
                 <TableCell>{r.wins}</TableCell>
                 <TableCell>{r.losses}</TableCell>
                 <TableCell>{Math.round((r.wins / total) * 100)} %</TableCell>
