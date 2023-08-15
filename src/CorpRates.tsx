@@ -2,6 +2,15 @@ import React, { useMemo } from "react";
 import { usePlacements } from "./hooks/use-placements";
 import groupBy from "just-group-by";
 import { isWin } from "./utils";
+import { Headline } from "./components/Headline";
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+} from "./components/ui/table";
 
 function CorpRates() {
   const { isLoading, data } = usePlacements({
@@ -38,18 +47,33 @@ function CorpRates() {
 
   return (
     <div>
-      <h1>Corporation win rates</h1>
-      <ul>
-        {ratings.map((r) => {
-          const total = r.wins + r.losses;
-          return (
-            <li key={r.corp}>
-              {r.corpName} ({r.wins} wins / {r.losses} losses, winrate{" "}
-              {Math.round((r.wins / total) * 100)} %, {total} total)
-            </li>
-          );
-        })}
-      </ul>
+      <Headline>Corporations</Headline>
+
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Corporation</TableHead>
+            <TableHead>Wins</TableHead>
+            <TableHead>Losses</TableHead>
+            <TableHead>Winrate</TableHead>
+            <TableHead>Total</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {ratings.map((r) => {
+            const total = r.wins + r.losses;
+            return (
+              <TableRow key={r.corp}>
+                <TableCell>{r.corpName}</TableCell>
+                <TableCell>{r.wins}</TableCell>
+                <TableCell>{r.losses}</TableCell>
+                <TableCell>{Math.round((r.wins / total) * 100)} %</TableCell>
+                <TableCell>{total}</TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
     </div>
   );
 }

@@ -45,10 +45,20 @@ const corpRatesRoute = new Route({
 });
 
 // Create the route tree using your routes
-const routeTree = rootRoute.addChildren([indexRoute, ratingsRoute, corpRatesRoute]);
+const routeTree = rootRoute.addChildren([
+  indexRoute,
+  ratingsRoute,
+  corpRatesRoute,
+]);
+
+const queryClient = new QueryClient();
 
 // Create the router using your route tree
-const router = new Router({ routeTree });
+const router = new Router({
+  routeTree,
+  defaultPreload: "intent",
+  context: queryClient,
+});
 
 // Register your router for maximum type safety
 declare module "@tanstack/react-router" {
@@ -58,8 +68,6 @@ declare module "@tanstack/react-router" {
 }
 
 function Root() {
-  const queryClient = new QueryClient();
-
   return (
     <>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
