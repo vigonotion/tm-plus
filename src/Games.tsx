@@ -42,7 +42,7 @@ function Games() {
 
   return (
     <div>
-      <h1>Recent games</h1>
+      <h1 className="font-head text-4xl">Recent games</h1>
 
       <Table>
         <TableHeader>
