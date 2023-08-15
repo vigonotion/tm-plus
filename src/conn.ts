@@ -15,3 +15,9 @@ export type Corporation = {
     name: string;
     description?: string;
 }
+
+export type Group = {
+    id: string;
+    name: string;
+    players: string[];
+}

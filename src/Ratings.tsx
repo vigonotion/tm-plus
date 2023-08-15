@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useRatings } from "./hooks/use-ratings";
 import { ordinal } from "openskill";
 import { Headline } from "./components/Headline";
@@ -10,17 +10,66 @@ import {
   TableBody,
   TableCell,
 } from "./components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./components/ui/select";
+import { useGroups } from "./hooks/use-placements";
+import { Group } from "./conn";
+
+function GroupSelector({
+  onChange,
+  value,
+}: {
+  onChange: (value: Group | undefined) => void;
+  value?: Group;
+}) {
+  const { data } = useGroups({});
+
+  return (
+    <Select
+      onValueChange={(v) => onChange(data?.find((x) => x.id == v))}
+      value={value?.id}
+    >
+      <SelectTrigger className="w-[180px]">
+        <SelectValue placeholder="Group" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="">All</SelectItem>
+        {data &&
+          data.map((g) => (
+            <SelectItem value={g.id} key={g.id}>
+              {g.name}
+            </SelectItem>
+          ))}
+      </SelectContent>
+    </Select>
+  );
+}
 
 function Ratings() {
   const { ratings, isLoading } = useRatings();
+
+  const [group, setGroup] = useState<Group | undefined>(undefined);
 
   if (isLoading || ratings === undefined) {
     return <div>loading ratings...</div>;
   }
 
+  const list =
+    group === undefined
+      ? ratings
+      : ratings.filter((x) => group.players.includes(x.playerId));
+
   return (
     <div>
-      <Headline>Ratings</Headline>
+      <div className="mb-4 flex justify-between">
+        <Headline>Ratings</Headline>
+        <GroupSelector value={group} onChange={setGroup} />
+      </div>
 
       <Table>
         <TableHeader>
@@ -34,7 +83,7 @@ function Ratings() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {ratings.map((r) => {
+          {list.map((r) => {
             const total = r.wins + r.losses;
 
             return (
