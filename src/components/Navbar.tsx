@@ -9,8 +9,11 @@ import {
   navigationMenuTriggerStyle,
 } from "./ui/navigation-menu";
 import { Circle } from "lucide-react";
+import { Link, useRouter, useNavigate } from "@tanstack/react-router";
 
 export function Navbar() {
+  const router = useRouter();
+
   return (
     <>
       <NavigationMenu className="fixed">
@@ -20,9 +23,19 @@ export function Navbar() {
             <span className="mt-[3px]">Terraforming Marsᐩ</span>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <NavigationMenuLink active className={navigationMenuTriggerStyle()}>
+            <Link to="/" className={navigationMenuTriggerStyle()}>
               Recent games
-            </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <Link to="/ratings" className={navigationMenuTriggerStyle()}>
+              Ratings
+            </Link>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <Link to="/corp-ratings" className={navigationMenuTriggerStyle()}>
+              Corp ratings
+            </Link>
           </NavigationMenuItem>
           <NavigationMenuItem className="pointer-events-none opacity-40">
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
