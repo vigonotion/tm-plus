@@ -8,21 +8,91 @@ import Ratings from "./Ratings";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import CorpRates from "./CorpRates";
 
-function App() {
-  const queryClient = new QueryClient();
+import "./global.css";
+import { ThemeProvider } from "./components/theme-provider";
+import { Navbar } from "./components/Navbar";
+import { Content } from "./components/Content";
+import {
+  Outlet,
+  RouterProvider,
+  Link,
+  Router,
+  Route,
+  RootRoute,
+} from "@tanstack/react-router";
+import { TooltipProvider } from "./components/ui/tooltip";
 
+// Create a root route
+const rootRoute = new RootRoute({
+  component: Root,
+});
+
+const indexRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: "/",
+  component: Games,
+});
+
+const ratingsRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: "/ratings",
+  component: Ratings,
+});
+
+const corpRatesRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: "/corp-ratings",
+  component: CorpRates,
+});
+
+// Create the route tree using your routes
+const routeTree = rootRoute.addChildren([
+  indexRoute,
+  ratingsRoute,
+  corpRatesRoute,
+]);
+
+const queryClient = new QueryClient();
+
+// Create the router using your route tree
+const router = new Router({
+  routeTree,
+  defaultPreload: "intent",
+  context: queryClient,
+});
+
+// Register your router for maximum type safety
+declare module "@tanstack/react-router" {
+  interface Register {
+    router: typeof router;
+  }
+}
+
+function Root() {
   return (
     <>
-      <QueryClientProvider client={queryClient}>
-        <div style={{ display: "flex", gap: 20 }}>
-          <Games />
-          <Ratings />
-          <CorpRates />
-        </div>
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+        <TooltipProvider delayDuration={200}>
+          <QueryClientProvider client={queryClient}>
+            <Navbar />
+            <Content>
+              <Outlet />
+            </Content>
+            {/* <div style={{ display: "flex", gap: 20 }}>
+                <Games />
+                <Ratings />
+                <CorpRates />
+              </div> */}
+            <ReactQueryDevtools initialIsOpen={false} />
+          </QueryClientProvider>
+        </TooltipProvider>
+      </ThemeProvider>
     </>
   );
+}
+
+function App() {
+  return <RouterProvider router={router} />;
 }
 
 export default App;
