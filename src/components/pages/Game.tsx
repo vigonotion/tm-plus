@@ -13,6 +13,7 @@ import {
 import { MapCell } from "@/Games";
 import { Calendar, Trophy } from "lucide-react";
 import { isWin } from "@/utils";
+import { Link } from "@tanstack/react-router";
 
 export function Game({ game }: { game: string }) {
   const { data } = useGame(game, {
@@ -59,7 +60,15 @@ export function Game({ game }: { game: string }) {
                 <TableCell>{p.expand?.player?.name}</TableCell>
                 <TableCell>{p.score}</TableCell>
                 <TableCell className="capitalize">
-                  {p.expand?.corp?.name}
+                  {p.corp && (
+                    <Link
+                      className="underline"
+                      to="/corporations/$corp"
+                      params={{ corp: p.corp }}
+                    >
+                      {p.expand?.corp?.name}
+                    </Link>
+                  )}
                 </TableCell>
               </TableRow>
             ))}

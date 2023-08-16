@@ -17,6 +17,7 @@ import {
   TooltipTrigger,
 } from "./components/ui/tooltip";
 import { Info } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 
 function CorpRates() {
   const { isLoading, data } = usePlacements({
@@ -74,7 +75,13 @@ function CorpRates() {
               <TableRow key={r.corp}>
                 <TableCell>
                   <span className="flex items-center gap-2">
-                    <span className="capitalize">{r.corpName}</span>
+                    <Link
+                      className="underline"
+                      to="/corporations/$corp"
+                      params={{ corp: r.corp }}
+                    >
+                      <span className="capitalize">{r.corpName}</span>
+                    </Link>
                     {r.corpDesc && (
                       <Tooltip>
                         <TooltipTrigger>

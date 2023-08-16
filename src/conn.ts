@@ -19,6 +19,11 @@ export type Corporation = {
     id: string;
     name: string;
     description?: string;
+    ability?: string;
+
+    expand?: {
+        "placements(corp)"?: Placement[]
+    }
 }
 
 export type Group = {

@@ -1,6 +1,6 @@
 import { UseQueryOptions, useQuery } from "@tanstack/react-query";
 import { Placement, Player } from "../client/placements";
-import { Game, Group, conn } from "../conn";
+import { Corporation, Game, Group, conn } from "../conn";
 import { RecordFullListQueryParams, RecordQueryParams } from "pocketbase";
 import { useId } from "react";
 
@@ -93,4 +93,15 @@ export function useGroups(
   >
 ) {
   return useGetFullList("groups", params, options);
+}
+
+export function useCorporation(
+  id: string,
+  params: RecordQueryParams,
+  options?: Omit<
+    UseQueryOptions<Corporation, never, Corporation>,
+    "queryKey" | "queryFn"
+  >
+) {
+  return useGetOne("corporations", id, params, options);
 }

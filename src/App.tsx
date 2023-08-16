@@ -22,6 +22,7 @@ import {
 } from "@tanstack/react-router";
 import { TooltipProvider } from "./components/ui/tooltip";
 import { Game } from "./components/pages/Game";
+import { Corporation } from "./components/pages/Corporation";
 
 // Create a root route
 const rootRoute = new RootRoute({
@@ -48,8 +49,26 @@ const ratingsRoute = new Route({
 
 const corpRatesRoute = new Route({
   getParentRoute: () => rootRoute,
-  path: "/corporations",
+  path: "corporations",
+  component: () => <Outlet />,
+});
+
+const corpIndexRoute = new Route({
+  getParentRoute: () => corpRatesRoute,
+  path: "/",
   component: CorpRates,
+});
+
+const corpRoute = new Route({
+  getParentRoute: () => corpRatesRoute,
+  path: "$corp",
+  key: false,
+  component: ({ useParams }) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const params = useParams();
+
+    return <Corporation corp={params.corp} key={params.corp} />;
+  },
 });
 
 const gameRoute = new Route({
@@ -68,7 +87,7 @@ const gameRoute = new Route({
 const routeTree = rootRoute.addChildren([
   indexRoute,
   ratingsRoute,
-  corpRatesRoute,
+  corpRatesRoute.addChildren([corpRoute, corpIndexRoute]),
   gamesRoute.addChildren([gameRoute]),
 ]);
 

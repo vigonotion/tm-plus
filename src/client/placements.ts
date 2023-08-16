@@ -1,6 +1,7 @@
 import { Corporation, Game } from "../conn"
 
 export type Placement = {
+    id: string
     player: string
     placement: number,
     score: number,
