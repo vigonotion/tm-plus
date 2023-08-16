@@ -75,10 +75,7 @@ function Games() {
               <TableRow key={game.id}>
                 <TableCell>{game.date.split(" ")[0]}</TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-1">
-                    <MapIcon map={game.map} />
-                    <span className="capitalize">{game.map}</span>
-                  </div>
+                  <MapCell map={game.map} />
                 </TableCell>
                 <TableCell>{game.generations}</TableCell>
                 <TableCell>
@@ -89,6 +86,15 @@ function Games() {
           })}
         </TableBody>
       </Table>
+    </div>
+  );
+}
+
+export function MapCell({ map }: { map: string }) {
+  return (
+    <div className="flex items-center gap-1">
+      <MapIcon map={map} />
+      <span className="capitalize">{map}</span>
     </div>
   );
 }

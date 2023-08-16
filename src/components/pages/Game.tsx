@@ -10,6 +10,8 @@ import {
   Table,
   TableCell,
 } from "../ui/table";
+import { MapCell } from "@/Games";
+import { Calendar } from "lucide-react";
 
 export function Game({ game }: { game: string }) {
   const { data } = useGame(game, {
@@ -21,8 +23,14 @@ export function Game({ game }: { game: string }) {
   return (
     <div>
       <Headline>Game insights</Headline>
-      <div>{data.date.split(" ")[0]}</div>
-      <div className="capitalize">{data.map}</div>
+
+      <div className="flex flex-col gap-2 mb-8">
+        <div className="flex items-center gap-1">
+          <Calendar size={16} />
+          <span>{data.date.split(" ")[0]}</span>
+        </div>
+        <MapCell map={data.map} />
+      </div>
 
       <Table>
         <TableHeader>
