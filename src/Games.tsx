@@ -10,19 +10,12 @@ import {
 import { useGames, usePlacements } from "./hooks/use-placements";
 import { Circle, Snowflake, Leaf, Trophy } from "lucide-react";
 import { isWin } from "./utils";
+import { Placement } from "./client/placements";
 
-function Placements({ game }: { game: string }) {
-  const { isLoading, data } = usePlacements({
-    sort: "placement",
-    expand: "player",
-    filter: 'game.id = "' + game + '"',
-  });
-
-  if (isLoading || data === undefined) return <span>loading...</span>;
-
+function Placements({ placements }: { placements: Placement[] }) {
   return (
     <span style={{ display: "flex", gap: 4, flexDirection: "column" }}>
-      {data.map((x) => {
+      {placements.map((x) => {
         const plc = x.placement;
 
         return (
@@ -30,7 +23,7 @@ function Placements({ game }: { game: string }) {
             <span>
               {plc}. {x.expand?.player?.name}
             </span>
-            {isWin(plc, data.length) && (
+            {isWin(plc, placements.length) && (
               <Trophy className="text-yellow-500 ml-2" size={12} />
             )}
           </span>
@@ -53,7 +46,10 @@ function MapIcon({ map }: { map: string }) {
 }
 
 function Games() {
-  const { isLoading, data } = useGames({ sort: "-date", expand: "placements" });
+  const { isLoading, data } = useGames({
+    sort: "-date",
+    expand: "placements(game),placements(game).player",
+  });
 
   if (isLoading || !data) {
     return <div>loading...</div>;
@@ -73,21 +69,24 @@ function Games() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data.map((game) => (
-            <TableRow key={game.id}>
-              <TableCell>{game.date.split(" ")[0]}</TableCell>
-              <TableCell>
-                <div className="flex items-center gap-1">
-                  <MapIcon map={game.map} />
-                  <span className="capitalize">{game.map}</span>
-                </div>
-              </TableCell>
-              <TableCell>{game.generations}</TableCell>
-              <TableCell>
-                <Placements game={game.id} />
-              </TableCell>
-            </TableRow>
-          ))}
+          {data.map((game) => {
+            const placements = game.expand?.["placements(game)"];
+            return (
+              <TableRow key={game.id}>
+                <TableCell>{game.date.split(" ")[0]}</TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-1">
+                    <MapIcon map={game.map} />
+                    <span className="capitalize">{game.map}</span>
+                  </div>
+                </TableCell>
+                <TableCell>{game.generations}</TableCell>
+                <TableCell>
+                  {placements && <Placements placements={placements} />}
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     </div>

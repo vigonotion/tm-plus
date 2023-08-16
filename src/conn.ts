@@ -1,4 +1,5 @@
 import PocketBase from "pocketbase";
+import { Placement } from "./client/placements";
 
 export const conn = new PocketBase("https://tm-plus-data.vigonotion.com");
 
@@ -8,6 +9,10 @@ export type Game = {
     date: string;
     generations: number;
     map: string;
+
+    expand?: {
+        "placements(game)"?: Placement[]
+    }
 };
 
 export type Corporation = {

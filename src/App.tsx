@@ -41,7 +41,7 @@ const ratingsRoute = new Route({
 
 const corpRatesRoute = new Route({
   getParentRoute: () => rootRoute,
-  path: "/corp-ratings",
+  path: "/corporations",
   component: CorpRates,
 });
 

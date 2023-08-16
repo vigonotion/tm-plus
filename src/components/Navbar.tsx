@@ -33,7 +33,7 @@ export function Navbar() {
             </Link>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <Link to="/corp-ratings" className={navigationMenuTriggerStyle()}>
+            <Link to="/corporations" className={navigationMenuTriggerStyle()}>
               Corp ratings
             </Link>
           </NavigationMenuItem>
