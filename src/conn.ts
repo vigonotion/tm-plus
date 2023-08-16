@@ -1,6 +1,6 @@
 import PocketBase from "pocketbase";
 
-export const conn = new PocketBase("http://pms:7717");
+export const conn = new PocketBase("https://tm-plus-data.vigonotion.com");
 
 export type Game = {
     id: string;

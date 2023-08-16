@@ -16,7 +16,7 @@ export function Navbar() {
 
   return (
     <>
-      <NavigationMenu className="fixed">
+      <NavigationMenu className="md:fixed">
         <NavigationMenuList>
           <NavigationMenuItem className="flex gap-2 font-head mx-4 uppercase items-center">
             <Circle className="text-orange-500" />
@@ -44,7 +44,7 @@ export function Navbar() {
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
-      <span className="h-24 inline-block"></span>
+      <span className="md:h-24 inline-block"></span>
     </>
   );
 }
