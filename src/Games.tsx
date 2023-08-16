@@ -11,6 +11,7 @@ import { useGames, usePlacements } from "./hooks/use-placements";
 import { Circle, Snowflake, Leaf, Trophy } from "lucide-react";
 import { isWin } from "./utils";
 import { Placement } from "./client/placements";
+import { Link } from "@tanstack/react-router";
 
 function Placements({ placements }: { placements: Placement[] }) {
   return (
@@ -73,7 +74,15 @@ function Games() {
             const placements = game.expand?.["placements(game)"];
             return (
               <TableRow key={game.id}>
-                <TableCell>{game.date.split(" ")[0]}</TableCell>
+                <TableCell>
+                  <Link
+                    to="/games/$game"
+                    params={{ game: game.id }}
+                    className="underline"
+                  >
+                    {game.date.split(" ")[0]}
+                  </Link>
+                </TableCell>
                 <TableCell>
                   <MapCell map={game.map} />
                 </TableCell>

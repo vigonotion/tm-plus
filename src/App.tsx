@@ -60,7 +60,7 @@ const gameRoute = new Route({
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const params = useParams();
 
-    return <Game game={params.game} />;
+    return <Game game={params.game} key={params.game} />;
   },
 });
 

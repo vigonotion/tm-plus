@@ -11,7 +11,8 @@ import {
   TableCell,
 } from "../ui/table";
 import { MapCell } from "@/Games";
-import { Calendar } from "lucide-react";
+import { Calendar, Trophy } from "lucide-react";
+import { isWin } from "@/utils";
 
 export function Game({ game }: { game: string }) {
   const { data } = useGame(game, {
@@ -46,7 +47,15 @@ export function Game({ game }: { game: string }) {
             ?.sort((a, b) => a.placement - b.placement)
             .map((p) => (
               <TableRow key={p.player}>
-                <TableCell>{p.placement}.</TableCell>
+                <TableCell>
+                  <span className="flex items-center">
+                    <span>{p.placement}.</span>
+                    {isWin(
+                      p.placement,
+                      data.expand?.["placements(game)"]?.length ?? 1
+                    ) && <Trophy className="text-yellow-500 ml-2" size={14} />}
+                  </span>
+                </TableCell>
                 <TableCell>{p.expand?.player?.name}</TableCell>
                 <TableCell>{p.score}</TableCell>
                 <TableCell className="capitalize">

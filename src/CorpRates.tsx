@@ -74,7 +74,7 @@ function CorpRates() {
               <TableRow key={r.corp}>
                 <TableCell>
                   <span className="flex items-center gap-2">
-                    {r.corpName}{" "}
+                    <span className="capitalize">{r.corpName}</span>
                     {r.corpDesc && (
                       <Tooltip>
                         <TooltipTrigger>
