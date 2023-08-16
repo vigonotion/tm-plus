@@ -62,7 +62,7 @@ const corpIndexRoute = new Route({
 const corpRoute = new Route({
   getParentRoute: () => corpRatesRoute,
   path: "$corp",
-  key: false,
+  key: ({ params }) => params.corp,
   component: ({ useParams }) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const params = useParams();
@@ -74,7 +74,7 @@ const corpRoute = new Route({
 const gameRoute = new Route({
   getParentRoute: () => gamesRoute,
   path: "$game",
-  key: false,
+  key: ({ params }) => params.game,
   component: ({ useParams }) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const params = useParams();
