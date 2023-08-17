@@ -20,6 +20,11 @@ import {
 import { useGroups } from "./hooks/use-placements";
 import { Group } from "./conn";
 import { FullLoading } from "./components/Loading";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "./components/ui/tooltip";
 
 function GroupSelector({
   onChange,
@@ -96,7 +101,19 @@ function Ratings() {
                 {/* {r.playerName}: {r.rating} ({r.wins} wins / {r.losses} losses,
                 winrate {Math.round((r.wins / total) * 100)} %, {total} total) */}
                 <TableCell>{r.playerName}</TableCell>
-                <TableCell>{r.rating}</TableCell>
+                <TableCell>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <span>{r.rating}</span>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <div className="flex flex-col gap-2">
+                        <span>mu: {r.ratingR.mu}</span>
+                        <span>sigma: {r.ratingR.sigma}</span>
+                      </div>
+                    </TooltipContent>
+                  </Tooltip>
+                </TableCell>
                 <TableCell>{r.wins}</TableCell>
                 <TableCell>{r.losses}</TableCell>
                 <TableCell>{Math.round((r.wins / total) * 100)} %</TableCell>

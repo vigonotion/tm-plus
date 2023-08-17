@@ -57,7 +57,11 @@ export function useRatings() {
     return Object.values(players)
       .map((p) => {
         console.log(p.rating);
-        return { ...p, rating: Math.floor(1500 + ordinal(p.rating) * 10) };
+        return {
+          ...p,
+          rating: Math.floor(1500 + ordinal(p.rating) * 10),
+          ratingR: p.rating,
+        };
       })
       .sort((a, b) => b.rating - a.rating);
   }, [data, isLoading]);
