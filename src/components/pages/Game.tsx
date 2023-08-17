@@ -65,25 +65,36 @@ export function Game({ game }: { game: string }) {
       <div className="mb-8">
         <HexGrid width={500} height={500}>
           <Layout
-            size={{ x: 6, y: 6 }}
+            size={{ x: 5, y: 5 }}
             flat={false}
-            spacing={1.05}
+            spacing={1.2}
             origin={{ x: 0, y: 0 }}
           >
             {
               // note: key must be unique between re-renders.
               // using config.mapProps+i makes a new key when the goal template chnages.
-              hexagons.map((hex, i) => (
-                <Hexagon
-                  key={i}
-                  q={hex.q}
-                  r={hex.r}
-                  s={hex.s}
-                  className="text-stone-900 fill-current"
-                >
-                  <span>{HexUtils.getID(hex)}</span>
-                </Hexagon>
-              ))
+              hexagons.map((hex, i) => {
+                const border =
+                  i % 6 == 0
+                    ? "stroke-gray-500"
+                    : i % 4 == 0
+                    ? "stroke-green-500"
+                    : i % 2 == 0
+                    ? "stroke-blue-500"
+                    : "stroke-stone-900";
+
+                return (
+                  <Hexagon
+                    key={i}
+                    q={hex.q}
+                    r={hex.r}
+                    s={hex.s}
+                    className={"text-stone-900 fill-current stroke-1 " + border}
+                  >
+                    <span>{HexUtils.getID(hex)}</span>
+                  </Hexagon>
+                );
+              })
             }
           </Layout>
         </HexGrid>
