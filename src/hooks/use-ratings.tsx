@@ -3,6 +3,7 @@ import { rate, rating, ordinal } from "openskill";
 import groupBy from "just-group-by";
 import { usePlacements } from "./use-placements";
 import { isWin } from "../utils";
+import { log } from "console";
 
 export function useRatings() {
   const { isLoading, data, ...other } = usePlacements({
@@ -54,7 +55,10 @@ export function useRatings() {
     });
 
     return Object.values(players)
-      .map((p) => ({ ...p, rating: Math.floor(1500 + ordinal(p.rating) * 10) }))
+      .map((p) => {
+        console.log(p.rating);
+        return { ...p, rating: Math.floor(1500 + ordinal(p.rating) * 10) };
+      })
       .sort((a, b) => b.rating - a.rating);
   }, [data, isLoading]);
 

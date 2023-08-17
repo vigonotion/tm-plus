@@ -37,6 +37,11 @@ export function Navbar() {
               Corp ratings
             </Link>
           </NavigationMenuItem>
+          <NavigationMenuItem>
+            <Link to="/elo-sim" className={navigationMenuTriggerStyle()}>
+              Elo simulator
+            </Link>
+          </NavigationMenuItem>
           <NavigationMenuItem className="pointer-events-none opacity-40">
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
               Explore data
