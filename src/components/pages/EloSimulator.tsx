@@ -19,11 +19,16 @@ import {
 import { useList } from "@uidotdev/usehooks";
 import { rate, rating } from "openskill";
 import { toElo } from "@/utils";
+import { Button } from "../ui/button";
+import { ArrowUpRightFromCircle, RotateCcw } from "lucide-react";
+
+const initial = [1, 2, 3, 4, 5].map((x) => ({
+  placement: x,
+  rating: rating(),
+}));
 
 export function EloSimulator() {
-  const [ratings, { updateAt }] = useList(
-    [1, 2, 3, 4, 5].map((x) => ({ placement: x, rating: rating() }))
-  );
+  const [ratings, { updateAt, set }] = useList(initial);
 
   const newElos = useMemo(() => {
     const rated = rate(
@@ -34,6 +39,14 @@ export function EloSimulator() {
     );
     return rated.map((x) => x[0]);
   }, [ratings]);
+
+  function handleReset(): void {
+    set(initial);
+  }
+
+  function handleCommit(): void {
+    set(ratings.map((r, i) => ({ ...r, rating: newElos[i] })));
+  }
 
   return (
     <div>
@@ -110,6 +123,17 @@ export function EloSimulator() {
           })}
         </TableBody>
       </Table>
+
+      <div className="mt-8 flex gap-2">
+        <Button variant="outline" onClick={handleReset}>
+          <RotateCcw size={14} className="mr-2" /> <span>Reset</span>
+        </Button>
+
+        <Button variant="outline" onClick={handleCommit}>
+          <ArrowUpRightFromCircle size={14} className="mr-2" />{" "}
+          <span>Use new elos as initial</span>
+        </Button>
+      </div>
     </div>
   );
 }
