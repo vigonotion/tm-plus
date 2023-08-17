@@ -71,7 +71,8 @@ module.exports = {
         "accordion-up": "accordion-up 0.2s ease-out",
       },
       fontFamily: {
-        "head": "Hubot Sans"
+        "head": "Hubot Sans",
+        "proto": "Prototype"
       }
     },
   },

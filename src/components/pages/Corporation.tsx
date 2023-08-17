@@ -12,7 +12,14 @@ export function Corporation({ corp }: { corp: string }) {
 
   return (
     <div>
-      <Headline className="capitalize">Corporation: {data.name}</Headline>
+      {data.logo ? (
+        <div
+          className="font-proto mb-8"
+          dangerouslySetInnerHTML={{ __html: data.logo }}
+        />
+      ) : (
+        <Headline className="capitalize">Corporation</Headline>
+      )}
 
       <div dangerouslySetInnerHTML={{ __html: data.description ?? "" }} />
       <div dangerouslySetInnerHTML={{ __html: data.ability ?? "" }} />

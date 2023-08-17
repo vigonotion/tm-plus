@@ -11,6 +11,11 @@
   font-stretch: 75% 200%;
 }
 
+@font-face {
+  font-family: "Prototype";
+  src: url("./assets/fonts/Prototype.ttf");
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

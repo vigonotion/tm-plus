@@ -20,6 +20,7 @@ export type Corporation = {
     name: string;
     description?: string;
     ability?: string;
+    logo?: string;
 
     expand?: {
         "placements(corp)"?: Placement[]
