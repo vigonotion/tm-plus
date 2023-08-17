@@ -14,13 +14,19 @@ import { MapCell } from "@/Games";
 import { Calendar, Trophy } from "lucide-react";
 import { isWin } from "@/utils";
 import { Link } from "@tanstack/react-router";
+import { FullLoading, Loading } from "../Loading";
 
 export function Game({ game }: { game: string }) {
   const { data } = useGame(game, {
     expand: "placements(game),placements(game).player,placements(game).corp",
   });
 
-  if (data === undefined) return <div>Loading...</div>;
+  if (data === undefined)
+    return (
+      <div>
+        <FullLoading />
+      </div>
+    );
 
   return (
     <div>

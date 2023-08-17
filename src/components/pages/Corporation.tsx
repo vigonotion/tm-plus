@@ -2,13 +2,19 @@ import React from "react";
 import { Headline } from "../Headline";
 import { useCorporation } from "@/hooks/use-placements";
 import { Link } from "@tanstack/react-router";
+import { FullLoading } from "../Loading";
 
 export function Corporation({ corp }: { corp: string }) {
   const { data } = useCorporation(corp, {
     expand: "placements(corp).game",
   });
 
-  if (data === undefined) return <div>Loading...</div>;
+  if (data === undefined)
+    return (
+      <div>
+        <FullLoading />
+      </div>
+    );
 
   return (
     <div>
