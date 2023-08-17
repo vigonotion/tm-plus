@@ -60,6 +60,11 @@ function Games() {
     <div>
       <Headline>Recent games</Headline>
 
+      <div className="text-muted-foreground mb-8">
+        A game is considered won if on the first place, or in a game with five
+        players, on the first or second place.
+      </div>
+
       <Table>
         <TableHeader>
           <TableRow>
