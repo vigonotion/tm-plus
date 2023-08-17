@@ -78,11 +78,13 @@ export function EloSimulator() {
                     onChange={(x) =>
                       updateAt(i, {
                         ...rr,
-                        rating: { ...rr.rating, mu: parseInt(x.target.value) },
+                        rating: {
+                          ...rr.rating,
+                          mu: parseFloat(x.target.value),
+                        },
                       })
                     }
                     className="w-32"
-                    type="number"
                   />
                 </TableCell>
                 <TableCell>
@@ -93,12 +95,11 @@ export function EloSimulator() {
                         ...rr,
                         rating: {
                           ...rr.rating,
-                          sigma: parseInt(x.target.value),
+                          sigma: parseFloat(x.target.value),
                         },
                       })
                     }
                     className="w-32"
-                    type="number"
                   />
                 </TableCell>
                 <TableCell>{toElo(rr.rating)}</TableCell>
