@@ -7,6 +7,7 @@ export type Placement = {
     score: number,
     game: string,
     corp?: string,
+    color?: string,
 
     expand?: {
         player?: Player,

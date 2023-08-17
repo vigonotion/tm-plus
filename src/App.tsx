@@ -63,6 +63,7 @@ const corpRoute = new Route({
   getParentRoute: () => corpRatesRoute,
   path: "$corp",
   key: ({ params }) => params.corp,
+  
   component: ({ useParams }) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const params = useParams();
