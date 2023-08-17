@@ -2,7 +2,7 @@ import React from "react";
 
 export function FullLoading() {
   return (
-    <div className="w-full flex justify-center h-screen fixed left-0 right-0 top-0 items-center backdrop-blur-lg bg-black bg-opacity-40">
+    <div className="w-full flex justify-center h-screen fixed left-0 right-0 top-0 items-center backdrop-blur-lg bg-background bg-opacity-40">
       <Loading />
     </div>
   );

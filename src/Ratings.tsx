@@ -19,6 +19,7 @@ import {
 } from "./components/ui/select";
 import { useGroups } from "./hooks/use-placements";
 import { Group } from "./conn";
+import { FullLoading } from "./components/Loading";
 
 function GroupSelector({
   onChange,
@@ -56,7 +57,11 @@ function Ratings() {
   const [group, setGroup] = useState<Group | undefined>(undefined);
 
   if (isLoading || ratings === undefined) {
-    return <div>loading ratings...</div>;
+    return (
+      <div>
+        <FullLoading />
+      </div>
+    );
   }
 
   const list =
