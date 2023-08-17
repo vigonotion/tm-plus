@@ -41,7 +41,9 @@ export function EloSimulator() {
   }, [ratings]);
 
   function handleReset(): void {
-    set(initial);
+    if (confirm("Do you want to reset the elo data?")) {
+      set(initial);
+    }
   }
 
   function handleCommit(): void {
