@@ -34,7 +34,7 @@ function useGetOne<TParams, TData>(
   params: TParams,
   options?: Omit<UseQueryOptions<TData, never, TData>, "queryKey" | "queryFn">
 ) {
-  const key = [collection, params];
+  const key = [collection, id, params];
   const cancelKey = useId();
 
   const query = useQuery(
