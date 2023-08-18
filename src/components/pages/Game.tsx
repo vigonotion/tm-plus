@@ -21,6 +21,7 @@ import {
   HexUtils,
   Hexagon,
   Layout,
+  Pattern,
   Text,
 } from "react-hexgrid";
 import { Owner, TileType, demoMap } from "@/mapdata";
@@ -82,7 +83,7 @@ function PlayerMarkerG({ color }: { color?: string }) {
     return (
       <g
         transform="scale(.005) translate(-230,-230)"
-        className="fill-current text-gray-400"
+        className="fill-current text-gray-700"
       >
         <path d="M0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96z" />
       </g>
@@ -91,7 +92,7 @@ function PlayerMarkerG({ color }: { color?: string }) {
   return null;
 }
 
-const hexagons = GridGenerator.hexagon(4).sort((a, b) => {
+const hexagons: Hex[] = GridGenerator.hexagon(4).sort((a, b) => {
   if (a.r == b.r) {
     if (a.q == b.q) {
       return a.s - b.s;
@@ -117,6 +118,7 @@ export function Game({ game }: { game: string }) {
       </div>
     );
 
+  const scale = 1.1;
   return (
     <div>
       <div className="mb-8">
@@ -144,9 +146,9 @@ export function Game({ game }: { game: string }) {
       <div className="mb-8">
         <HexGrid width={500} height={500}>
           <Layout
-            size={{ x: 5, y: 5 }}
+            size={{ x: 5 * scale, y: 5 * scale }}
             flat={false}
-            spacing={1.2}
+            spacing={1.1}
             origin={{ x: 0, y: 0 }}
           >
             {
@@ -166,16 +168,16 @@ export function Game({ game }: { game: string }) {
                   [TileType.Empty]: "stroke-stone-900",
                   [TileType.Ocean]: "stroke-blue-500",
                   [TileType.Greenery]: "stroke-green-500",
-                  [TileType.City]: "stroke-gray-500",
+                  [TileType.City]: "stroke-gray-900",
                   [TileType.Other]: "stroke-yellow-500",
                 }[demoMap[i].type];
 
                 const fillHighlight = {
-                  [TileType.Empty]: "fill-stone-900",
-                  [TileType.Ocean]: "fill-blue-500",
-                  [TileType.Greenery]: "fill-green-500",
-                  [TileType.City]: "fill-gray-500",
-                  [TileType.Other]: "fill-yellow-500",
+                  [TileType.Empty]: "",
+                  [TileType.Ocean]: "ocean",
+                  [TileType.Greenery]: "greenery",
+                  [TileType.City]: "city",
+                  [TileType.Other]: "other",
                 }[demoMap[i].type];
 
                 const color = {
@@ -192,23 +194,16 @@ export function Game({ game }: { game: string }) {
                 return (
                   <>
                     <Hexagon
-                      key={i}
-                      q={hex.q}
-                      r={hex.r}
-                      s={hex.s}
-                      className={
-                        "text-stone-900 fill-current stroke-1 " +
-                        border +
-                        " " +
-                        (showFill ? fillHighlight : "")
-                      }
-                    ></Hexagon>
-                    <Hexagon
                       key={i + "p"}
                       q={hex.q}
                       r={hex.r}
                       s={hex.s}
-                      className="fill-none"
+                      fill={fillHighlight}
+                      strokeWidth={0.4}
+                      className={
+                        "stroke-stone-800 " +
+                        (showFill ? "" : hovered ? "opacity-30" : "")
+                      }
                     >
                       <PlayerMarkerG color={color} />
                     </Hexagon>
@@ -217,6 +212,27 @@ export function Game({ game }: { game: string }) {
               })
             }
           </Layout>
+          <Pattern
+            id="city"
+            link="/city2.svg"
+            size={{ x: 4.4 * scale, y: 5 * scale }}
+          />
+
+          <Pattern
+            id="greenery"
+            link="/greenery2.svg"
+            size={{ x: 4.4 * scale, y: 5 * scale }}
+          />
+          <Pattern
+            id="ocean"
+            link="/ocean2.svg"
+            size={{ x: 4.4 * scale, y: 5 * scale }}
+          />
+          <Pattern
+            id="other"
+            link="/other.svg"
+            size={{ x: 4.4 * scale, y: 5 * scale }}
+          />
         </HexGrid>
       </div>
 
