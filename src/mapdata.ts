@@ -1,6 +1,6 @@
 import assert from "assert";
 
-const map = "o0gbgkgk0000cbgkck000000gbgkxycycgxggyckgbcygyoooo00gkgk00gygyoooooo00ck00cy00cgoooo00oo0000gk00000000cgxk0000xg00ggcg0000";
+const map = "oogbgkgk0000cbgkck000000gbgkxycycgxggyckgbcygyoooo00gkgk00gygyoooooo00ck00cy00cgoooo00oo0000gk00000000cgxk0000xg00ggcg0000";
 
 export enum TileType {
     Empty,

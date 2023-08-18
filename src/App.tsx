@@ -27,6 +27,7 @@ import { EloSimulator } from "./components/pages/EloSimulator";
 import { Player } from "./components/pages/Player";
 import { MapPage } from "./components/pages/Map";
 import { About } from "./components/pages/About";
+import { MapTool } from "./components/pages/MapTool";
 
 // Create a root route
 const rootRoute = new RootRoute({
@@ -49,6 +50,12 @@ const aboutRoute = new Route({
   getParentRoute: () => rootRoute,
   path: "about",
   component: About,
+});
+
+const mapToolRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: "mapTool",
+  component: MapTool,
 });
 
 const gamesRoute = new Route({
@@ -149,6 +156,7 @@ const routeTree = rootRoute.addChildren([
   mapsRoute.addChildren([mapRoute, mapIndexRoute]),
   corpRatesRoute.addChildren([corpRoute, corpIndexRoute]),
   gamesRoute.addChildren([gameRoute]),
+  mapToolRoute
 ]);
 
 const queryClient = new QueryClient({

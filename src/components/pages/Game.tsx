@@ -24,8 +24,8 @@ import {
   Pattern,
   Text,
 } from "react-hexgrid";
-import { Owner, TileType, demoMap } from "@/mapdata";
-import { useState } from "react";
+import { Owner, Tile, TileType, demoMap, parse } from "@/mapdata";
+import { useMemo, useState } from "react";
 
 function PlayerMarker({ color }: { color?: string }) {
   if (color === "red")
@@ -103,13 +103,115 @@ const hexagons: Hex[] = GridGenerator.hexagon(4).sort((a, b) => {
 
   return a.r - b.r;
 });
+const scale = 1.1;
+
+export function MapView({ hovered, map }: { hovered?: string; map: Tile[] }) {
+  return (
+    <HexGrid width={500} height={500}>
+      <Layout
+        size={{
+          x: 5 * scale,
+          y: 5 * scale,
+        }}
+        flat={false}
+        spacing={1.1}
+        origin={{
+          x: 0,
+          y: 0,
+        }}
+      >
+        {
+          // note: key must be unique between re-renders.
+          // using config.mapProps+i makes a new key when the goal template chnages.
+          hexagons.map((hex, i) => {
+            const fillHighlight = {
+              [TileType.Empty]: "",
+              [TileType.Ocean]: "ocean",
+              [TileType.Greenery]: "greenery",
+              [TileType.City]: "city",
+              [TileType.Other]: "other",
+            }[map[i].type];
+
+            const color = {
+              [Owner.Red]: "red",
+              [Owner.Green]: "green",
+              [Owner.Blue]: "blue",
+              [Owner.Yellow]: "yellow",
+              [Owner.Black]: "black",
+              [Owner.None]: undefined,
+            }[map[i].owner];
+
+            const showFill = hovered && hovered === color;
+
+            return (
+              <>
+                <Hexagon
+                  key={i + "p"}
+                  q={hex.q}
+                  r={hex.r}
+                  s={hex.s}
+                  fill={fillHighlight}
+                  strokeWidth={0.4}
+                  className={
+                    "stroke-stone-800 " +
+                    (showFill ? "" : hovered ? "opacity-30" : "")
+                  }
+                >
+                  <PlayerMarkerG color={color} />
+                </Hexagon>
+              </>
+            );
+          })
+        }
+      </Layout>
+      <Pattern
+        id="city"
+        link="/city2.svg"
+        size={{
+          x: 4.4 * scale,
+          y: 5 * scale,
+        }}
+      />
+
+      <Pattern
+        id="greenery"
+        link="/greenery2.svg"
+        size={{
+          x: 4.4 * scale,
+          y: 5 * scale,
+        }}
+      />
+      <Pattern
+        id="ocean"
+        link="/ocean2.svg"
+        size={{
+          x: 4.4 * scale,
+          y: 5 * scale,
+        }}
+      />
+      <Pattern
+        id="other"
+        link="/other.svg"
+        size={{
+          x: 4.4 * scale,
+          y: 5 * scale,
+        }}
+      />
+    </HexGrid>
+  );
+}
 
 export function Game({ game }: { game: string }) {
   const { data } = useGame(game, {
     expand: "placements(game),placements(game).player,placements(game).corp",
   });
 
-  const [hovered, setHovered] = useState<string | undefined>("blue");
+  const map_state = useMemo(
+    () => data?.map_state && parse(data.map_state),
+    [data?.map_state]
+  );
+
+  const [hovered, setHovered] = useState<string | undefined>(undefined);
 
   if (data === undefined)
     return (
@@ -118,7 +220,6 @@ export function Game({ game }: { game: string }) {
       </div>
     );
 
-  const scale = 1.1;
   return (
     <div>
       <div className="mb-8">
@@ -143,98 +244,11 @@ export function Game({ game }: { game: string }) {
         <MapCell map={data.map} />
       </div>
 
-      <div className="mb-8">
-        <HexGrid width={500} height={500}>
-          <Layout
-            size={{ x: 5 * scale, y: 5 * scale }}
-            flat={false}
-            spacing={1.1}
-            origin={{ x: 0, y: 0 }}
-          >
-            {
-              // note: key must be unique between re-renders.
-              // using config.mapProps+i makes a new key when the goal template chnages.
-              hexagons.map((hex, i) => {
-                // const border =
-                //   i % 6 == 0
-                //     ? "stroke-gray-500"
-                //     : i % 4 == 0
-                //     ? "stroke-green-500"
-                //     : i % 2 == 0
-                //     ? "stroke-blue-500"
-                //     : "stroke-stone-900";
-
-                const border = {
-                  [TileType.Empty]: "stroke-stone-900",
-                  [TileType.Ocean]: "stroke-blue-500",
-                  [TileType.Greenery]: "stroke-green-500",
-                  [TileType.City]: "stroke-gray-900",
-                  [TileType.Other]: "stroke-yellow-500",
-                }[demoMap[i].type];
-
-                const fillHighlight = {
-                  [TileType.Empty]: "",
-                  [TileType.Ocean]: "ocean",
-                  [TileType.Greenery]: "greenery",
-                  [TileType.City]: "city",
-                  [TileType.Other]: "other",
-                }[demoMap[i].type];
-
-                const color = {
-                  [Owner.Red]: "red",
-                  [Owner.Green]: "green",
-                  [Owner.Blue]: "blue",
-                  [Owner.Yellow]: "yellow",
-                  [Owner.Black]: "black",
-                  [Owner.None]: undefined,
-                }[demoMap[i].owner];
-
-                const showFill = hovered && hovered === color;
-
-                return (
-                  <>
-                    <Hexagon
-                      key={i + "p"}
-                      q={hex.q}
-                      r={hex.r}
-                      s={hex.s}
-                      fill={fillHighlight}
-                      strokeWidth={0.4}
-                      className={
-                        "stroke-stone-800 " +
-                        (showFill ? "" : hovered ? "opacity-30" : "")
-                      }
-                    >
-                      <PlayerMarkerG color={color} />
-                    </Hexagon>
-                  </>
-                );
-              })
-            }
-          </Layout>
-          <Pattern
-            id="city"
-            link="/city2.svg"
-            size={{ x: 4.4 * scale, y: 5 * scale }}
-          />
-
-          <Pattern
-            id="greenery"
-            link="/greenery2.svg"
-            size={{ x: 4.4 * scale, y: 5 * scale }}
-          />
-          <Pattern
-            id="ocean"
-            link="/ocean2.svg"
-            size={{ x: 4.4 * scale, y: 5 * scale }}
-          />
-          <Pattern
-            id="other"
-            link="/other.svg"
-            size={{ x: 4.4 * scale, y: 5 * scale }}
-          />
-        </HexGrid>
-      </div>
+      {map_state && (
+        <div className="mb-8">
+          <MapView hovered={hovered} map={map_state} />
+        </div>
+      )}
 
       <Table onPointerLeave={() => setHovered(undefined)}>
         <TableHeader>

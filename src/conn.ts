@@ -10,6 +10,7 @@ export type Game = {
     generations: number;
     map: string;
     duration_in_minutes?: number;
+    map_state?: string;
 
     expand?: {
         "placements(game)"?: Placement[]
