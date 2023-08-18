@@ -79,15 +79,13 @@ function Corps({ player }: { player: string }) {
     );
 
   return (
-    <Card className="overflow-hidden">
-      <ScrollArea className="h-full overflow-auto">
-        <CardHeader>
-          <CardTitle>Corporations</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <CorpTable ratings={ratings} />
-        </CardContent>
-      </ScrollArea>
+    <Card className="">
+      <CardHeader>
+        <CardTitle>Corporations</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <CorpTable ratings={ratings} />
+      </CardContent>
     </Card>
   );
 }
@@ -198,55 +196,51 @@ function Measure({ label, value }: { label: string; value: number }) {
 
 function RecentGames({ placements }: { placements: Placement[] }) {
   return (
-    <Card className="overflow-hidden">
-      <ScrollArea className="h-full overflow-auto">
-        <CardHeader>
-          <CardTitle>Recent games</CardTitle>
-        </CardHeader>
-        <CardContent className="">
-          <Table>
-            <TableHeader>
+    <Card className="">
+      <CardHeader>
+        <CardTitle>Recent games</CardTitle>
+      </CardHeader>
+      <CardContent className="">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Game</TableHead>
+              <TableHead>Map</TableHead>
+              <TableHead>Generations</TableHead>
+              <TableHead>Placement</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {placements.map((x) => (
               <TableRow>
-                <TableHead>Game</TableHead>
-                <TableHead>Map</TableHead>
-                <TableHead>Generations</TableHead>
-                <TableHead>Placement</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {placements.map((x) => (
-                <TableRow>
-                  <TableCell>
-                    <Link
-                      to="/games/$game"
-                      params={{ game: x.game }}
-                      className="underline"
-                    >
-                      {x.expand?.game?.date.split(" ")[0]}
-                    </Link>
-                  </TableCell>
-                  <TableCell>
-                    {x.expand?.game?.map && (
-                      <MapCell map={x.expand?.game?.map} />
-                    )}
-                  </TableCell>
-                  <TableCell>{x.expand?.game?.generations}</TableCell>
-                  <TableCell>
-                    <span key={x.player} className="flex items-center">
-                      <span>
-                        {x.placement}. {x.expand?.player?.name}
-                      </span>
-                      {/* {isWin(x.placement, placements.length) && (
+                <TableCell>
+                  <Link
+                    to="/games/$game"
+                    params={{ game: x.game }}
+                    className="underline"
+                  >
+                    {x.expand?.game?.date.split(" ")[0]}
+                  </Link>
+                </TableCell>
+                <TableCell>
+                  {x.expand?.game?.map && <MapCell map={x.expand?.game?.map} />}
+                </TableCell>
+                <TableCell>{x.expand?.game?.generations}</TableCell>
+                <TableCell>
+                  <span key={x.player} className="flex items-center">
+                    <span>
+                      {x.placement}. {x.expand?.player?.name}
+                    </span>
+                    {/* {isWin(x.placement, placements.length) && (
                       <Trophy className="text-yellow-500 ml-2" size={12} />
                     )} */}
-                    </span>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </ScrollArea>
+                  </span>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </CardContent>
     </Card>
   );
 }
@@ -284,12 +278,12 @@ export function Player({ player }: { player: string }) {
       </div>
 
       <div className="flex flex-col gap-4">
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid sm:grid-cols-3 grid-cols-2 gap-4">
           <EloChart player={player} />
           <Measure label="Wins" value={playerRatings.wins} />
           <Measure label="Losses" value={playerRatings.losses} />
         </div>
-        <div className="grid grid-cols-2 gap-4 h-[500px]">
+        <div className="grid xl:grid-cols-2 gap-4">
           <Corps player={player} />
           <RecentGames placements={placements} />
         </div>
