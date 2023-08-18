@@ -25,6 +25,7 @@ import { Game } from "./components/pages/Game";
 import { Corporation } from "./components/pages/Corporation";
 import { EloSimulator } from "./components/pages/EloSimulator";
 import { Player } from "./components/pages/Player";
+import { MapPage } from "./components/pages/Map";
 
 // Create a root route
 const rootRoute = new RootRoute({
@@ -108,11 +109,35 @@ const gameRoute = new Route({
   },
 });
 
+const mapsRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: "maps",
+  component: () => <Outlet />,
+});
+
+const mapIndexRoute = new Route({
+  getParentRoute: () => mapsRoute,
+  path: "/",
+  component: () => <span></span>,
+});
+
+const mapRoute = new Route({
+  getParentRoute: () => mapsRoute,
+  path: "$map",
+  component: ({ useParams }) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const params = useParams();
+
+    return <MapPage map={params.map} key={params.map} />;
+  },
+});
+
 // Create the route tree using your routes
 const routeTree = rootRoute.addChildren([
   indexRoute,
   playersRoute.addChildren([playerRoute, playerIndexRoute]),
   eloSimRoute,
+  mapsRoute.addChildren([mapRoute, mapIndexRoute]),
   corpRatesRoute.addChildren([corpRoute, corpIndexRoute]),
   gamesRoute.addChildren([gameRoute]),
 ]);

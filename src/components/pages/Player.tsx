@@ -179,7 +179,7 @@ function EloChart({ player }: { player: string }) {
   );
 }
 
-function Measure({ label, value }: { label: string; value: number }) {
+export function Measure({ label, value }: { label: string; value: number }) {
   return (
     <Card className=" h-[200px] overflow-hidden">
       <CardHeader>
@@ -195,64 +195,61 @@ function Measure({ label, value }: { label: string; value: number }) {
 }
 
 export function RecentGamesTables({ placements }: { placements: Placement[] }) {
-    return (
-
-        <Table>
-            <TableHeader>
-                <TableRow>
-                    <TableHead>Game</TableHead>
-                    <TableHead>Map</TableHead>
-                    <TableHead>Generations</TableHead>
-                    <TableHead>Placement</TableHead>
-                </TableRow>
-            </TableHeader>
-            <TableBody>
-                {placements.map((x) => (
-                    <TableRow key={x.id}>
-                        <TableCell>
-                            <Link
-                                to="/games/$game"
-                                params={{game: x.game}}
-                                className="underline"
-                            >
-                                {x.expand?.game?.date.split(" ")[0]}
-                            </Link>
-                        </TableCell>
-                        <TableCell>
-                            {x.expand?.game?.map && <MapCell map={x.expand?.game?.map}/>}
-                        </TableCell>
-                        <TableCell>{x.expand?.game?.generations}</TableCell>
-                        <TableCell>
-                  <span key={x.player} className="flex items-center">
-                    <span>
-                      {x.placement}. {x.expand?.player?.name}
-                    </span>
-                      {/* {isWin(x.placement, placements.length) && (
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Game</TableHead>
+          <TableHead>Map</TableHead>
+          <TableHead>Generations</TableHead>
+          <TableHead>Placement</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {placements.map((x) => (
+          <TableRow key={x.id}>
+            <TableCell>
+              <Link
+                to="/games/$game"
+                params={{ game: x.game }}
+                className="underline"
+              >
+                {x.expand?.game?.date.split(" ")[0]}
+              </Link>
+            </TableCell>
+            <TableCell>
+              {x.expand?.game?.map && <MapCell map={x.expand?.game?.map} />}
+            </TableCell>
+            <TableCell>{x.expand?.game?.generations}</TableCell>
+            <TableCell>
+              <span key={x.player} className="flex items-center">
+                <span>
+                  {x.placement}. {x.expand?.player?.name}
+                </span>
+                {/* {isWin(x.placement, placements.length) && (
                       <Trophy className="text-yellow-500 ml-2" size={12} />
                     )} */}
-                  </span>
-                        </TableCell>
-                    </TableRow>
-                ))}
-            </TableBody>
-        </Table>
-    );
-
+              </span>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
 }
 
 function RecentGames({ placements }: { placements: Placement[] }) {
-    return (
-        <Card className="">
-            <CardHeader>
-                <CardTitle>Recent games</CardTitle>
-            </CardHeader>
-            <CardContent className="">
-                <RecentGamesTables placements={placements} />
-            </CardContent>
-        </Card>
-    );
+  return (
+    <Card className="">
+      <CardHeader>
+        <CardTitle>Recent games</CardTitle>
+      </CardHeader>
+      <CardContent className="">
+        <RecentGamesTables placements={placements} />
+      </CardContent>
+    </Card>
+  );
 }
-
 
 export function Player({ player }: { player: string }) {
   const { data } = usePlayer(player, {});

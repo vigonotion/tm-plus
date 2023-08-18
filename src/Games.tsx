@@ -13,6 +13,7 @@ import { isWin } from "./utils";
 import { Placement } from "./client/placements";
 import { Link } from "@tanstack/react-router";
 import { FullLoading } from "./components/Loading";
+import { Game } from "./conn";
 
 function Placements({ placements }: { placements: Placement[] }) {
   return (
@@ -70,51 +71,67 @@ function Games() {
         players, on the first or second place.
       </div>
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Game</TableHead>
-            <TableHead>Map</TableHead>
-            <TableHead>Generations</TableHead>
-            <TableHead>Placements</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {data.map((game) => {
-            const placements = game.expand?.["placements(game)"];
-            return (
-              <TableRow key={game.id}>
-                <TableCell>
-                  <Link
-                    to="/games/$game"
-                    params={{ game: game.id }}
-                    className="underline"
-                  >
-                    {game.date.split(" ")[0]}
-                  </Link>
-                </TableCell>
+      <RecentGamesTable data={data} />
+    </div>
+  );
+}
+
+export function RecentGamesTable({
+  data,
+  showMapColumn = true,
+}: {
+  data: Game[];
+  showMapColumn?: boolean;
+}) {
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Game</TableHead>
+          {showMapColumn && <TableHead>Map</TableHead>}
+          <TableHead>Generations</TableHead>
+          <TableHead>Placements</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {data.map((game) => {
+          const placements = game.expand?.["placements(game)"];
+          return (
+            <TableRow key={game.id}>
+              <TableCell>
+                <Link
+                  to="/games/$game"
+                  params={{ game: game.id }}
+                  className="underline"
+                >
+                  {game.date.split(" ")[0]}
+                </Link>
+              </TableCell>
+              {showMapColumn && (
                 <TableCell>
                   <MapCell map={game.map} />
                 </TableCell>
-                <TableCell>{game.generations}</TableCell>
-                <TableCell>
-                  {placements && <Placements placements={placements} />}
-                </TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-    </div>
+              )}
+              <TableCell>{game.generations}</TableCell>
+              <TableCell>
+                {placements && <Placements placements={placements} />}
+              </TableCell>
+            </TableRow>
+          );
+        })}
+      </TableBody>
+    </Table>
   );
 }
 
 export function MapCell({ map }: { map: string }) {
   return (
-    <div className="flex items-center gap-1">
-      <MapIcon map={map} />
-      <span className="capitalize">{map}</span>
-    </div>
+    <Link to={"/maps/$map"} params={{ map }} className="underline">
+      <div className="flex items-center gap-1">
+        <MapIcon map={map} />
+        <span className="capitalize">{map}</span>
+      </div>
+    </Link>
   );
 }
 
