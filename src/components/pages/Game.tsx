@@ -119,7 +119,12 @@ export function Game({ game }: { game: string }) {
 
   return (
     <div>
-      <Headline>Game insights</Headline>
+      <div className="mb-8">
+        <Headline className="text-sm uppercase text-muted-foreground mb-1 inline-block">
+          <Link to="/">Games</Link>
+        </Headline>
+        <Headline>{data.date.split(" ")[0]}</Headline>
+      </div>
 
       <div className="flex flex-col gap-2 mb-8">
         <div className="flex items-center gap-1">
@@ -242,10 +247,17 @@ export function Game({ game }: { game: string }) {
                   </span>
                 </TableCell>
                 <TableCell>
-                  <div className="flex gap-2 items-center">
-                    <PlayerMarker color={p.color} />
-                    <span>{p.expand?.player?.name}</span>
-                  </div>
+                  {" "}
+                  <Link
+                    to="/players/$player"
+                    params={{ player: p.player }}
+                    className="underline"
+                  >
+                    <div className="flex gap-2 items-center">
+                      <PlayerMarker color={p.color} />
+                      <span>{p.expand?.player?.name}</span>
+                    </div>
+                  </Link>
                 </TableCell>
                 <TableCell>{p.score}</TableCell>
                 <TableCell className="capitalize">

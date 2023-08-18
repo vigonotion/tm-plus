@@ -63,55 +63,69 @@ function CorpRates() {
     <div>
       <Headline>Corporations</Headline>
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Corporation</TableHead>
-            <TableHead>Wins</TableHead>
-            <TableHead>Losses</TableHead>
-            <TableHead>Winrate</TableHead>
-            <TableHead>Total</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {ratings.map((r) => {
-            const total = r.wins + r.losses;
-            return (
-              <TableRow key={r.corp}>
-                <TableCell>
-                  <span className="flex items-center gap-2">
-                    <Link
-                      className="underline"
-                      to="/corporations/$corp"
-                      params={{ corp: r.corp }}
-                    >
-                      <span className="capitalize">{r.corpName}</span>
-                    </Link>
-                    {r.corpDesc && (
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <Info size={16} className="text-gray-300" />
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <div
-                            dangerouslySetInnerHTML={{ __html: r.corpDesc }}
-                          ></div>
-                        </TooltipContent>
-                      </Tooltip>
-                    )}
-                  </span>
-                </TableCell>
-                <TableCell>{r.wins}</TableCell>
-                <TableCell>{r.losses}</TableCell>
-                <TableCell>{Math.round((r.wins / total) * 100)} %</TableCell>
-                <TableCell>{total}</TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
+      <CorpTable ratings={ratings} />
     </div>
   );
 }
 
 export default CorpRates;
+
+export type CorpRating = {
+  corp: string;
+  corpName: string | undefined;
+  corpDesc: string | undefined;
+  wins: number;
+  losses: number;
+};
+
+export function CorpTable({ ratings }: { ratings: CorpRating[] }) {
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Corporation</TableHead>
+          <TableHead>Wins</TableHead>
+          <TableHead>Losses</TableHead>
+          <TableHead>Winrate</TableHead>
+          <TableHead>Total</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {ratings.map((r) => {
+          const total = r.wins + r.losses;
+          return (
+            <TableRow key={r.corp}>
+              <TableCell>
+                <span className="flex items-center gap-2">
+                  <Link
+                    className="underline"
+                    to="/corporations/$corp"
+                    params={{ corp: r.corp }}
+                  >
+                    <span className="capitalize">{r.corpName}</span>
+                  </Link>
+                  {r.corpDesc && (
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <Info size={16} className="text-gray-300" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <div
+                          dangerouslySetInnerHTML={{ __html: r.corpDesc }}
+                        ></div>
+                      </TooltipContent>
+                    </Tooltip>
+                  )}
+                </span>
+              </TableCell>
+              <TableCell>{r.wins}</TableCell>
+              <TableCell>{r.losses}</TableCell>
+              <TableCell>{Math.round((r.wins / total) * 100)} %</TableCell>
+              <TableCell>{total}</TableCell>
+            </TableRow>
+          );
+        })}
+      </TableBody>
+    </Table>
+  );
+}

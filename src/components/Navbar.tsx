@@ -24,17 +24,17 @@ export function Navbar() {
           </NavigationMenuItem>
           <NavigationMenuItem>
             <Link to="/" className={navigationMenuTriggerStyle()}>
-              Recent games
+              Games
             </Link>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <Link to="/ratings" className={navigationMenuTriggerStyle()}>
-              Ratings
+            <Link to="/players" className={navigationMenuTriggerStyle()}>
+              Players
             </Link>
           </NavigationMenuItem>
           <NavigationMenuItem>
             <Link to="/corporations" className={navigationMenuTriggerStyle()}>
-              Corp ratings
+              Corporations
             </Link>
           </NavigationMenuItem>
           <NavigationMenuItem>
@@ -42,10 +42,10 @@ export function Navbar() {
               Elo simulator
             </Link>
           </NavigationMenuItem>
-          <NavigationMenuItem className="pointer-events-none opacity-40">
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Explore data
-            </NavigationMenuLink>
+          <NavigationMenuItem>
+            <Link to="/about" className={navigationMenuTriggerStyle()}>
+              About
+            </Link>
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>

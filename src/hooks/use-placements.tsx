@@ -105,3 +105,11 @@ export function useCorporation(
 ) {
   return useGetOne("corporations", id, params, options);
 }
+
+export function usePlayer(
+  id: string,
+  params: RecordQueryParams,
+  options?: Omit<UseQueryOptions<Player, never, Player>, "queryKey" | "queryFn">
+) {
+  return useGetOne("players", id, params, options);
+}

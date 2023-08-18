@@ -24,6 +24,9 @@ import { TooltipProvider } from "./components/ui/tooltip";
 import { Game } from "./components/pages/Game";
 import { Corporation } from "./components/pages/Corporation";
 import { EloSimulator } from "./components/pages/EloSimulator";
+import { Player } from "./components/pages/Player";
+import { MapPage } from "./components/pages/Map";
+import { About } from "./components/pages/About";
 
 // Create a root route
 const rootRoute = new RootRoute({
@@ -42,16 +45,22 @@ const eloSimRoute = new Route({
   component: EloSimulator,
 });
 
+const aboutRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: "about",
+  component: About,
+});
+
 const gamesRoute = new Route({
   getParentRoute: () => rootRoute,
   path: "games",
   component: () => <Outlet />,
 });
 
-const ratingsRoute = new Route({
+const playersRoute = new Route({
   getParentRoute: () => rootRoute,
-  path: "/ratings",
-  component: Ratings,
+  path: "/players",
+  component: () => <Outlet />,
 });
 
 const corpRatesRoute = new Route({
@@ -79,6 +88,23 @@ const corpRoute = new Route({
   },
 });
 
+const playerIndexRoute = new Route({
+  getParentRoute: () => playersRoute,
+  path: "/",
+  component: Ratings,
+});
+
+const playerRoute = new Route({
+  getParentRoute: () => playersRoute,
+  path: "$player",
+  component: ({ useParams }) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const params = useParams();
+
+    return <Player player={params.player} key={params.player} />;
+  },
+});
+
 const gameRoute = new Route({
   getParentRoute: () => gamesRoute,
   path: "$game",
@@ -91,16 +117,47 @@ const gameRoute = new Route({
   },
 });
 
+const mapsRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: "maps",
+  component: () => <Outlet />,
+});
+
+const mapIndexRoute = new Route({
+  getParentRoute: () => mapsRoute,
+  path: "/",
+  component: () => <span></span>,
+});
+
+const mapRoute = new Route({
+  getParentRoute: () => mapsRoute,
+  path: "$map",
+  component: ({ useParams }) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const params = useParams();
+
+    return <MapPage map={params.map} key={params.map} />;
+  },
+});
+
 // Create the route tree using your routes
 const routeTree = rootRoute.addChildren([
   indexRoute,
-  ratingsRoute,
+  playersRoute.addChildren([playerRoute, playerIndexRoute]),
   eloSimRoute,
+  aboutRoute,
+  mapsRoute.addChildren([mapRoute, mapIndexRoute]),
   corpRatesRoute.addChildren([corpRoute, corpIndexRoute]),
   gamesRoute.addChildren([gameRoute]),
 ]);
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 10000,
+    },
+  },
+});
 
 // Create the router using your route tree
 const router = new Router({

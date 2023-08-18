@@ -25,6 +25,8 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "./components/ui/tooltip";
+import { Link } from "@tanstack/react-router";
+import { toElo } from "./utils";
 
 function GroupSelector({
   onChange,
@@ -77,7 +79,7 @@ function Ratings() {
   return (
     <div>
       <div className="mb-4 flex justify-between">
-        <Headline>Ratings</Headline>
+        <Headline>Players</Headline>
         <GroupSelector value={group} onChange={setGroup} />
       </div>
 
@@ -100,16 +102,25 @@ function Ratings() {
               <TableRow key={r.playerId}>
                 {/* {r.playerName}: {r.rating} ({r.wins} wins / {r.losses} losses,
                 winrate {Math.round((r.wins / total) * 100)} %, {total} total) */}
-                <TableCell>{r.playerName}</TableCell>
+                <TableCell>
+                  {" "}
+                  <Link
+                    to="/players/$player"
+                    params={{ player: r.playerId }}
+                    className="underline"
+                  >
+                    {r.playerName}
+                  </Link>
+                </TableCell>
                 <TableCell>
                   <Tooltip>
                     <TooltipTrigger>
-                      <span>{r.rating}</span>
+                      <span>{toElo(r.rating)}</span>
                     </TooltipTrigger>
                     <TooltipContent>
                       <div className="flex flex-col gap-2">
-                        <span>mu: {r.ratingR.mu}</span>
-                        <span>sigma: {r.ratingR.sigma}</span>
+                        <span>mu: {r.rating.mu}</span>
+                        <span>sigma: {r.rating.sigma}</span>
                       </div>
                     </TooltipContent>
                   </Tooltip>
