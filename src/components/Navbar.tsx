@@ -24,12 +24,12 @@ export function Navbar() {
           </NavigationMenuItem>
           <NavigationMenuItem>
             <Link to="/" className={navigationMenuTriggerStyle()}>
-              Recent games
+              Games
             </Link>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <Link to="/ratings" className={navigationMenuTriggerStyle()}>
-              Ratings
+            <Link to="/players" className={navigationMenuTriggerStyle()}>
+              Players
             </Link>
           </NavigationMenuItem>
           <NavigationMenuItem>

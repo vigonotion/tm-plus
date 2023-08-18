@@ -63,7 +63,7 @@ function Games() {
 
   return (
     <div>
-      <Headline>Recent games</Headline>
+      <Headline>Games</Headline>
 
       <div className="text-muted-foreground mb-8">
         A game is considered won if on the first place, or in a game with five

@@ -24,6 +24,7 @@ import { TooltipProvider } from "./components/ui/tooltip";
 import { Game } from "./components/pages/Game";
 import { Corporation } from "./components/pages/Corporation";
 import { EloSimulator } from "./components/pages/EloSimulator";
+import { Player } from "./components/pages/Player";
 
 // Create a root route
 const rootRoute = new RootRoute({
@@ -48,10 +49,10 @@ const gamesRoute = new Route({
   component: () => <Outlet />,
 });
 
-const ratingsRoute = new Route({
+const playersRoute = new Route({
   getParentRoute: () => rootRoute,
-  path: "/ratings",
-  component: Ratings,
+  path: "/players",
+  component: () => <Outlet />,
 });
 
 const corpRatesRoute = new Route({
@@ -78,6 +79,23 @@ const corpRoute = new Route({
   },
 });
 
+const playerIndexRoute = new Route({
+  getParentRoute: () => playersRoute,
+  path: "/",
+  component: Ratings,
+});
+
+const playerRoute = new Route({
+  getParentRoute: () => playersRoute,
+  path: "$player",
+  component: ({ useParams }) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const params = useParams();
+
+    return <Player player={params.player} key={params.player} />;
+  },
+});
+
 const gameRoute = new Route({
   getParentRoute: () => gamesRoute,
   path: "$game",
@@ -93,7 +111,7 @@ const gameRoute = new Route({
 // Create the route tree using your routes
 const routeTree = rootRoute.addChildren([
   indexRoute,
-  ratingsRoute,
+  playersRoute.addChildren([playerRoute, playerIndexRoute]),
   eloSimRoute,
   corpRatesRoute.addChildren([corpRoute, corpIndexRoute]),
   gamesRoute.addChildren([gameRoute]),
