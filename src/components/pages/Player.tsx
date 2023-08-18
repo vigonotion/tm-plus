@@ -3,10 +3,20 @@ import React, { useMemo } from "react";
 import { FullLoading, Loading } from "../Loading";
 import { Headline } from "../Headline";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { isWin } from "@/utils";
+import { isWin, toElo } from "@/utils";
 import groupBy from "just-group-by";
 import { CorpTable } from "@/CorpRates";
 import { Link } from "@tanstack/react-router";
+import { useRatings } from "@/hooks/use-ratings";
+import {
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Area,
+  AreaChart,
+  ResponsiveContainer,
+} from "recharts";
 
 function Corps({ player }: { player: string }) {
   const { data } = usePlacements({
@@ -61,6 +71,53 @@ function Corps({ player }: { player: string }) {
   );
 }
 
+function EloChart({ player }: { player: string }) {
+  const { ratings, isLoading } = useRatings();
+
+  if (ratings === undefined || isLoading)
+    return (
+      <div>
+        <FullLoading />
+      </div>
+    );
+
+  const playerRatings = ratings.find((x) => x.playerId == player)!.ratings;
+  const chartData = playerRatings.map((x) => ({ elo: toElo(x) }));
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Elo</CardTitle>
+      </CardHeader>
+      <CardContent className="h-[300px]">
+        <ResponsiveContainer>
+          <AreaChart data={chartData}>
+            <defs>
+              <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#f97316" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="#f97316" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <XAxis dataKey="name" />
+            <YAxis />
+            <CartesianGrid strokeDasharray="3 3" />
+            <Tooltip />
+            <Area
+              type="monotone"
+              dataKey="elo"
+              stroke="#f97316"
+              fillOpacity={1}
+              fill="url(#colorUv)"
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      </CardContent>
+    </Card>
+  );
+
+  return <div>{toElo(ratings.find((x) => x.playerId == player)!.rating)}</div>;
+}
+
 export function Player({ player }: { player: string }) {
   const { data } = usePlayer(player, {});
 
@@ -73,12 +130,15 @@ export function Player({ player }: { player: string }) {
 
   return (
     <div>
-      <Headline className="text-sm uppercase text-muted-foreground mb-1 inline-block">
-        <Link to="/players">Players</Link>
-      </Headline>
-      <Headline>{data.name}</Headline>
+      <div className="mb-8">
+        <Headline className="text-sm uppercase text-muted-foreground mb-1 inline-block">
+          <Link to="/players">Players</Link>
+        </Headline>
+        <Headline>{data.name}</Headline>
+      </div>
 
-      <div className="grid">
+      <div className="grid grid-cols-2 gap-4">
+        <EloChart player={player} />
         <Corps player={player} />
       </div>
     </div>

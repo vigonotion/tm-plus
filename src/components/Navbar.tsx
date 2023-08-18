@@ -34,7 +34,7 @@ export function Navbar() {
           </NavigationMenuItem>
           <NavigationMenuItem>
             <Link to="/corporations" className={navigationMenuTriggerStyle()}>
-              Corp ratings
+              Corporations
             </Link>
           </NavigationMenuItem>
           <NavigationMenuItem>

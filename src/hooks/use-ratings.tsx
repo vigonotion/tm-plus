@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { rate, rating, ordinal } from "openskill";
 import groupBy from "just-group-by";
 import { usePlacements } from "./use-placements";
-import { isWin } from "../utils";
+import { isWin, toElo } from "../utils";
 import { log } from "console";
 
 export function useRatings() {
@@ -23,6 +23,7 @@ export function useRatings() {
           playerId: p[1][0].player,
           playerName: p[1][0].expand?.player?.name,
           rating: rating(),
+          ratings: [rating()],
           wins: 0,
           losses: 0,
         },
@@ -51,19 +52,13 @@ export function useRatings() {
         }
 
         players[p.player].rating = R[i][0];
+        players[p.player].ratings.push(R[i][0]);
       });
     });
 
-    return Object.values(players)
-      .map((p) => {
-        console.log(p.rating);
-        return {
-          ...p,
-          rating: Math.floor(1500 + ordinal(p.rating) * 10),
-          ratingR: p.rating,
-        };
-      })
-      .sort((a, b) => b.rating - a.rating);
+    return Object.values(players).sort(
+      (a, b) => ordinal(b.rating) - ordinal(a.rating)
+    );
   }, [data, isLoading]);
 
   return { ratings, isLoading, ...other };

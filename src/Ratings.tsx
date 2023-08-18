@@ -26,6 +26,7 @@ import {
   TooltipTrigger,
 } from "./components/ui/tooltip";
 import { Link } from "@tanstack/react-router";
+import { toElo } from "./utils";
 
 function GroupSelector({
   onChange,
@@ -114,12 +115,12 @@ function Ratings() {
                 <TableCell>
                   <Tooltip>
                     <TooltipTrigger>
-                      <span>{r.rating}</span>
+                      <span>{toElo(r.rating)}</span>
                     </TooltipTrigger>
                     <TooltipContent>
                       <div className="flex flex-col gap-2">
-                        <span>mu: {r.ratingR.mu}</span>
-                        <span>sigma: {r.ratingR.sigma}</span>
+                        <span>mu: {r.rating.mu}</span>
+                        <span>sigma: {r.rating.sigma}</span>
                       </div>
                     </TooltipContent>
                   </Tooltip>
