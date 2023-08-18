@@ -30,7 +30,12 @@ export function Game({ game }: { game: string }) {
 
   return (
     <div>
-      <Headline>Game insights</Headline>
+      <div className="mb-8">
+        <Headline className="text-sm uppercase text-muted-foreground mb-1 inline-block">
+          <Link to="/">Games</Link>
+        </Headline>
+        <Headline>{data.date.split(" ")[0]}</Headline>
+      </div>
 
       <div className="flex flex-col gap-2 mb-8">
         <div className="flex items-center gap-1">
@@ -70,7 +75,16 @@ export function Game({ game }: { game: string }) {
                     ) && <Trophy className="text-yellow-500 ml-2" size={14} />}
                   </span>
                 </TableCell>
-                <TableCell>{p.expand?.player?.name}</TableCell>
+                <TableCell>
+                  {" "}
+                  <Link
+                    to="/players/$player"
+                    params={{ player: p.player }}
+                    className="underline"
+                  >
+                    {p.expand?.player?.name}
+                  </Link>
+                </TableCell>
                 <TableCell>{p.score}</TableCell>
                 <TableCell className="capitalize">
                   {p.corp && (

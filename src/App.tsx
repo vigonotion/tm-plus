@@ -117,7 +117,13 @@ const routeTree = rootRoute.addChildren([
   gamesRoute.addChildren([gameRoute]),
 ]);
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 10000,
+    },
+  },
+});
 
 // Create the router using your route tree
 const router = new Router({
