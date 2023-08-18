@@ -1,0 +1,23 @@
+o ocean
+g greenery
+c city
+x other
+0 empty
+
+r red
+g green
+b blue
+y yellow 
+k black
+
+    o0gbgkgk00
+   00cbgkck0000
+  00gbgkxycycgxg
+ gyckgbcygyoooo00
+gkgk00gygyoooooo00
+ ck00cy00cgoooo00
+  oo0000gk000000
+   00cgxk0000xg
+    00ggcg0000
+
+o0gbgkgk0000cbgkck000000gbgkxycycgxggyckgbcygyoooo00gkgk00gygyoooooo00ck00cy00cgoooo00oo0000gk00000000cgxk0000xg00ggcg0000
