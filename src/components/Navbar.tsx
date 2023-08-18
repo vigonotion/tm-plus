@@ -42,10 +42,10 @@ export function Navbar() {
               Elo simulator
             </Link>
           </NavigationMenuItem>
-          <NavigationMenuItem className="pointer-events-none opacity-40">
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Explore data
-            </NavigationMenuLink>
+          <NavigationMenuItem>
+            <Link to="/about" className={navigationMenuTriggerStyle()}>
+              About
+            </Link>
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>

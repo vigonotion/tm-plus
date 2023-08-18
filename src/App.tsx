@@ -26,6 +26,7 @@ import { Corporation } from "./components/pages/Corporation";
 import { EloSimulator } from "./components/pages/EloSimulator";
 import { Player } from "./components/pages/Player";
 import { MapPage } from "./components/pages/Map";
+import { About } from "./components/pages/About";
 
 // Create a root route
 const rootRoute = new RootRoute({
@@ -42,6 +43,12 @@ const eloSimRoute = new Route({
   getParentRoute: () => rootRoute,
   path: "elo-sim",
   component: EloSimulator,
+});
+
+const aboutRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: "about",
+  component: About,
 });
 
 const gamesRoute = new Route({
@@ -137,6 +144,7 @@ const routeTree = rootRoute.addChildren([
   indexRoute,
   playersRoute.addChildren([playerRoute, playerIndexRoute]),
   eloSimRoute,
+  aboutRoute,
   mapsRoute.addChildren([mapRoute, mapIndexRoute]),
   corpRatesRoute.addChildren([corpRoute, corpIndexRoute]),
   gamesRoute.addChildren([gameRoute]),
