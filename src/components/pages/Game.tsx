@@ -222,33 +222,34 @@ export function Game({ game }: { game: string }) {
 
   return (
     <div>
-      <div className="mb-8">
-        <Headline className="text-sm uppercase text-muted-foreground mb-1 inline-block">
-          <Link to="/">Games</Link>
-        </Headline>
-        <Headline>{data.date.split(" ")[0]}</Headline>
-      </div>
-
-      <div className="flex flex-col gap-2 mb-8">
-        <div className="flex items-center gap-1">
-          <Calendar size={16} />
-          <span>{data.date.split(" ")[0]}</span>
+      <div className="flex justify-between flex-col md:flex-row">
+        <div>
+          <div className="mb-8">
+            <Headline className="text-sm uppercase text-muted-foreground mb-1 inline-block">
+              <Link to="/">Games</Link>
+            </Headline>
+            <Headline>{data.date.split(" ")[0]}</Headline>
+          </div>
+          <div className="flex flex-col gap-2 mb-8">
+            <div className="flex items-center gap-1">
+              <Calendar size={16} />
+              <span>{data.date.split(" ")[0]}</span>
+            </div>
+            {!!(data.duration_in_minutes && data.duration_in_minutes > 0) && (
+              <div className="flex items-center gap-1">
+                <Clock size={16} />
+                <span>{data.duration_in_minutes} min</span>
+              </div>
+            )}
+            <MapCell map={data.map} />
+          </div>
         </div>
-        {!!(data.duration_in_minutes && data.duration_in_minutes > 0) && (
-          <div className="flex items-center gap-1">
-            <Clock size={16} />
-            <span>{data.duration_in_minutes} min</span>
+        {map_state && (
+          <div className="mb-8">
+            <MapView hovered={hovered} map={map_state} />
           </div>
         )}
-
-        <MapCell map={data.map} />
       </div>
-
-      {map_state && (
-        <div className="mb-8">
-          <MapView hovered={hovered} map={map_state} />
-        </div>
-      )}
 
       <Table onPointerLeave={() => setHovered(undefined)}>
         <TableHeader>
