@@ -17,6 +17,7 @@ import {
   AreaChart,
   ResponsiveContainer,
 } from "recharts";
+import { ArrowDownLeft, ArrowDownRight, ArrowUpRight } from "lucide-react";
 
 function Corps({ player }: { player: string }) {
   const { data } = usePlacements({
@@ -85,29 +86,51 @@ function EloChart({ player }: { player: string }) {
   const chartData = playerRatings.map((x) => ({ elo: toElo(x) }));
 
   return (
-    <Card>
+    <Card className="flex flex-col">
       <CardHeader>
         <CardTitle>Elo</CardTitle>
       </CardHeader>
-      <CardContent className="h-[300px]">
-        <ResponsiveContainer>
-          <AreaChart data={chartData}>
+      <CardContent className="p-0 flex flex-col space-between grow gap-8">
+        <div className="px-6 flex gap-2 items-center">
+          <div className="text-4xl">
+            {toElo(playerRatings[playerRatings.length - 1])}
+          </div>
+          {playerRatings.length > 1 && (
+            <div>
+              {toElo(playerRatings[playerRatings.length - 2]) <
+              toElo(playerRatings[playerRatings.length - 1]) ? (
+                <ArrowUpRight size={36} className="text-green-700" />
+              ) : (
+                <ArrowDownRight size={36} className="text-red-700" />
+              )}
+            </div>
+          )}
+        </div>
+        <ResponsiveContainer className={"grow"}>
+          <AreaChart
+            data={chartData}
+            margin={{
+              top: 5,
+              right: 0,
+              left: 0,
+              bottom: 5,
+            }}
+          >
             <defs>
               <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#f97316" stopOpacity={0.8} />
                 <stop offset="95%" stopColor="#f97316" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <XAxis dataKey="name" />
-            <YAxis />
-            <CartesianGrid strokeDasharray="3 3" />
             <Tooltip />
             <Area
               type="monotone"
               dataKey="elo"
               stroke="#f97316"
-              fillOpacity={1}
+              strokeWidth={2}
+              fillOpacity={0.5}
               fill="url(#colorUv)"
+              dot={undefined}
             />
           </AreaChart>
         </ResponsiveContainer>
