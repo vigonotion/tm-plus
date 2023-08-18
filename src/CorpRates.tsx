@@ -18,6 +18,7 @@ import {
 } from "./components/ui/tooltip";
 import { Info } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { FullLoading } from "./components/Loading";
 
 function CorpRates() {
   const { isLoading, data } = usePlacements({
@@ -53,6 +54,10 @@ function CorpRates() {
 
     return stats;
   }, [data]);
+
+  if (isLoading) {
+    return <FullLoading />;
+  }
 
   return (
     <div>

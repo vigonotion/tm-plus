@@ -10,9 +10,10 @@ import {
   TableCell,
 } from "../ui/table";
 import { MapCell } from "@/Games";
-import { Calendar, Trophy } from "lucide-react";
+import { Calendar, Clock, Trophy } from "lucide-react";
 import { isWin } from "@/utils";
 import { Link } from "@tanstack/react-router";
+import { FullLoading, Loading } from "../Loading";
 import {
   GridGenerator,
   Hex,
@@ -48,7 +49,12 @@ export function Game({ game }: { game: string }) {
     expand: "placements(game),placements(game).player,placements(game).corp",
   });
 
-  if (data === undefined) return <div>Loading...</div>;
+  if (data === undefined)
+    return (
+      <div>
+        <FullLoading />
+      </div>
+    );
 
   return (
     <div>
@@ -59,6 +65,13 @@ export function Game({ game }: { game: string }) {
           <Calendar size={16} />
           <span>{data.date.split(" ")[0]}</span>
         </div>
+        {!!(data.duration_in_minutes && data.duration_in_minutes > 0) && (
+          <div className="flex items-center gap-1">
+            <Clock size={16} />
+            <span>{data.duration_in_minutes} min</span>
+          </div>
+        )}
+
         <MapCell map={data.map} />
       </div>
 

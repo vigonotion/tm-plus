@@ -1,4 +1,6 @@
 import { type ClassValue, clsx } from "clsx"
+import { ordinal } from "openskill";
+import { Options, Rating } from "openskill/dist/types";
 import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {
@@ -11,4 +13,8 @@ export function isWin(placement: number, players: number) {
   }
 
   return placement == 1;
+}
+
+export function toElo(rating: Rating) {
+  return Math.floor(1500 + ordinal(rating) * 10);
 }

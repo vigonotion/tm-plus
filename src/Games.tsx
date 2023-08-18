@@ -12,6 +12,7 @@ import { Circle, Snowflake, Leaf, Trophy } from "lucide-react";
 import { isWin } from "./utils";
 import { Placement } from "./client/placements";
 import { Link } from "@tanstack/react-router";
+import { FullLoading } from "./components/Loading";
 
 function Placements({ placements }: { placements: Placement[] }) {
   return (
@@ -53,12 +54,21 @@ function Games() {
   });
 
   if (isLoading || !data) {
-    return <div>loading...</div>;
+    return (
+      <div>
+        <FullLoading />
+      </div>
+    );
   }
 
   return (
     <div>
       <Headline>Recent games</Headline>
+
+      <div className="text-muted-foreground mb-8">
+        A game is considered won if on the first place, or in a game with five
+        players, on the first or second place.
+      </div>
 
       <Table>
         <TableHeader>

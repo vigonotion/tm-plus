@@ -23,6 +23,7 @@ import {
 import { TooltipProvider } from "./components/ui/tooltip";
 import { Game } from "./components/pages/Game";
 import { Corporation } from "./components/pages/Corporation";
+import { EloSimulator } from "./components/pages/EloSimulator";
 
 // Create a root route
 const rootRoute = new RootRoute({
@@ -33,6 +34,12 @@ const indexRoute = new Route({
   getParentRoute: () => rootRoute,
   path: "/",
   component: Games,
+});
+
+const eloSimRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: "elo-sim",
+  component: EloSimulator,
 });
 
 const gamesRoute = new Route({
@@ -88,6 +95,7 @@ const gameRoute = new Route({
 const routeTree = rootRoute.addChildren([
   indexRoute,
   ratingsRoute,
+  eloSimRoute,
   corpRatesRoute.addChildren([corpRoute, corpIndexRoute]),
   gamesRoute.addChildren([gameRoute]),
 ]);
