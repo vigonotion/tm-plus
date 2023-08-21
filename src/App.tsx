@@ -29,9 +29,9 @@ import { Player } from "./components/pages/Player";
 import { MapPage } from "./components/pages/Map";
 import { About } from "./components/pages/About";
 import { MapTool } from "./components/pages/MapTool";
-import { getOneQueryData } from "./hooks/use-placements";
+import { getAllQueryData, getOneQueryData } from "./hooks/use-placements";
 import { Corporation as CorporationResponse, Game } from "./conn";
-import { Player as PlayerResponse } from "./client/placements";
+import { Placement, Player as PlayerResponse } from "./client/placements";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -52,6 +52,14 @@ const rootRoute = routerContext.createRootRoute({
 
 const indexRoute = new Route({
   getParentRoute: () => rootRoute,
+  getContext: () =>
+    getAllQueryData<Game>("games", {
+      sort: "-date",
+      expand: "placements(game),placements(game).player",
+    }),
+  loader: async ({ context: { queryClient }, routeContext: queryOptions }) => {
+    await queryClient.ensureQueryData(queryOptions);
+  },
   path: "/",
   component: Games,
 });
@@ -82,12 +90,27 @@ const gamesRoute = new Route({
 
 const playersRoute = new Route({
   getParentRoute: () => rootRoute,
+  getContext: () =>
+    getAllQueryData<Placement>("placements", {
+      sort: "placement",
+      expand: "player,game",
+    }),
+  loader: async ({ context: { queryClient }, routeContext: queryOptions }) => {
+    await queryClient.ensureQueryData(queryOptions);
+  },
   path: "/players",
   component: () => <Outlet />,
 });
 
 const corpRatesRoute = new Route({
   getParentRoute: () => rootRoute,
+  getContext: () =>
+    getAllQueryData<Placement>("placements", {
+      expand: "corp",
+    }),
+  loader: async ({ context: { queryClient }, routeContext: queryOptions }) => {
+    await queryClient.ensureQueryData(queryOptions);
+  },
   path: "corporations",
   component: () => <Outlet />,
 });

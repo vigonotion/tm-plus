@@ -54,6 +54,26 @@ export function getOneQueryData<TData>(
   return { queryKey: key, queryFn, options };
 }
 
+export function getAllQueryData<TData>(
+  collection: string,
+  params: RecordQueryParams,
+  options?: Omit<UseQueryOptions<TData, never, TData>, "queryKey" | "queryFn">
+): {
+  queryKey: QueryKey;
+  queryFn: QueryFunction<TData[]>;
+  options?: Omit<UseQueryOptions<TData, never, TData>, "queryKey" | "queryFn">;
+} {
+  const key = [collection, params];
+
+  const queryFn = () =>
+    conn.collection(collection).getFullList<TData>({
+      ...params,
+      $autoCancel: false,
+    });
+
+  return { queryKey: key, queryFn, options };
+}
+
 function useGetOne<TData>(
   collection: string,
   id: string,
