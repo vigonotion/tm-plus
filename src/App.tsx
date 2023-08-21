@@ -31,6 +31,7 @@ import { About } from "./components/pages/About";
 import { MapTool } from "./components/pages/MapTool";
 import { getOneQueryData } from "./hooks/use-placements";
 import { Game } from "./conn";
+import { Player as PlayerResponse } from "./client/placements";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -119,11 +120,16 @@ const playerIndexRoute = new Route({
 const playerRoute = new Route({
   getParentRoute: () => playersRoute,
   path: "$player",
+  getContext: ({ params: { player } }) =>
+    getOneQueryData<PlayerResponse>("players", player, {}),
+  loader: async ({ context: { queryClient }, routeContext: queryOptions }) => {
+    await queryClient.ensureQueryData(queryOptions);
+  },
   component: ({ useParams }) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const params = useParams();
 
-    return <Player player={params.player} key={params.player} />;
+    return <Player key={params.player} player={params.player} />;
   },
 });
 

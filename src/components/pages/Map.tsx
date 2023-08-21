@@ -11,7 +11,7 @@ import {
 import { RecentGamesTable } from "@/Games";
 import { useGames } from "@/hooks/use-placements";
 import { FullLoading } from "../Loading";
-import { Measure } from "./Player";
+import { Measure } from "./Measure";
 
 export function MapPage({ map }: { map: string }) {
   const { isLoading, data } = useGames({

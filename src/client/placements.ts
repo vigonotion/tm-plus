@@ -17,5 +17,6 @@ export type Placement = {
 }
 
 export type Player = {
+    id: string,
     name: string
 }
