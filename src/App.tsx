@@ -191,6 +191,15 @@ const mapIndexRoute = new Route({
 const mapRoute = new Route({
   getParentRoute: () => mapsRoute,
   path: "$map",
+  getContext: ({ params: { map } }) =>
+    getAllQueryData<Game>("games", {
+      sort: "-date",
+      expand: "placements(game),placements(game).player",
+      filter: `map = '${map}'`,
+    }),
+  loader: async ({ context: { queryClient }, routeContext: queryOptions }) => {
+    await queryClient.ensureQueryData(queryOptions);
+  },
   component: ({ useParams }) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const params = useParams();
