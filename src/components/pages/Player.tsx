@@ -22,6 +22,7 @@ export function Player({ player }: { player: string }) {
   const { data } = useQuery(queryKey, queryFn, options);
 
   const { ratings, isLoading } = useRatings();
+  
   const { data: placements } = usePlacements({
     filter: `player = '${data?.id}'`,
     expand: "game",
