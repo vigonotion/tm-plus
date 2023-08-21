@@ -1,4 +1,9 @@
-import { UseQueryOptions, useQuery } from "@tanstack/react-query";
+import {
+  QueryFunction,
+  QueryKey,
+  UseQueryOptions,
+  useQuery,
+} from "@tanstack/react-query";
 import { Placement, Player } from "../client/placements";
 import { Corporation, Game, Group, conn } from "../conn";
 import { RecordFullListQueryParams, RecordQueryParams } from "pocketbase";
@@ -28,24 +33,34 @@ function useGetFullList<TParams, TData>(
   return query;
 }
 
-function useGetOne<TParams, TData>(
+export function getOneQueryData<TData>(
   collection: string,
   id: string,
-  params: TParams,
+  params: RecordQueryParams,
+  options?: Omit<UseQueryOptions<TData, never, TData>, "queryKey" | "queryFn">
+): {
+  queryKey: QueryKey;
+  queryFn: QueryFunction<TData>;
+  options?: Omit<UseQueryOptions<TData, never, TData>, "queryKey" | "queryFn">;
+} {
+  const key = [collection, id, params];
+
+  const queryFn = () =>
+    conn.collection(collection).getOne<TData>(id, {
+      ...params,
+      $autoCancel: false,
+    });
+
+  return { queryKey: key, queryFn, options };
+}
+
+function useGetOne<TData>(
+  collection: string,
+  id: string,
+  params: RecordQueryParams,
   options?: Omit<UseQueryOptions<TData, never, TData>, "queryKey" | "queryFn">
 ) {
-  const key = [collection, id, params];
-  const cancelKey = useId();
-
-  const query = useQuery(
-    key,
-    () =>
-      conn.collection(collection).getOne<TData>(id, {
-        ...params,
-        $cancelKey: cancelKey,
-      }),
-    options
-  );
+  const query = useQuery(getOneQueryData(collection, id, params, options));
 
   return query;
 }
@@ -67,12 +82,20 @@ export function useGames(
   return useGetFullList("games", params, options);
 }
 
-export function useGame(
+// export function useGame(
+//   id: string,
+//   params: RecordQueryParams,
+//   options?: Omit<UseQueryOptions<Game, never, Game>, "queryKey" | "queryFn">
+// ) {
+//   return useGetOne("games", id, params, options);
+// }
+
+export function useGameQueryOptions(
   id: string,
   params: RecordQueryParams,
   options?: Omit<UseQueryOptions<Game, never, Game>, "queryKey" | "queryFn">
 ) {
-  return useGetOne("games", id, params, options);
+  return getOneQueryData("games", id, params, options);
 }
 
 export function usePlayers(

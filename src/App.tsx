@@ -19,18 +19,33 @@ import {
   Router,
   Route,
   RootRoute,
+  RouterContext,
 } from "@tanstack/react-router";
 import { TooltipProvider } from "./components/ui/tooltip";
-import { Game } from "./components/pages/Game";
+import { Game as GamePage } from "./components/pages/Game";
 import { Corporation } from "./components/pages/Corporation";
 import { EloSimulator } from "./components/pages/EloSimulator";
 import { Player } from "./components/pages/Player";
 import { MapPage } from "./components/pages/Map";
 import { About } from "./components/pages/About";
 import { MapTool } from "./components/pages/MapTool";
+import { getOneQueryData } from "./hooks/use-placements";
+import { Game } from "./conn";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 10000,
+    },
+  },
+});
+
+const routerContext = new RouterContext<{
+  queryClient: typeof queryClient;
+}>();
 
 // Create a root route
-const rootRoute = new RootRoute({
+const rootRoute = routerContext.createRootRoute({
   component: Root,
 });
 
@@ -86,7 +101,7 @@ const corpRoute = new Route({
   getParentRoute: () => corpRatesRoute,
   path: "$corp",
   key: ({ params }) => params.corp,
-  
+
   component: ({ useParams }) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const params = useParams();
@@ -116,12 +131,14 @@ const gameRoute = new Route({
   getParentRoute: () => gamesRoute,
   path: "$game",
   key: ({ params }) => params.game,
-  component: ({ useParams }) => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const params = useParams();
-
-    return <Game game={params.game} key={params.game} />;
+  getContext: ({ params: { game } }) =>
+    getOneQueryData<Game>("games", game, {
+      expand: "placements(game),placements(game).player,placements(game).corp",
+    }),
+  loader: async ({ context: { queryClient }, routeContext: queryOptions }) => {
+    await queryClient.ensureQueryData(queryOptions);
   },
+  component: () => <GamePage />,
 });
 
 const mapsRoute = new Route({
@@ -156,22 +173,14 @@ const routeTree = rootRoute.addChildren([
   mapsRoute.addChildren([mapRoute, mapIndexRoute]),
   corpRatesRoute.addChildren([corpRoute, corpIndexRoute]),
   gamesRoute.addChildren([gameRoute]),
-  mapToolRoute
+  mapToolRoute,
 ]);
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 10000,
-    },
-  },
-});
 
 // Create the router using your route tree
 const router = new Router({
   routeTree,
   defaultPreload: "intent",
-  context: queryClient,
+  context: { queryClient },
 });
 
 // Register your router for maximum type safety

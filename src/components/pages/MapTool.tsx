@@ -3,7 +3,7 @@ import { Headline } from "../Headline";
 import { Input } from "../ui/input";
 import { demoMap, parse } from "@/mapdata";
 import { Button } from "../ui/button";
-import { MapView } from "./Game";
+import { MapView } from "./MapView";
 
 const INITIAL =
   "oogbgkgk0000cbgkck000000gbgkxycycgxggyckgbcygyoooo00gkgk00gygyoooooo00ck00cy00cgoooo00oo0000gk00000000cgxk0000xg00ggcg0000";
