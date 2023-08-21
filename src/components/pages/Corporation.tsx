@@ -1,14 +1,16 @@
 import React from "react";
 import { Headline } from "../Headline";
 import { useCorporation } from "@/hooks/use-placements";
-import { Link } from "@tanstack/react-router";
+import { Link, useRouteContext } from "@tanstack/react-router";
 import { FullLoading } from "../Loading";
 import { RecentGamesTables } from "./RecentGamesTables";
+import { useQuery } from "@tanstack/react-query";
 
 export function Corporation({ corp }: { corp: string }) {
-  const { data } = useCorporation(corp, {
-    expand: "placements(corp).game",
+  const { queryKey, queryFn, options } = useRouteContext({
+    from: "/corporations/$corp",
   });
+  const { data } = useQuery(queryKey, queryFn, options);
 
   if (data === undefined)
     return (

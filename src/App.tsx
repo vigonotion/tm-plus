@@ -30,7 +30,7 @@ import { MapPage } from "./components/pages/Map";
 import { About } from "./components/pages/About";
 import { MapTool } from "./components/pages/MapTool";
 import { getOneQueryData } from "./hooks/use-placements";
-import { Game } from "./conn";
+import { Corporation as CorporationResponse, Game } from "./conn";
 import { Player as PlayerResponse } from "./client/placements";
 
 const queryClient = new QueryClient({
@@ -102,7 +102,13 @@ const corpRoute = new Route({
   getParentRoute: () => corpRatesRoute,
   path: "$corp",
   key: ({ params }) => params.corp,
-
+  getContext: ({ params: { corp } }) =>
+    getOneQueryData<CorporationResponse>("corporations", corp, {
+      expand: "placements(corp).game",
+    }),
+  loader: async ({ context: { queryClient }, routeContext: queryOptions }) => {
+    await queryClient.ensureQueryData(queryOptions);
+  },
   component: ({ useParams }) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const params = useParams();
