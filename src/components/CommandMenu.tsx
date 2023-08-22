@@ -21,7 +21,7 @@ export function CommandMenu() {
   const [open, setOpen] = useState(true);
 
   const [rawSearch, setSearch] = useState("");
-  const search = useDebounce(rawSearch, 300);
+  const search = useDebounce(rawSearch, 100);
 
   const { data: players, isLoading: playersLoading } = usePlayers(
     {
@@ -30,6 +30,7 @@ export function CommandMenu() {
     },
     {
       enabled: search !== "",
+      keepPreviousData: true,
     }
   );
 
@@ -40,6 +41,7 @@ export function CommandMenu() {
     },
     {
       enabled: search !== "",
+      keepPreviousData: true,
     }
   );
 
@@ -66,13 +68,13 @@ export function CommandMenu() {
         placeholder="Search for players, corporations or games..."
         onValueChange={setSearch}
       />
-      {loading && (
+      {/* {loading && (
         <CommandLoading>
           <div className="h-24 flex items-center justify-center">
             <Loading />
           </div>
         </CommandLoading>
-      )}
+      )} */}
       <CommandList>
         <CommandEmpty>
           {loading ? "Loading..." : "No results found."}
@@ -101,6 +103,23 @@ export function CommandMenu() {
             }}
           >
             Corporations
+          </CommandItem>
+
+          <CommandItem
+            onSelect={() => {
+              navigate({ to: "/elo-sim" });
+              setOpen(false);
+            }}
+          >
+            Elo simulator
+          </CommandItem>
+          <CommandItem
+            onSelect={() => {
+              navigate({ to: "/mapTool" });
+              setOpen(false);
+            }}
+          >
+            Map tool
           </CommandItem>
         </CommandGroup>
 
