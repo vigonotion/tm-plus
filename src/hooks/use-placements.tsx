@@ -138,6 +138,16 @@ export function useGroups(
   return useGetFullList("groups", params, options);
 }
 
+export function useCorporations(
+  params: RecordFullListQueryParams,
+  options?: Omit<
+    UseQueryOptions<Group[], never, Group[]>,
+    "queryKey" | "queryFn"
+  >
+) {
+  return useGetFullList("corporations", params, options);
+}
+
 export function useCorporation(
   id: string,
   params: RecordQueryParams,

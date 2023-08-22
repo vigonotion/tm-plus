@@ -32,6 +32,7 @@ import { MapTool } from "./components/pages/MapTool";
 import { getAllQueryData, getOneQueryData } from "./hooks/use-placements";
 import { Corporation as CorporationResponse, Game } from "./conn";
 import { Placement, Player as PlayerResponse } from "./client/placements";
+import { CommandMenu } from "./components/CommandMenu";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -240,6 +241,7 @@ function Root() {
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <TooltipProvider delayDuration={200}>
           <QueryClientProvider client={queryClient}>
+            <CommandMenu />
             <Navbar />
             <Content>
               <Outlet />
