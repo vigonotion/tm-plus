@@ -1,5 +1,5 @@
 import PocketBase from "pocketbase";
-import { Placement } from "./client/placements";
+import { Placement, Player } from "./client/placements";
 
 export const conn = new PocketBase("https://tm-plus-data.vigonotion.com");
 
@@ -14,8 +14,44 @@ export type Game = {
 
     expand?: {
         "placements(game)"?: Placement[]
+        "milestones_unlocked(game)"?: MilestoneUnlocked[],
+        "awards_unlocked(game)"?: AwardUnlocked[]
     }
 };
+
+export type Award = {
+    id: string;
+    name: string;
+}
+
+export type AwardUnlocked = {
+    id: string;
+    player: string;
+    winner: string[];
+    second: string[];
+
+    expand?: {
+        "award"?: Award,
+        "player"?: Player,
+        "winner"?: Player[],
+        "second"?: Player[]
+    }
+}
+
+export type Milestone = {
+    id: string;
+    name: string;
+}
+
+export type MilestoneUnlocked = {
+    id: string;
+    player: string;
+
+    expand?: {
+        "milestone"?: Milestone,
+        "player"?: Player
+    }
+}
 
 export type Corporation = {
     id: string;

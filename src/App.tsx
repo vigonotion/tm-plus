@@ -169,7 +169,8 @@ const gameRoute = new Route({
   key: ({ params }) => params.game,
   getContext: ({ params: { game } }) =>
     getOneQueryData<Game>("games", game, {
-      expand: "placements(game),placements(game).player,placements(game).corp",
+      expand:
+        "placements(game),placements(game).player,placements(game).corp,milestones_unlocked(game),milestones_unlocked(game).milestone,awards_unlocked(game),awards_unlocked(game).award",
     }),
   loader: async ({ context: { queryClient }, routeContext: queryOptions }) => {
     await queryClient.ensureQueryData(queryOptions);
