@@ -108,7 +108,7 @@ export function Game() {
       </div>
 
       <div className="grid gap-4 xl:grid-cols-2">
-        <Card className="col-span-2">
+        <Card className="xl:col-span-2">
           <CardHeader>
             <CardTitle>Final score</CardTitle>
           </CardHeader>
