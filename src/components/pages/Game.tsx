@@ -9,12 +9,12 @@ import {
   TableCell,
 } from "../ui/table";
 import { MapCell } from "@/Games";
-import { Calendar, Clock, Info, Trophy } from "lucide-react";
+import { Calendar, Clock, Hexagon, Info, Trophy } from "lucide-react";
 import { isWin } from "@/utils";
 import { Link, useRouteContext } from "@tanstack/react-router";
 import { FullLoading, Loading } from "../Loading";
 import { GridGenerator, Hex, HexUtils, Text } from "react-hexgrid";
-import { demoMap, parse } from "@/mapdata";
+import { Owner, demoMap, parse } from "@/mapdata";
 import { useMemo, useState } from "react";
 import { PlayerMarker } from "./PlayerMarker";
 import { MapView } from "./MapView";
@@ -22,6 +22,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Placement } from "@/client/placements";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { mapScore } from "@/utils/mapscore";
 
 export const hexagons: Hex[] = GridGenerator.hexagon(4).sort((a, b) => {
   if (a.r == b.r) {
@@ -53,6 +54,16 @@ function PlacementLink({ p }: { p: Placement }) {
   );
 }
 
+function colorToOwner(color: string) {
+  return {
+    red: Owner.Red,
+    green: Owner.Green,
+    blue: Owner.Blue,
+    yellow: Owner.Yellow,
+    black: Owner.Black,
+  }[color];
+}
+
 export function Game() {
   const { queryKey, queryFn, options } = useRouteContext({
     from: "/games/$game",
@@ -61,6 +72,11 @@ export function Game() {
 
   const map_state = useMemo(
     () => data?.map_state && parse(data.map_state),
+    [data?.map_state]
+  );
+
+  const map_score = useMemo(
+    () => data?.map_state && mapScore(parse(data.map_state)),
     [data?.map_state]
   );
 
@@ -76,6 +92,7 @@ export function Game() {
   const placements = data.expand?.["placements(game)"]?.sort(
     (a, b) => a.placement - b.placement
   );
+
   return (
     <div>
       <div className="flex justify-between flex-col md:flex-row">
@@ -123,39 +140,64 @@ export function Game() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {placements?.map((p) => (
-                  <TableRow
-                    key={p.player}
-                    onPointerEnter={() => setHovered(p.color)}
-                  >
-                    <TableCell>
-                      <span className="flex items-center">
-                        <span>{p.placement}.</span>
-                        {isWin(
-                          p.placement,
-                          data.expand?.["placements(game)"]?.length ?? 1
-                        ) && (
-                          <Trophy className="text-yellow-500 ml-2" size={14} />
+                {placements?.map((p) => {
+                  const owner = p.color && colorToOwner(p.color);
+
+                  return (
+                    <TableRow
+                      key={p.player}
+                      onPointerEnter={() => setHovered(p.color)}
+                    >
+                      <TableCell>
+                        <span className="flex items-center">
+                          <span>{p.placement}.</span>
+                          {isWin(
+                            p.placement,
+                            data.expand?.["placements(game)"]?.length ?? 1
+                          ) && (
+                            <Trophy
+                              className="text-yellow-500 ml-2"
+                              size={14}
+                            />
+                          )}
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        <PlacementLink p={p}></PlacementLink>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex gap-4">
+                          <span>{p.score}</span>
+
+                          {map_score && owner && (
+                            <>
+                              <span className="flex gap-2 items-center">
+                                <Hexagon size={16} />{" "}
+                                <span>{map_score[owner].cities}</span>
+                              </span>
+
+                              <span className="flex gap-2 items-center">
+                                <Hexagon size={16} className="text-green-700" />{" "}
+                                <span>{map_score[owner].greenery}</span>
+                              </span>
+                            </>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell className="capitalize">
+                        {p.corp && (
+                          <Link
+                            className="underline"
+                            to="/corporations/$corp"
+                            params={{ corp: p.corp }}
+                          >
+                            {p.expand?.corp?.name}
+                          </Link>
                         )}
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <PlacementLink p={p}></PlacementLink>
-                    </TableCell>
-                    <TableCell>{p.score}</TableCell>
-                    <TableCell className="capitalize">
-                      {p.corp && (
-                        <Link
-                          className="underline"
-                          to="/corporations/$corp"
-                          params={{ corp: p.corp }}
-                        >
-                          {p.expand?.corp?.name}
-                        </Link>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                ))}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           </CardContent>
