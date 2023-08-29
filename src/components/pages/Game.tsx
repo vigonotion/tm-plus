@@ -9,7 +9,15 @@ import {
   TableCell,
 } from "../ui/table";
 import { MapCell } from "@/Games";
-import { Calendar, Clock, Hexagon, Info, Trophy } from "lucide-react";
+import {
+  Award,
+  Calendar,
+  Clock,
+  Hexagon,
+  Info,
+  Rocket,
+  Trophy,
+} from "lucide-react";
 import { isWin } from "@/utils";
 import { Link, useRouteContext } from "@tanstack/react-router";
 import { FullLoading, Loading } from "../Loading";
@@ -181,6 +189,34 @@ export function Game() {
                                 <span>{map_score[owner].greenery}</span>
                               </span>
                             </>
+                          )}
+
+                          {data.expand?.["milestones_unlocked(game)"] && (
+                            <span className="flex gap-2 items-center">
+                              <Rocket size={16} className="text-yellow-700" />{" "}
+                              <span>
+                                {data.expand?.[
+                                  "milestones_unlocked(game)"
+                                ].filter((x) => x.player == p.player).length *
+                                  5}
+                              </span>
+                            </span>
+                          )}
+
+                          {data.expand?.["awards_unlocked(game)"] && (
+                            <span className="flex gap-2 items-center">
+                              <Award size={16} className="text-yellow-600" />{" "}
+                              <span>
+                                {data.expand?.["awards_unlocked(game)"].filter(
+                                  (x) => x.winner.includes(p.player)
+                                ).length *
+                                  5 +
+                                  data.expand?.["awards_unlocked(game)"].filter(
+                                    (x) => x.second.includes(p.player)
+                                  ).length *
+                                    2}
+                              </span>
+                            </span>
                           )}
                         </div>
                       </TableCell>
