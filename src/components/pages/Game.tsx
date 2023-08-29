@@ -33,6 +33,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Placement } from "@/client/placements";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { mapScore } from "@/utils/mapscore";
+import { ResponsiveContainer, Sankey } from "recharts";
 
 export const hexagons: Hex[] = GridGenerator.hexagon(4).sort((a, b) => {
   if (a.r == b.r) {
@@ -205,54 +206,87 @@ export function Game() {
                         <PlacementLink p={p}></PlacementLink>
                       </TableCell>
                       <TableCell>
-                        <div className="flex gap-4">
-                          <span>{p.score}</span>
-
-                          <span className="flex gap-2 items-center">
-                            <ArrowUpRightFromCircle
-                              size={16}
-                              className="text-orange-500"
-                            />
-                            <span>{scoreTw}</span>
-                          </span>
-
-                          {data.expand?.["awards_unlocked(game)"] && (
-                            <span className="flex gap-2 items-center">
-                              <Award size={16} className="text-yellow-600" />{" "}
-                              <span>{scoreAwards}</span>
-                            </span>
-                          )}
-
-                          {data.expand?.["milestones_unlocked(game)"] && (
-                            <span className="flex gap-2 items-center">
-                              <Rocket size={16} className="text-yellow-700" />{" "}
-                              <span>{scoreMile}</span>
-                            </span>
-                          )}
-
-                          {scoreCities >= 0 && scoreGreenery >= 0 && (
-                            <>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <div className="flex gap-4">
+                              <span>{p.score}</span>
                               <span className="flex gap-2 items-center">
-                                <Hexagon size={16} /> <span>{scoreCities}</span>
+                                <ArrowUpRightFromCircle
+                                  size={16}
+                                  className="text-orange-500"
+                                />
+                                <span>{scoreTw}</span>
                               </span>
-
-                              <span className="flex gap-2 items-center">
-                                <Hexagon size={16} className="text-green-700" />{" "}
-                                <span>{scoreGreenery}</span>
-                              </span>
-                            </>
-                          )}
-
-                          {scoreCards >= 0 && (
-                            <span className="flex gap-2 items-center">
-                              <RectangleVertical
-                                size={16}
-                                className="text-blue-500"
+                              {data.expand?.["awards_unlocked(game)"] && (
+                                <span className="flex gap-2 items-center">
+                                  <Award
+                                    size={16}
+                                    className="text-yellow-600"
+                                  />{" "}
+                                  <span>{scoreAwards}</span>
+                                </span>
+                              )}
+                              {data.expand?.["milestones_unlocked(game)"] && (
+                                <span className="flex gap-2 items-center">
+                                  <Rocket
+                                    size={16}
+                                    className="text-yellow-700"
+                                  />{" "}
+                                  <span>{scoreMile}</span>
+                                </span>
+                              )}
+                              {scoreCities >= 0 && scoreGreenery >= 0 && (
+                                <>
+                                  <span className="flex gap-2 items-center">
+                                    <Hexagon size={16} />{" "}
+                                    <span>{scoreCities}</span>
+                                  </span>
+                                  <span className="flex gap-2 items-center">
+                                    <Hexagon
+                                      size={16}
+                                      className="text-green-700"
+                                    />{" "}
+                                    <span>{scoreGreenery}</span>
+                                  </span>
+                                </>
+                              )}
+                              {scoreCards >= 0 && (
+                                <span className="flex gap-2 items-center">
+                                  <RectangleVertical
+                                    size={16}
+                                    className="text-blue-500"
+                                  />
+                                  <span>{scoreCards}</span>
+                                </span>
+                              )}
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <ResponsiveContainer width={600} height={400}>
+                              <Sankey
+                                nodeWidth={10}
+                                nodePadding={60}
+                                height={500}
+                                width={960}
+                                data={{
+                                  nodes: [
+                                    { name: "Visit" },
+                                    { name: "Direct-Favourite" },
+                                    { name: "Page-Click" },
+                                    { name: "Detail-Favourite" },
+                                    { name: "Lost" },
+                                  ],
+                                  links: [
+                                    { source: 0, target: 1, value: 3728.3 },
+                                    { source: 0, target: 2, value: 354170 },
+                                    { source: 2, target: 3, value: 291741 },
+                                    { source: 2, target: 4, value: 62429 },
+                                  ],
+                                }}
                               />
-                              <span>{scoreCards}</span>
-                            </span>
-                          )}
-                        </div>
+                            </ResponsiveContainer>
+                          </TooltipContent>
+                        </Tooltip>
                       </TableCell>
                       <TableCell className="capitalize">
                         {p.corp && (
