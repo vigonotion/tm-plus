@@ -34,6 +34,7 @@ import { Placement } from "@/client/placements";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { mapScore } from "@/utils/mapscore";
 import { ResponsiveContainer, Sankey } from "recharts";
+import { SankeyNode } from "recharts/types/util/types";
 
 export const hexagons: Hex[] = GridGenerator.hexagon(4).sort((a, b) => {
   if (a.r == b.r) {
@@ -73,6 +74,37 @@ function colorToOwner(color: string) {
     yellow: Owner.Yellow,
     black: Owner.Black,
   }[color];
+}
+
+const nameToColor: Record<string, string> = {
+  TW: "rgb(249, 115, 22)",
+  Awards: "rgb(202, 138, 4)",
+  Milestones: "rgb(202, 138, 4)",
+  "A+M": "rgb(249, 115, 22)",
+  Greeneries: "rgb(21, 128, 61)",
+  Cities: "rgb(250, 250, 249)",
+  "G+C": "rgb(249, 115, 22)",
+  Cards: "rgb(59, 130, 246)",
+  ALL: "rgb(249, 115, 22)",
+};
+
+function SankeyNodeC(
+  props: SankeyNode & {
+    width: number;
+    height: number;
+    payload: { name: string };
+  }
+) {
+  return props.payload.value > 0 ? (
+    <rect
+      x={props.x + 2}
+      y={props.y - 2}
+      width={props.width - 4}
+      height={props.height + 4}
+      fill={nameToColor[props.payload.name]} // colors[props.payload.depth % colors.length]
+      rx={2.5}
+    />
+  ) : null;
 }
 
 export function Game() {
@@ -183,6 +215,64 @@ export function Game() {
                     scoreMile -
                     scoreAwards;
 
+                  const scoreReady =
+                    (data.expand?.["milestones_unlocked(game)"] &&
+                      data.expand?.["awards_unlocked(game)"] &&
+                      scoreTw +
+                        scoreCities +
+                        scoreGreenery +
+                        scoreMile +
+                        scoreAwards +
+                        scoreCards ===
+                        p.score) ??
+                    false;
+
+                  const scorings = (
+                    <div className="flex gap-4">
+                      <span>{p.score}</span>
+                      {scoreTw > 0 && (
+                        <span className="flex gap-2 items-center">
+                          <ArrowUpRightFromCircle
+                            size={16}
+                            className="text-orange-500"
+                          />
+                          <span>{scoreTw}</span>
+                        </span>
+                      )}
+                      {data.expand?.["awards_unlocked(game)"] && (
+                        <span className="flex gap-2 items-center">
+                          <Award size={16} className="text-yellow-600" />{" "}
+                          <span>{scoreAwards}</span>
+                        </span>
+                      )}
+                      {data.expand?.["milestones_unlocked(game)"] && (
+                        <span className="flex gap-2 items-center">
+                          <Rocket size={16} className="text-yellow-700" />{" "}
+                          <span>{scoreMile}</span>
+                        </span>
+                      )}
+                      {scoreCities >= 0 && scoreGreenery >= 0 && (
+                        <>
+                          <span className="flex gap-2 items-center">
+                            <Hexagon size={16} /> <span>{scoreCities}</span>
+                          </span>
+                          <span className="flex gap-2 items-center">
+                            <Hexagon size={16} className="text-green-700" />{" "}
+                            <span>{scoreGreenery}</span>
+                          </span>
+                        </>
+                      )}
+                      {scoreCards >= 0 && scoreTw > 0 && (
+                        <span className="flex gap-2 items-center">
+                          <RectangleVertical
+                            size={16}
+                            className="text-blue-500"
+                          />
+                          <span>{scoreCards}</span>
+                        </span>
+                      )}
+                    </div>
+                  );
                   return (
                     <TableRow
                       key={p.player}
@@ -206,87 +296,66 @@ export function Game() {
                         <PlacementLink p={p}></PlacementLink>
                       </TableCell>
                       <TableCell>
-                        <Tooltip>
-                          <TooltipTrigger>
-                            <div className="flex gap-4">
-                              <span>{p.score}</span>
-                              <span className="flex gap-2 items-center">
-                                <ArrowUpRightFromCircle
-                                  size={16}
-                                  className="text-orange-500"
-                                />
-                                <span>{scoreTw}</span>
-                              </span>
-                              {data.expand?.["awards_unlocked(game)"] && (
-                                <span className="flex gap-2 items-center">
-                                  <Award
-                                    size={16}
-                                    className="text-yellow-600"
-                                  />{" "}
-                                  <span>{scoreAwards}</span>
-                                </span>
-                              )}
-                              {data.expand?.["milestones_unlocked(game)"] && (
-                                <span className="flex gap-2 items-center">
-                                  <Rocket
-                                    size={16}
-                                    className="text-yellow-700"
-                                  />{" "}
-                                  <span>{scoreMile}</span>
-                                </span>
-                              )}
-                              {scoreCities >= 0 && scoreGreenery >= 0 && (
-                                <>
-                                  <span className="flex gap-2 items-center">
-                                    <Hexagon size={16} />{" "}
-                                    <span>{scoreCities}</span>
-                                  </span>
-                                  <span className="flex gap-2 items-center">
-                                    <Hexagon
-                                      size={16}
-                                      className="text-green-700"
-                                    />{" "}
-                                    <span>{scoreGreenery}</span>
-                                  </span>
-                                </>
-                              )}
-                              {scoreCards >= 0 && (
-                                <span className="flex gap-2 items-center">
-                                  <RectangleVertical
-                                    size={16}
-                                    className="text-blue-500"
-                                  />
-                                  <span>{scoreCards}</span>
-                                </span>
-                              )}
-                            </div>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <ResponsiveContainer width={600} height={400}>
+                        {scoreReady ? (
+                          <Tooltip>
+                            <TooltipTrigger>{scorings}</TooltipTrigger>
+                            <TooltipContent>
                               <Sankey
                                 nodeWidth={10}
                                 nodePadding={60}
-                                height={500}
-                                width={960}
+                                height={400}
+                                width={600}
+                                sort={false}
+                                node={SankeyNodeC as unknown as SankeyNode}
                                 data={{
                                   nodes: [
-                                    { name: "Visit" },
-                                    { name: "Direct-Favourite" },
-                                    { name: "Page-Click" },
-                                    { name: "Detail-Favourite" },
-                                    { name: "Lost" },
+                                    { name: "TW" }, //0
+                                    { name: "Awards" }, //1
+                                    { name: "Milestones" }, //2
+                                    { name: "A+M" }, //3
+                                    { name: "Greeneries" }, //4
+                                    { name: "Cities" }, //5
+                                    { name: "G+C" }, //6
+                                    { name: "Cards" }, //7
+                                    { name: "ALL" }, //8
                                   ],
                                   links: [
-                                    { source: 0, target: 1, value: 3728.3 },
-                                    { source: 0, target: 2, value: 354170 },
-                                    { source: 2, target: 3, value: 291741 },
-                                    { source: 2, target: 4, value: 62429 },
-                                  ],
+                                    { source: 0, target: 8, value: scoreTw },
+                                    {
+                                      source: 1,
+                                      target: 3,
+                                      value: scoreAwards,
+                                    },
+                                    { source: 2, target: 3, value: scoreMile },
+                                    {
+                                      source: 3,
+                                      target: 8,
+                                      value: scoreAwards + scoreMile,
+                                    },
+                                    {
+                                      source: 4,
+                                      target: 6,
+                                      value: scoreGreenery,
+                                    },
+                                    {
+                                      source: 5,
+                                      target: 6,
+                                      value: scoreCities,
+                                    },
+                                    {
+                                      source: 6,
+                                      target: 8,
+                                      value: scoreCities + scoreGreenery,
+                                    },
+                                    { source: 7, target: 8, value: scoreCards },
+                                  ].filter((l) => l.value !== 0),
                                 }}
                               />
-                            </ResponsiveContainer>
-                          </TooltipContent>
-                        </Tooltip>
+                            </TooltipContent>
+                          </Tooltip>
+                        ) : (
+                          <>{scorings}</>
+                        )}
                       </TableCell>
                       <TableCell className="capitalize">
                         {p.corp && (
