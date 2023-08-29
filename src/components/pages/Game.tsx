@@ -10,6 +10,7 @@ import {
 } from "../ui/table";
 import { MapCell } from "@/Games";
 import {
+  ArrowUpRightFromCircle,
   Award,
   Calendar,
   Clock,
@@ -176,6 +177,16 @@ export function Game() {
                       <TableCell>
                         <div className="flex gap-4">
                           <span>{p.score}</span>
+
+                          {p.tw >= 20 && (
+                            <span className="flex gap-2 items-center">
+                              <ArrowUpRightFromCircle
+                                size={16}
+                                className="text-orange-500"
+                              />
+                              <span>{p.tw}</span>
+                            </span>
+                          )}
 
                           {map_score && owner && (
                             <>
