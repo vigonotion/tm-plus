@@ -18,7 +18,7 @@ import { useState, useEffect } from "react";
 import { Loading } from "./Loading";
 
 export function CommandMenu() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   const [rawSearch, setSearch] = useState("");
   const search = useDebounce(rawSearch, 100);
