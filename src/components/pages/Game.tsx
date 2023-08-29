@@ -9,7 +9,7 @@ import {
   TableCell,
 } from "../ui/table";
 import { MapCell } from "@/Games";
-import { Calendar, Clock, Trophy } from "lucide-react";
+import { Calendar, Clock, Info, Trophy } from "lucide-react";
 import { isWin } from "@/utils";
 import { Link, useRouteContext } from "@tanstack/react-router";
 import { FullLoading, Loading } from "../Loading";
@@ -21,6 +21,7 @@ import { MapView } from "./MapView";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Placement } from "@/client/placements";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 export const hexagons: Hex[] = GridGenerator.hexagon(4).sort((a, b) => {
   if (a.r == b.r) {
@@ -179,7 +180,26 @@ export function Game() {
                       const p = placements?.find((x) => x.player == mu.player);
                       return (
                         <TableRow key={mu.id}>
-                          <TableCell>{mu.expand?.milestone?.name}</TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              <span>{mu.expand?.milestone?.name}</span>
+
+                              {mu.expand?.milestone?.note && (
+                                <Tooltip>
+                                  <TooltipTrigger>
+                                    <Info size={16} className="text-gray-300" />
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <div
+                                      dangerouslySetInnerHTML={{
+                                        __html: mu.expand?.milestone?.note,
+                                      }}
+                                    ></div>
+                                  </TooltipContent>
+                                </Tooltip>
+                              )}
+                            </div>
+                          </TableCell>
                           <TableCell>
                             {p && <PlacementLink p={p}></PlacementLink>}
                           </TableCell>
@@ -205,8 +225,8 @@ export function Game() {
                     <TableRow>
                       <TableHead>Award</TableHead>
                       <TableHead>Unlocked by</TableHead>
-                      <TableHead>First place (5VP)</TableHead>
-                      <TableHead>Second place (2VP)</TableHead>
+                      <TableHead>First (5VP)</TableHead>
+                      <TableHead>Second (2VP)</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -221,7 +241,26 @@ export function Game() {
                       );
                       return (
                         <TableRow key={mu.id}>
-                          <TableCell>{mu.expand?.award?.name}</TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              <span>{mu.expand?.award?.name}</span>
+
+                              {mu.expand?.award?.note && (
+                                <Tooltip>
+                                  <TooltipTrigger>
+                                    <Info size={16} className="text-gray-300" />
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <div
+                                      dangerouslySetInnerHTML={{
+                                        __html: mu.expand?.award?.note,
+                                      }}
+                                    ></div>
+                                  </TooltipContent>
+                                </Tooltip>
+                              )}
+                            </div>
+                          </TableCell>
                           <TableCell>
                             {p && <PlacementLink p={p}></PlacementLink>}
                           </TableCell>

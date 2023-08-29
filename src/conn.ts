@@ -22,6 +22,7 @@ export type Game = {
 export type Award = {
     id: string;
     name: string;
+    note: string;
 }
 
 export type AwardUnlocked = {
@@ -41,6 +42,7 @@ export type AwardUnlocked = {
 export type Milestone = {
     id: string;
     name: string;
+    note: string;
 }
 
 export type MilestoneUnlocked = {
