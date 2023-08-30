@@ -92,7 +92,7 @@ function SankeyNodeC(
   props: SankeyNode & {
     width: number;
     height: number;
-    payload: { name: string };
+    payload: { name: string; value: number };
   }
 ) {
   return props.payload.value > 0 ? (
