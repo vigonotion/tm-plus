@@ -18,7 +18,9 @@ import { Game } from "./conn";
 function Placements({ placements }: { placements: Placement[] }) {
   return (
     <span style={{ display: "flex", gap: 4, flexDirection: "column" }}>
-      {placements.map((x) => {
+      {placements.sort(
+        (a, b) => a.placement - b.placement
+      ).map((x) => {
         const plc = x.placement;
 
         return (
