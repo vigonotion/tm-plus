@@ -11,13 +11,14 @@ import {
 import { Circle } from "lucide-react";
 import { Link, useRouter, useNavigate } from "@tanstack/react-router";
 import { cn } from "@/utils";
+import {conn} from "@/conn.ts";
 
 export function Navbar() {
   const router = useRouter();
 
   return (
     <>
-      <NavigationMenu className="md:fixed">
+      <NavigationMenu className="md:fixed [&>*]:w-full">
         <NavigationMenuList>
           <NavigationMenuItem className="flex gap-2 font-head mx-4 uppercase items-center">
             <Circle className="text-orange-500" />
@@ -89,11 +90,22 @@ export function Navbar() {
             </Link>
           </NavigationMenuItem>
 
-          <NavigationMenuItem>
-            <Link to="/login" className={navigationMenuTriggerStyle()}>
-              Login
-            </Link>
-          </NavigationMenuItem>
+          <span className={"grow"}></span>
+
+
+            {
+              conn.authStore.isValid ?
+                  <>
+                    <NavigationMenuItem><span>{conn.authStore.model?.email}</span></NavigationMenuItem>
+                    <NavigationMenuItem><Link to="/logout" className={navigationMenuTriggerStyle()}>
+                      Logout
+                    </Link></NavigationMenuItem>
+                  </>
+                  :
+                  <NavigationMenuItem><Link to="/login" className={navigationMenuTriggerStyle()}>
+                    Login
+                  </Link></NavigationMenuItem>
+            }
         </NavigationMenuList>
       </NavigationMenu>
       <span className="md:h-24 inline-block"></span>

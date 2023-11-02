@@ -19,7 +19,7 @@ import {
   Router,
   Route,
   RootRoute,
-  RouterContext,
+  RouterContext, Navigate,
 } from "@tanstack/react-router";
 import { TooltipProvider } from "./components/ui/tooltip";
 import { Game as GamePage } from "./components/pages/Game";
@@ -30,7 +30,7 @@ import { MapPage } from "./components/pages/Map";
 import { About } from "./components/pages/About";
 import { MapTool } from "./components/pages/MapTool";
 import { getAllQueryData, getOneQueryData } from "./hooks/use-placements";
-import { Corporation as CorporationResponse, Game } from "./conn";
+import {conn, Corporation as CorporationResponse, Game} from "./conn";
 import { Placement, Player as PlayerResponse } from "./client/placements";
 import { CommandMenu } from "./components/CommandMenu";
 import {LoginPage} from "@/components/pages/LoginPage.tsx";
@@ -70,6 +70,18 @@ const loginRoute = new Route({
   getParentRoute: () => rootRoute,
   path: "login",
   component: LoginPage,
+});
+
+const logoutRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: "logout",
+  component: () => {
+    conn.authStore.clear();
+
+    return <>
+      <Navigate to={"/login"} />
+    </>
+  },
 });
 
 const indexRoute = new Route({
@@ -241,7 +253,7 @@ const routeTree = rootRoute.addChildren([pageLayout.addChildren([
   corpRatesRoute.addChildren([corpRoute, corpIndexRoute]),
   gamesRoute.addChildren([gameRoute]),
   mapToolRoute,
-]), loginRoute]);
+]), loginRoute, logoutRoute]);
 
 // Create the router using your route tree
 const router = new Router({
