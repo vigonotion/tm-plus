@@ -88,6 +88,12 @@ export function Navbar() {
               About
             </Link>
           </NavigationMenuItem>
+
+          <NavigationMenuItem>
+            <Link to="/login" className={navigationMenuTriggerStyle()}>
+              Login
+            </Link>
+          </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
       <span className="md:h-24 inline-block"></span>

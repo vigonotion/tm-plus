@@ -33,6 +33,7 @@ import { getAllQueryData, getOneQueryData } from "./hooks/use-placements";
 import { Corporation as CorporationResponse, Game } from "./conn";
 import { Placement, Player as PlayerResponse } from "./client/placements";
 import { CommandMenu } from "./components/CommandMenu";
+import {LoginPage} from "@/components/pages/LoginPage.tsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -51,8 +52,28 @@ const rootRoute = routerContext.createRootRoute({
   component: Root,
 });
 
-const indexRoute = new Route({
+const pageLayout = new Route({
   getParentRoute: () => rootRoute,
+  component: () => (
+      <>
+        <CommandMenu />
+        <Navbar />
+        <Content>
+          <Outlet />
+        </Content>
+      </>
+  ),
+  id: 'pageLayout',
+})
+
+const loginRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: "login",
+  component: LoginPage,
+});
+
+const indexRoute = new Route({
+  getParentRoute: () => pageLayout,
   getContext: () =>
     getAllQueryData<Game>("games", {
       sort: "-date",
@@ -66,31 +87,31 @@ const indexRoute = new Route({
 });
 
 const eloSimRoute = new Route({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => pageLayout,
   path: "elo-sim",
   component: EloSimulator,
 });
 
 const aboutRoute = new Route({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => pageLayout,
   path: "about",
   component: About,
 });
 
 const mapToolRoute = new Route({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => pageLayout,
   path: "mapTool",
   component: MapTool,
 });
 
 const gamesRoute = new Route({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => pageLayout,
   path: "games",
   component: () => <Outlet />,
 });
 
 const playersRoute = new Route({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => pageLayout,
   getContext: () =>
     getAllQueryData<Placement>("placements", {
       sort: "placement",
@@ -104,7 +125,7 @@ const playersRoute = new Route({
 });
 
 const corpRatesRoute = new Route({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => pageLayout,
   getContext: () =>
     getAllQueryData<Placement>("placements", {
       expand: "corp",
@@ -179,7 +200,7 @@ const gameRoute = new Route({
 });
 
 const mapsRoute = new Route({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => pageLayout,
   path: "maps",
   component: () => <Outlet />,
 });
@@ -211,7 +232,7 @@ const mapRoute = new Route({
 });
 
 // Create the route tree using your routes
-const routeTree = rootRoute.addChildren([
+const routeTree = rootRoute.addChildren([pageLayout.addChildren([
   indexRoute,
   playersRoute.addChildren([playerRoute, playerIndexRoute]),
   eloSimRoute,
@@ -220,7 +241,7 @@ const routeTree = rootRoute.addChildren([
   corpRatesRoute.addChildren([corpRoute, corpIndexRoute]),
   gamesRoute.addChildren([gameRoute]),
   mapToolRoute,
-]);
+]), loginRoute]);
 
 // Create the router using your route tree
 const router = new Router({
@@ -242,11 +263,7 @@ function Root() {
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <TooltipProvider delayDuration={200}>
           <QueryClientProvider client={queryClient}>
-            <CommandMenu />
-            <Navbar />
-            <Content>
-              <Outlet />
-            </Content>
+            <Outlet />
             {/* <div style={{ display: "flex", gap: 20 }}>
                 <Games />
                 <Ratings />
