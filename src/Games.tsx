@@ -24,7 +24,7 @@ function Placements({ placements }: { placements: Placement[] }) {
         const plc = x.placement;
 
         return (
-          <span key={x.player} className="flex items-center">
+          <span key={x.id} className="flex items-center">
             <span>
               {plc}. {x.expand?.player?.name}
             </span>

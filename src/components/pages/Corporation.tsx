@@ -8,7 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export function Corporation({ corp }: { corp: string }) {
   const { queryKey, queryFn, options } = useRouteContext({
-    from: "/corporations/$corp",
+    from: "/l/corporations/$corp",
   });
   const { data } = useQuery(queryKey, queryFn, options);
 

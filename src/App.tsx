@@ -63,7 +63,7 @@ const pageLayout = new Route({
         </Content>
       </>
   ),
-  id: 'pageLayout',
+  id: 'l',
 })
 
 const loginRoute = new Route({

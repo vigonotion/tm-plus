@@ -109,7 +109,7 @@ function SankeyNodeC(
 
 export function Game() {
   const { queryKey, queryFn, options } = useRouteContext({
-    from: "/games/$game",
+    from: "/l/games/$game",
   });
   const { data } = useQuery(queryKey, queryFn, options);
 
