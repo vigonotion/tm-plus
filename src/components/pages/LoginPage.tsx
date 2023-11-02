@@ -29,6 +29,8 @@ export function LoginPage() {
             { transform: "translateX(-20px)", color: "#ef4444" },
             { transform: "translateX(20px)" },
             { transform: "translateX(0px)" },
+            { transform: "translateX(-20px)" },
+            { transform: "translateX(0px)" },
 
         ], {
             duration: 300,
