@@ -45,7 +45,7 @@ export function RecentGamesTables({ placements }: { placements: Placement[] }) {
 
                     <Link
                         to="/players/$player"
-                        params={{ player: x.expand?.player?.id }}
+                        params={{ player: x.expand?.player?.id || "" }}
                         className="underline"
                     >
                     {x.placement}. {x.expand?.player?.name}
