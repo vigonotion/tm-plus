@@ -128,7 +128,7 @@ const corpRoute = new Route({
   key: ({ params }) => params.corp,
   getContext: ({ params: { corp } }) =>
     getOneQueryData<CorporationResponse>("corporations", corp, {
-      expand: "placements(corp).game",
+      expand: "placements(corp).game,placements(corp).player",
     }),
   loader: async ({ context: { queryClient }, routeContext: queryOptions }) => {
     await queryClient.ensureQueryData(queryOptions);
