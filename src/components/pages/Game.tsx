@@ -20,7 +20,7 @@ import {
   Rocket,
   Trophy,
 } from "lucide-react";
-import { isWin } from "@/utils";
+import {isWin, toElo} from "@/utils";
 import { Link, useRouteContext } from "@tanstack/react-router";
 import { FullLoading, Loading } from "../Loading";
 import { GridGenerator, Hex, HexUtils, Text } from "react-hexgrid";
@@ -35,6 +35,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { mapScore } from "@/utils/mapscore";
 import { ResponsiveContainer, Sankey } from "recharts";
 import { SankeyNode } from "recharts/types/util/types";
+import {useRatings} from "@/hooks/use-ratings.tsx";
 
 export const hexagons: Hex[] = GridGenerator.hexagon(4).sort((a, b) => {
   if (a.r == b.r) {
@@ -125,6 +126,8 @@ export function Game() {
 
   const [hovered, setHovered] = useState<string | undefined>(undefined);
 
+  const { ratings, isLoading: ratingsLoading } = useRatings({ untilGame: data?.id });
+
   if (data === undefined)
     return (
       <div>
@@ -135,6 +138,20 @@ export function Game() {
   const placements = data.expand?.["placements(game)"]?.sort(
     (a, b) => a.placement - b.placement
   );
+
+  function getDelta(player: string) {
+    if(!ratings) return null;
+
+    const ratingPlayer = ratings.find(x => x.playerId === player);
+
+    if(!ratingPlayer) return null;
+
+    const r = ratingPlayer.ratings;
+    const eloDiff = toElo(r[r.length - 1]) - toElo(r[r.length - 2]);
+
+    return <span className={eloDiff > 0 ? "text-green-700" : eloDiff < 0 ? "text-red-700" : ""}>{eloDiff > 0 ? `+${eloDiff}` : eloDiff}</span>
+
+  }
 
   return (
     <div>
@@ -180,6 +197,7 @@ export function Game() {
                   <TableHead>Player</TableHead>
                   <TableHead>Score</TableHead>
                   <TableHead>Corporation</TableHead>
+                  <TableHead>Δ Elo</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -367,6 +385,9 @@ export function Game() {
                             {p.expand?.corp?.name}
                           </Link>
                         )}
+                      </TableCell>
+                      <TableCell>
+                        {ratings && getDelta(p.player)}
                       </TableCell>
                     </TableRow>
                   );
