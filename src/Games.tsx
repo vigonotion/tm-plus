@@ -54,6 +54,7 @@ function Games() {
   const { isLoading, data } = useGames({
     sort: "-date",
     expand: "placements(game),placements(game).player",
+    filter: "planned = false"
   });
 
   if (isLoading || !data) {
