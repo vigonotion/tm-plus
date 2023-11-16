@@ -52,25 +52,25 @@ function Countdown({ to }: { to: DateTime }) {
           <>
             <div>
               <span className="countdown font-head text-3xl lg:text-6xl">
-                <span style={{ "--value": diff.days }}></span>
+                <span style={{ ["--value" as string]: diff.days }}></span>
               </span>
               days
             </div>
             <div>
               <span className="countdown font-head text-3xl lg:text-6xl">
-                <span style={{ "--value": diff.hours }}></span>
+                <span style={{ ["--value" as string]: diff.hours }}></span>
               </span>
               hours
             </div>
             <div>
               <span className="countdown font-head text-3xl lg:text-6xl">
-                <span style={{ "--value": diff.minutes }}></span>
+                <span style={{ ["--value" as string]: diff.minutes }}></span>
               </span>
               min
             </div>
             <div>
               <span className="countdown font-head text-3xl lg:text-6xl">
-                <span style={{ "--value": diff.seconds }}></span>
+                <span style={{ ["--value" as string]: diff.seconds }}></span>
               </span>
               sec
             </div>
