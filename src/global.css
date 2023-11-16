@@ -94,7 +94,13 @@
   * {
     @apply border-border;
   }
-  body {
+  html {
     @apply bg-background text-foreground;
+    background-color: hsl(var(--background));
   }
+}
+
+html {
+  @apply bg-background text-foreground;
+  background-color: hsl(var(--background)) !important;
 }

@@ -19,12 +19,16 @@ export function Navbar() {
     <>
       <NavigationMenu className="md:fixed">
         <NavigationMenuList>
-          <NavigationMenuItem className="flex gap-2 font-head mx-4 uppercase items-center">
-            <Circle className="text-orange-500" />
-            <span className="mt-[3px]">Terraforming Marsᐩ</span>
+          <NavigationMenuItem className={"ml-1 mr-4"}>
+            <Link to="/" className={navigationMenuTriggerStyle()}>
+              <span className="flex gap-2 font-head uppercase items-center">
+                <Circle className="text-orange-500"/>
+              <span className="mt-[3px]">Terraforming Marsᐩ</span>
+              </span>
+            </Link>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <Link to="/" className={navigationMenuTriggerStyle()}>
+            <Link to="/games" className={navigationMenuTriggerStyle()}>
               Games
             </Link>
           </NavigationMenuItem>

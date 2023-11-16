@@ -33,6 +33,7 @@ import { getAllQueryData, getOneQueryData } from "./hooks/use-placements";
 import { Corporation as CorporationResponse, Game } from "./conn";
 import { Placement, Player as PlayerResponse } from "./client/placements";
 import { CommandMenu } from "./components/CommandMenu";
+import {Home} from "@/components/pages/Home.tsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -51,8 +52,8 @@ const rootRoute = routerContext.createRootRoute({
   component: Root,
 });
 
-const indexRoute = new Route({
-  getParentRoute: () => rootRoute,
+const gamesIndexRoute = new Route({
+  getParentRoute: () => gamesRoute,
   getContext: () =>
     getAllQueryData<Game>("games", {
       sort: "-date",
@@ -147,6 +148,12 @@ const playerIndexRoute = new Route({
   component: Ratings,
 });
 
+const indexRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: "/",
+  component: Home,
+});
+
 const playerRoute = new Route({
   getParentRoute: () => playersRoute,
   path: "$player",
@@ -218,7 +225,7 @@ const routeTree = rootRoute.addChildren([
   aboutRoute,
   mapsRoute.addChildren([mapRoute, mapIndexRoute]),
   corpRatesRoute.addChildren([corpRoute, corpIndexRoute]),
-  gamesRoute.addChildren([gameRoute]),
+  gamesRoute.addChildren([gamesIndexRoute, gameRoute]),
   mapToolRoute,
 ]);
 
