@@ -44,7 +44,7 @@ function Countdown({ to }: { to: DateTime }) {
   const dayGradient = DAY_GRADIENTS[Math.min(6, diff.days)];
 
   return (
-    <div>
+    <div className={"flex"}>
       <div
         className={`flex gap-5 text-transparent bg-clip-text bg-gradient-to-r ${dayGradient}`}
       >
