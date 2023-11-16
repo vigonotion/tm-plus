@@ -48,7 +48,7 @@ function Countdown({ to }: { to: DateTime }) {
       <div
         className={`flex gap-5 text-white md:text-transparent md:bg-clip-text md:bg-gradient-to-r ${dayGradient}`}
       >
-        {diff.seconds > 0 ? (
+        {diff.seconds >= 0 ? (
           <>
             <div>
               <span className="countdown font-head text-3xl lg:text-6xl">
