@@ -99,18 +99,20 @@ export function Home() {
     filter: "planned = true",
   });
 
+  const hasPlanned = plannedGames && plannedGames.length > 0;
+
   const date = useMemo(() => {
-    if (!plannedGames) return DateTime.fromISO("2030-11-11T15:30:00");
+    if (!hasPlanned) return DateTime.fromISO("2030-11-11T15:30:00");
     return DateTime.fromFormat(
       plannedGames[0].date,
-      "yyyy-MM-dd HH:mm:ss.SSS'Z'",
+      "yyyy-MM-dd HH:mm:ss.SSS'Z'"
     );
-  }, [plannedGames]);
+  }, [hasPlanned, plannedGames]);
 
   return (
     <div>
       <div className={"grid gap-4"}>
-        {date.diffNow(UNITS).hours >= 0 && (
+        {hasPlanned && date.diffNow(UNITS).hours >= 0 && (
           <Card className="">
             <CardHeader>
               <CardTitle>Next game</CardTitle>
