@@ -11,7 +11,6 @@ import Enumerable from "linq";
 
 export function Wrapped({ playerId }: { playerId: string }) {
   const { data: player } = usePlayer(playerId, {});
-  const { ratings, isLoading } = useRatings();
 
   const { data: placements } = usePlacements({
     filter: `player = '${player?.id}' && game.date >= "2023-01-01" && game.date <= "2023-12-31"`,
@@ -30,6 +29,40 @@ export function Wrapped({ playerId }: { playerId: string }) {
 
     return [e?.key(), e?.count() ?? 0];
   }, [placements]);
+
+  const [favMap, favMapTimes] = useMemo(() => {
+    if (!placements) return [null, 0];
+
+    const e = Enumerable.from(placements)
+      .groupBy((x) => x.expand!.game!.map)
+      .orderByDescending((x) => x.count())
+      .firstOrDefault();
+
+    return [e?.key(), e?.count() ?? 0];
+  }, [placements]);
+
+  const winStreak = useMemo(() => {
+    if (!placements) return 0;
+
+    let max = 0;
+    let cur = 0;
+
+    placements.forEach((p) => {
+      if (p.placement === 1) {
+        cur++;
+        if (cur > max) max = cur;
+      } else {
+        cur = 0;
+      }
+    });
+
+    return max;
+  }, [placements]);
+
+  const terraScore = useMemo(
+    () => placements?.map((a) => a.tw).reduce((a, b) => a + b) ?? 0,
+    [placements],
+  );
 
   const { data: favCorp } = useCorporation(favCorpId || "", {});
 
@@ -57,12 +90,42 @@ export function Wrapped({ playerId }: { playerId: string }) {
     {
       content: (props) => (
         <div>
+          <div>Most of your games happened on {favMap}</div>
+          <div>You've played it {favMapTimes} times</div>
+        </div>
+      ),
+    },
+    {
+      content: (props) => (
+        <div>
+          <div>You got {terraScore} terra scores.</div>
+          <div>
+            That means you alone terraformed the mars{" "}
+            {Math.floor(terraScore / 43)} times
+          </div>
+        </div>
+      ),
+    },
+    {
+      content: (props) => (
+        <div>
           <div>Your favorite corporation was</div>
 
           <div dangerouslySetInnerHTML={{ __html: favCorp?.logo ?? "" }}></div>
           <div>{favCorp?.ability}</div>
 
           <div>You've played it {favCorpTimes} times</div>
+        </div>
+      ),
+    },
+    {
+      content: (props) => (
+        <div>
+          <div>
+            You've won {placements?.filter((x) => x.placement === 1).length}{" "}
+            times this year
+          </div>
+          <div>And your longest streak was {winStreak} sessions long</div>
         </div>
       ),
     },
