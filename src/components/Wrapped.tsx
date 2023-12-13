@@ -3,6 +3,7 @@ import Stories from "react-insta-stories";
 import { Story } from "react-insta-stories/dist/interfaces";
 import {
   useCorporation,
+  useMilestonesUnlocked,
   usePlacements,
   usePlayer,
 } from "@/hooks/use-placements.tsx";
@@ -16,6 +17,11 @@ export function Wrapped({ playerId }: { playerId: string }) {
     filter: `player = '${player?.id}' && game.date >= "2023-01-01" && game.date <= "2023-12-31"`,
     expand: "game",
     sort: "-game.date",
+  });
+
+  const { data: milestonesUnlocked } = useMilestonesUnlocked({
+    filter: `player = '${player?.id}' && game.date >= "2023-01-01" && game.date <= "2023-12-31"`,
+    expand: "milestone",
   });
 
   const [favCorpId, favCorpTimes] = useMemo(() => {
@@ -41,6 +47,17 @@ export function Wrapped({ playerId }: { playerId: string }) {
     return [e?.key(), e?.count() ?? 0];
   }, [placements]);
 
+  const [favMile, favMileTimes] = useMemo(() => {
+    if (!milestonesUnlocked) return [null, 0];
+
+    const e = Enumerable.from(milestonesUnlocked)
+      .groupBy((x) => x.id)
+      .orderByDescending((x) => x.count())
+      .firstOrDefault();
+
+    return [e?.first().expand?.milestone, e?.count() ?? 0];
+  }, [placements]);
+
   const winStreak = useMemo(() => {
     if (!placements) return 0;
 
@@ -60,7 +77,7 @@ export function Wrapped({ playerId }: { playerId: string }) {
   }, [placements]);
 
   const terraScore = useMemo(
-    () => placements?.map((a) => a.tw).reduce((a, b) => a + b) ?? 0,
+    () => placements?.map((a) => a.tw).reduce((a, b) => a + b, 0) ?? 0,
     [placements],
   );
 
@@ -82,7 +99,7 @@ export function Wrapped({ playerId }: { playerId: string }) {
           <div>You've played {placements?.length} times this year</div>
           <div>
             With an average game duration of 4 hours, that would be{" "}
-            {((placements?.length ?? 0) * 4) / 24} days!
+            {Math.floor(((placements?.length ?? 0) * 4) / 24)} days!
           </div>
         </div>
       ),
@@ -92,6 +109,17 @@ export function Wrapped({ playerId }: { playerId: string }) {
         <div>
           <div>Most of your games happened on {favMap}</div>
           <div>You've played it {favMapTimes} times</div>
+        </div>
+      ),
+    },
+    {
+      content: (props) => (
+        <div>
+          <div>There is one milestone you unlocked the most:</div>
+          <div>{favMile?.name}</div>
+          <div>{favMile?.note}</div>
+
+          <div>You've unlocked it in {favMileTimes} games.</div>
         </div>
       ),
     },
