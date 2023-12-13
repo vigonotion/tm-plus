@@ -12,6 +12,18 @@
 }
 
 @font-face {
+  font-family: "Hubot Sans Italic";
+  src: url("./assets/fonts/Hubot-Sans.woff2")
+  format("woff2 supports variations"),
+  url("./assets/fonts/Hubot-Sans.woff2") format("woff2-variations");
+  font-weight: 500;
+  font-style: italic;
+  font-stretch: 100% 300%;
+
+  font-variation-settings: "ital" 100;
+}
+
+@font-face {
   font-family: "Prototype";
   src: url("./assets/fonts/Prototype.ttf");
 }

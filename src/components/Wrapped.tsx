@@ -9,6 +9,7 @@ import {
 } from "@/hooks/use-placements.tsx";
 import { useRatings } from "@/hooks/use-ratings.tsx";
 import Enumerable from "linq";
+import { Circle } from "lucide-react";
 
 export function Wrapped({ playerId }: { playerId: string }) {
   const { data: player } = usePlayer(playerId, {});
@@ -86,10 +87,19 @@ export function Wrapped({ playerId }: { playerId: string }) {
   const stories: Story[] = [
     {
       content: (props) => (
-        <div>
-          <div>Terraforming Mars Wrapped</div>
-          <div>2023</div>
-          <div>for {player?.name}</div>
+        <div
+          className={
+            "w-full h-full flex flex-col items-center justify-center gap-8"
+          }
+        >
+          <span className="flex gap-2 font-head uppercase items-center">
+            <Circle className="text-orange-500" />
+            <span className="mt-[3px]">
+              Terraforming Mars <sup>WRAPPED</sup>
+            </span>
+          </span>
+          <div className={"font-proto text-5xl"}>2023</div>
+          <div className={"text-[3em] font-headItalic"}>for {player?.name}</div>
         </div>
       ),
     },
@@ -163,7 +173,7 @@ export function Wrapped({ playerId }: { playerId: string }) {
     <div className={"flex content-center items-center justify-center mt-4"}>
       <Stories
         stories={stories}
-        defaultInterval={5000}
+        defaultInterval={500000}
         width={432}
         height={768}
         keyboardNavigation={true}
