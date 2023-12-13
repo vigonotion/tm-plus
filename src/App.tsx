@@ -176,6 +176,17 @@ const playerRoute = new Route({
   },
 });
 
+const wrappedRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: "wrapped/$player",
+  component: ({ useParams }) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const params = useParams();
+
+    return <span>{params.player}</span>;
+  },
+});
+
 const gameRoute = new Route({
   getParentRoute: () => gamesRoute,
   path: "$game",
@@ -235,6 +246,7 @@ const routeTree = rootRoute.addChildren([
     gamesRoute.addChildren([gamesIndexRoute, gameRoute]),
     mapToolRoute,
   ]),
+  wrappedRoute,
 ]);
 
 // Create the router using your route tree

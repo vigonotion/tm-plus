@@ -17,12 +17,12 @@ import { useQuery } from "@tanstack/react-query";
 
 export function Player({ player }: { player: string }) {
   const { queryKey, queryFn, options } = useRouteContext({
-    from: "/players/$player",
+    from: "/layout/players/$player",
   });
   const { data } = useQuery(queryKey, queryFn, options);
 
   const { ratings, isLoading } = useRatings();
-  
+
   const { data: placements } = usePlacements({
     filter: `player = '${data?.id}'`,
     expand: "game",
