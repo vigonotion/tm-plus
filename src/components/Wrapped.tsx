@@ -87,20 +87,24 @@ export function Wrapped({ playerId }: { playerId: string }) {
   const stories: Story[] = [
     {
       content: (props) => (
-        <div
-          className={
-            "w-full h-full flex flex-col items-center justify-center gap-8"
-          }
-        >
-          <span className="flex gap-2 font-head uppercase items-center">
-            <Circle className="text-orange-500" />
-            <span className="mt-[3px]">
-              Terraforming Mars <sup>WRAPPED</sup>
+        <>
+          <div className="gradient"></div>
+
+          <div
+            className={
+              "w-full h-full flex flex-col items-center justify-center gap-8 relative tm-textshadow"
+            }
+          >
+            <span className="flex gap-2 font-head uppercase items-center">
+              <Circle className="text-orange-500" />
+              <span className="mt-[3px]">
+                Terraforming Mars <sup>WRAPPED</sup>
+              </span>
             </span>
-          </span>
-          <div className={"font-proto text-5xl"}>2023</div>
-          <div className={"text-[3em] font-headItalic"}>for {player?.name}</div>
-        </div>
+            <div className={"font-head text-5xl"}>2023</div>
+            <div className={"text-[3em] font-proto"}>for {player?.name}</div>
+          </div>
+        </>
       ),
     },
     {

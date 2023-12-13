@@ -116,3 +116,34 @@ html {
   @apply bg-background text-foreground;
   background-color: hsl(var(--background)) !important;
 }
+
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.gradient {
+  --size: 500px;
+  --speed: 30s;
+  --easing: cubic-bezier(0.8, 0.2, 0.2, 0.8);
+
+  width: var(--size);
+  height: var(--size);
+  filter: blur(calc(var(--size) / 5));
+  background-image: linear-gradient(rgba(235, 80, 55, 0.85), #bfd28a);
+  animation: rotate var(--speed) var(--easing) alternate infinite;
+  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+
+  position: absolute;
+  opacity: .4;
+}
+
+
+.tm-textshadow {
+  text-shadow: 4px 4px rgba(0, 0, 0, .2);
+}
