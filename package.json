@@ -35,6 +35,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hexgrid": "^2.0.0-beta.4",
+    "react-insta-stories": "^2.6.2",
     "recharts": "^2.8.0",
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.6"

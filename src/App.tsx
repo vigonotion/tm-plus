@@ -34,6 +34,7 @@ import { Corporation as CorporationResponse, Game } from "./conn";
 import { Placement, Player as PlayerResponse } from "./client/placements";
 import { CommandMenu } from "./components/CommandMenu";
 import { Home } from "@/components/pages/Home.tsx";
+import { Wrapped } from "@/components/Wrapped.tsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -183,7 +184,7 @@ const wrappedRoute = new Route({
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const params = useParams();
 
-    return <span>{params.player}</span>;
+    return <Wrapped playerId={params.player} />;
   },
 });
 
