@@ -143,7 +143,49 @@ html {
   opacity: .4;
 }
 
+.gradient2 {
+  --size: 200px;
+  --speed: 30s;
+  --easing: cubic-bezier(0.8, 0.2, 0.2, 0.8);
+
+  width: var(--size);
+  height: var(--size);
+  filter: blur(calc(var(--size) / 5));
+  background-image: linear-gradient(rgba(55, 100, 235, 0.85), #ce4141);
+  animation: rotate var(--speed) var(--easing) alternate infinite;
+  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+
+  position: absolute;
+  top: 20%;
+  left: 10%;
+  opacity: .4;
+}
+
+.gradient2b {
+  --size: 150px;
+  --speed: 20s;
+  --easing: cubic-bezier(0.8, 0.2, 0.2, 0.8);
+
+  width: var(--size);
+  height: var(--size);
+  filter: blur(calc(var(--size) / 5));
+  background-image: linear-gradient(rgba(55, 210, 235, 0.85), #916f08);
+  animation: rotate var(--speed) var(--easing) alternate infinite;
+  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+
+  position: absolute;
+  top: 70%;
+  right: -5%;
+  opacity: .4;
+}
+
 
 .tm-textshadow {
   text-shadow: 4px 4px rgba(0, 0, 0, .2);
+}
+
+.tm-countdown-wrapped > :before {
+  transition: all 3s cubic-bezier(1,.01,.1,1);
+  font-variant-numeric: lining-nums tabular-nums;
+  text-align: center;
 }

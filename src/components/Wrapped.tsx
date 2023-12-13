@@ -1,4 +1,5 @@
-import React, { useMemo } from "react";
+/* eslint-disable react-hooks/rules-of-hooks */
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Stories from "react-insta-stories";
 import { Story } from "react-insta-stories/dist/interfaces";
 import {
@@ -10,6 +11,8 @@ import {
 import { useRatings } from "@/hooks/use-ratings.tsx";
 import Enumerable from "linq";
 import { Circle } from "lucide-react";
+
+import "../wrapped.css";
 
 export function Wrapped({ playerId }: { playerId: string }) {
   const { data: player } = usePlayer(playerId, {});
@@ -108,15 +111,55 @@ export function Wrapped({ playerId }: { playerId: string }) {
       ),
     },
     {
-      content: (props) => (
-        <div>
-          <div>You've played {placements?.length} times this year</div>
-          <div>
-            With an average game duration of 4 hours, that would be{" "}
-            {Math.floor(((placements?.length ?? 0) * 4) / 24)} days!
-          </div>
-        </div>
-      ),
+      content: (_) => {
+        const [x, setX] = useState(0);
+        const [y, setY] = useState(0);
+
+        useEffect(() => {
+          const t = window.setTimeout(() => {
+            setX(placements?.length ?? 0);
+          }, 500);
+
+          const t2 = window.setTimeout(() => {
+            setY(1);
+          }, 4000);
+
+          return () => {
+            window.clearTimeout(t);
+            window.clearTimeout(t2);
+          };
+        }, [setX]);
+
+        return (
+          <>
+            <div className="gradient2"></div>
+            <div className="gradient2b"></div>
+            <div
+              className={
+                "text-2xl w-full h-full flex flex-col items-center justify-center gap-8 "
+              }
+            >
+              <div>You've played</div>
+              <div>
+                <span className="countdown font-proto text-6xl tm-countdown-wrapped">
+                  <span style={{ ["--value" as string]: x }}></span>
+                </span>
+              </div>
+              <div>games this year.</div>
+
+              <div className="h-8"></div>
+
+              <div
+                className={"text-center transition-opacity duration-700"}
+                style={{ opacity: y }}
+              >
+                With an average game duration of 4 hours, that would be{" "}
+                {Math.floor(((placements?.length ?? 0) * 4) / 24)} days!
+              </div>
+            </div>
+          </>
+        );
+      },
     },
     {
       content: (props) => (
@@ -174,12 +217,12 @@ export function Wrapped({ playerId }: { playerId: string }) {
   ];
 
   return (
-    <div className={"flex content-center items-center justify-center mt-4"}>
+    <div className={"flex content-center items-center justify-center"}>
       <Stories
         stories={stories}
         defaultInterval={500000}
-        width={432}
-        height={768}
+        width={"100dvw"}
+        height={"100dvh"}
         keyboardNavigation={true}
       />
     </div>
