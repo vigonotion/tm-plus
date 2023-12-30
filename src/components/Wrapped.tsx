@@ -95,7 +95,7 @@ export function Wrapped({ playerId }: { playerId: string }) {
 
           <div
             className={
-              "w-full h-full flex flex-col items-center justify-center gap-8 relative tm-textshadow"
+              "w-full h-full flex flex-col items-center justify-center gap-8 p-4 relative tm-textshadow"
             }
           >
             <span className="flex gap-2 font-head uppercase items-center">
@@ -136,7 +136,7 @@ export function Wrapped({ playerId }: { playerId: string }) {
             <div className="gradient2b"></div>
             <div
               className={
-                "text-2xl w-full h-full flex flex-col items-center justify-center gap-8 "
+                "text-2xl w-full h-full flex flex-col items-center justify-center gap-8 p-4"
               }
             >
               <div>You've played</div>
@@ -221,8 +221,9 @@ export function Wrapped({ playerId }: { playerId: string }) {
       <Stories
         stories={stories}
         defaultInterval={500000}
-        width={"100dvw"}
-        height={"100dvh"}
+        // width={"100dvw"}
+        // height={"100dvh"}
+
         keyboardNavigation={true}
       />
     </div>
