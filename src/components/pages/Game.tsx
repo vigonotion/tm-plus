@@ -14,13 +14,14 @@ import {
   Award,
   Calendar,
   Clock,
+  Gavel,
   Hexagon,
   Info,
   RectangleVertical,
   Rocket,
   Trophy,
 } from "lucide-react";
-import {isWin, toElo} from "@/utils";
+import { isWin, toElo } from "@/utils";
 import { Link, useRouteContext } from "@tanstack/react-router";
 import { FullLoading, Loading } from "../Loading";
 import { GridGenerator, Hex, HexUtils, Text } from "react-hexgrid";
@@ -35,7 +36,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { mapScore } from "@/utils/mapscore";
 import { ResponsiveContainer, Sankey } from "recharts";
 import { SankeyNode } from "recharts/types/util/types";
-import {useRatings} from "@/hooks/use-ratings.tsx";
+import { useRatings } from "@/hooks/use-ratings.tsx";
 
 export const hexagons: Hex[] = GridGenerator.hexagon(4).sort((a, b) => {
   if (a.r == b.r) {
@@ -126,7 +127,9 @@ export function Game() {
 
   const [hovered, setHovered] = useState<string | undefined>(undefined);
 
-  const { ratings, isLoading: ratingsLoading } = useRatings({ untilGame: data?.id });
+  const { ratings, isLoading: ratingsLoading } = useRatings({
+    untilGame: data?.id,
+  });
 
   if (data === undefined)
     return (
@@ -140,17 +143,24 @@ export function Game() {
   );
 
   function getDelta(player: string) {
-    if(!ratings) return null;
+    if (!ratings) return null;
 
-    const ratingPlayer = ratings.find(x => x.playerId === player);
+    const ratingPlayer = ratings.find((x) => x.playerId === player);
 
-    if(!ratingPlayer) return null;
+    if (!ratingPlayer) return null;
 
     const r = ratingPlayer.ratings;
     const eloDiff = toElo(r[r.length - 1]) - toElo(r[r.length - 2]);
 
-    return <span className={eloDiff > 0 ? "text-green-700" : eloDiff < 0 ? "text-red-700" : ""}>{eloDiff > 0 ? `+${eloDiff}` : eloDiff}</span>
-
+    return (
+      <span
+        className={
+          eloDiff > 0 ? "text-green-700" : eloDiff < 0 ? "text-red-700" : ""
+        }
+      >
+        {eloDiff > 0 ? `+${eloDiff}` : eloDiff}
+      </span>
+    );
   }
 
   return (
@@ -225,13 +235,16 @@ export function Game() {
                         2
                     : -1;
 
+                  const scorePolitics = p.politics_tw;
+
                   const scoreCards =
                     p.score -
                     scoreTw -
                     scoreCities -
                     scoreGreenery -
                     scoreMile -
-                    scoreAwards;
+                    scoreAwards -
+                    scorePolitics;
 
                   const scoreReady =
                     (data.expand?.["milestones_unlocked(game)"] &&
@@ -241,6 +254,7 @@ export function Game() {
                         scoreGreenery +
                         scoreMile +
                         scoreAwards +
+                        scorePolitics +
                         scoreCards ===
                         p.score) ??
                     false;
@@ -287,6 +301,12 @@ export function Game() {
                             className="text-blue-500"
                           />
                           <span>{scoreCards}</span>
+                        </span>
+                      )}
+                      {scoreCards >= 0 && scoreTw > 0 && (
+                        <span className="flex gap-2 items-center">
+                          <Gavel size={16} className="text-red-500" />
+                          <span>{scorePolitics}</span>
                         </span>
                       )}
                     </div>
@@ -386,9 +406,7 @@ export function Game() {
                           </Link>
                         )}
                       </TableCell>
-                      <TableCell>
-                        {ratings && getDelta(p.player)}
-                      </TableCell>
+                      <TableCell>{ratings && getDelta(p.player)}</TableCell>
                     </TableRow>
                   );
                 })}
