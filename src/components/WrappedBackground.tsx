@@ -4,7 +4,6 @@ import HALO from "vanta/src/vanta.halo";
 import TRUNK from "vanta/src/vanta.trunk";
 import WAVES from "vanta/src/vanta.waves";
 import CLOUDS from "vanta/src/vanta.clouds";
-import FOG from "vanta/src/vanta.fog";
 import NET from "vanta/src/vanta.net";
 import DOTS from "vanta/src/vanta.dots";
 
@@ -136,7 +135,11 @@ function Background({
       setVantaEffect(e);
     }
     return () => {
-      if (vantaEffect) vantaEffect.destroy();
+      if (vantaEffect) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        vantaEffect.destroy();
+      }
     };
   }, [effect, vantaEffect]);
 
