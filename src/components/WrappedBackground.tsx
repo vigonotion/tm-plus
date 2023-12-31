@@ -13,7 +13,7 @@ import p5 from "p5";
 import { match } from "ts-pattern";
 import { cn } from "@/utils.ts";
 
-export type Effect = "topology" | "halo" | "trunk" | "waves" | "fog";
+export type Effect = "topology" | "halo" | "trunk" | "waves" | "fog" | "net";
 
 function Background({
   effect,
@@ -97,6 +97,20 @@ function Background({
             skyColor: 0x181414,
             sunColor: 0x412607,
             speed: 0.7,
+          }),
+        )
+        .with("net", () =>
+          NET({
+            el: myRef.current,
+            THREE: THREE,
+            p5: p5,
+            minHeight: 200.0,
+            minWidth: 200.0,
+            scale: 1.0,
+            scaleMobile: 1.0,
+            color: 0xff6c3f,
+            backgroundColor: 0x3c2015,
+            showDots: false,
           }),
         )
         .exhaustive();

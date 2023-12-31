@@ -337,14 +337,51 @@ export function Wrapped({ playerId }: { playerId: string }) {
     },
     {
       content: (props) => (
-        <div>
-          <div>Your favorite corporation was</div>
+        <>
+          <WrappedBackground effect={"net"} className={"opacity-20"} />
 
-          <div dangerouslySetInnerHTML={{ __html: favCorp?.logo ?? "" }}></div>
-          <div>{favCorp?.ability}</div>
-
-          <div>You've played it {favCorpTimes} times</div>
-        </div>
+          <motion.div
+            layout
+            layoutRoot
+            className={
+              "text-xl w-full h-full flex flex-col items-center justify-center gap-8 p-4 absolute transition-opacity duration-1000 text-center"
+            }
+          >
+            <motion.div
+              layout
+              initial={{
+                opacity: 0,
+                transform: "translateY(-20px)",
+              }}
+              animate={{ opacity: 1, transform: "translateY(0px)" }}
+            >
+              Your favorite corporation this year was:
+            </motion.div>
+            <motion.div
+              layout
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 1.5 }}
+              className={"flex flex-col gap-3"}
+            >
+              <div
+                dangerouslySetInnerHTML={{ __html: favCorp?.logo ?? "" }}
+              ></div>
+              <div className={"text-sm opacity-90"}>{favCorp?.ability}</div>
+            </motion.div>
+            <motion.div
+              layout
+              initial={{
+                opacity: 0,
+                transform: "translateY(20px)",
+              }}
+              animate={{ opacity: 1, transform: "translateY(0px)" }}
+              transition={{ delay: 3 }}
+            >
+              You've played it {favCorpTimes} times.
+            </motion.div>
+          </motion.div>
+        </>
       ),
     },
     {
