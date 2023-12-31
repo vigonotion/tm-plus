@@ -232,13 +232,48 @@ export function Wrapped({ playerId }: { playerId: string }) {
     },
     {
       content: (props) => (
-        <div>
-          <div>There is one milestone you unlocked the most:</div>
-          <div>{favMile?.name}</div>
-          <div>{favMile?.note}</div>
+        <>
+          <WrappedBackground effect={"waves"} />
 
-          <div>You've unlocked it in {favMileTimes} games.</div>
-        </div>
+          <motion.div
+            layout
+            layoutRoot
+            className={
+              "text-xl w-full h-full flex flex-col items-center justify-center gap-8 p-4 absolute transition-opacity duration-1000 text-center"
+            }
+          >
+            <motion.div
+              layout
+              initial={{
+                opacity: 0,
+                transform: "translateY(-20px)",
+              }}
+              animate={{ opacity: 1, transform: "translateY(0px)" }}
+            >
+              There is one milestone you unlocked the most:
+            </motion.div>
+            <motion.div
+              layout
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 1.5 }}
+            >
+              <div className={"font-proto text-2xl"}>{favMile?.name}</div>
+              <div className={"text-sm opacity-40"}>{favMile?.note}</div>
+            </motion.div>
+            <motion.div
+              layout
+              initial={{
+                opacity: 0,
+                transform: "translateY(20px)",
+              }}
+              animate={{ opacity: 1, transform: "translateY(0px)" }}
+              transition={{ delay: 3 }}
+            >
+              You've unlocked it in {favMileTimes} games.
+            </motion.div>
+          </motion.div>
+        </>
       ),
     },
     {

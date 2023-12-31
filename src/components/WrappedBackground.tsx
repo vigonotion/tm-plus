@@ -2,12 +2,17 @@ import React, { memo, useLayoutEffect, useRef, useState } from "react";
 import TOPOLOGY from "vanta/src/vanta.topology";
 import HALO from "vanta/src/vanta.halo";
 import TRUNK from "vanta/src/vanta.trunk";
+import WAVES from "vanta/src/vanta.waves";
+import CLOUDS from "vanta/src/vanta.clouds";
+import NET from "vanta/src/vanta.net";
+import DOTS from "vanta/src/vanta.dots";
+
 import * as THREE from "three";
 import p5 from "p5";
 import { match } from "ts-pattern";
 import { cn } from "@/utils.ts";
 
-export type Effect = "topology" | "halo" | "trunk";
+export type Effect = "topology" | "halo" | "trunk" | "waves";
 
 function Background({
   effect,
@@ -65,6 +70,20 @@ function Background({
             backgroundColor: 0x0,
             spacing: 10.0,
             chaos: 2.5,
+          }),
+        )
+        .with("waves", () =>
+          WAVES({
+            el: myRef.current,
+            THREE: THREE,
+            p5: p5,
+            minHeight: 200.0,
+            minWidth: 200.0,
+            scale: 1.0,
+            scaleMobile: 1.0,
+            color: 0x140b06,
+            shininess: 8.0,
+            waveSpeed: 0.4,
           }),
         )
         .exhaustive();
