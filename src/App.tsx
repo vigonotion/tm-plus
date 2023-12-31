@@ -33,7 +33,8 @@ import { getAllQueryData, getOneQueryData } from "./hooks/use-placements";
 import { Corporation as CorporationResponse, Game } from "./conn";
 import { Placement, Player as PlayerResponse } from "./client/placements";
 import { CommandMenu } from "./components/CommandMenu";
-import {Home} from "@/components/pages/Home.tsx";
+import { Home } from "@/components/pages/Home.tsx";
+import { Wrapped } from "@/components/Wrapped.tsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -67,31 +68,31 @@ const gamesIndexRoute = new Route({
 });
 
 const eloSimRoute = new Route({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => layoutRoute,
   path: "elo-sim",
   component: EloSimulator,
 });
 
 const aboutRoute = new Route({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => layoutRoute,
   path: "about",
   component: About,
 });
 
 const mapToolRoute = new Route({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => layoutRoute,
   path: "mapTool",
   component: MapTool,
 });
 
 const gamesRoute = new Route({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => layoutRoute,
   path: "games",
   component: () => <Outlet />,
 });
 
 const playersRoute = new Route({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => layoutRoute,
   getContext: () =>
     getAllQueryData<Placement>("placements", {
       sort: "placement",
@@ -105,7 +106,7 @@ const playersRoute = new Route({
 });
 
 const corpRatesRoute = new Route({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => layoutRoute,
   getContext: () =>
     getAllQueryData<Placement>("placements", {
       expand: "corp",
@@ -148,8 +149,14 @@ const playerIndexRoute = new Route({
   component: Ratings,
 });
 
-const indexRoute = new Route({
+const layoutRoute = new Route({
   getParentRoute: () => rootRoute,
+  id: "layout",
+  component: Layout,
+});
+
+const indexRoute = new Route({
+  getParentRoute: () => layoutRoute,
   path: "/",
   component: Home,
 });
@@ -170,6 +177,17 @@ const playerRoute = new Route({
   },
 });
 
+const wrappedRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: "wrapped/$player",
+  component: ({ useParams }) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const params = useParams();
+
+    return <Wrapped playerId={params.player} />;
+  },
+});
+
 const gameRoute = new Route({
   getParentRoute: () => gamesRoute,
   path: "$game",
@@ -186,7 +204,7 @@ const gameRoute = new Route({
 });
 
 const mapsRoute = new Route({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => layoutRoute,
   path: "maps",
   component: () => <Outlet />,
 });
@@ -219,14 +237,17 @@ const mapRoute = new Route({
 
 // Create the route tree using your routes
 const routeTree = rootRoute.addChildren([
-  indexRoute,
-  playersRoute.addChildren([playerRoute, playerIndexRoute]),
-  eloSimRoute,
-  aboutRoute,
-  mapsRoute.addChildren([mapRoute, mapIndexRoute]),
-  corpRatesRoute.addChildren([corpRoute, corpIndexRoute]),
-  gamesRoute.addChildren([gamesIndexRoute, gameRoute]),
-  mapToolRoute,
+  layoutRoute.addChildren([
+    indexRoute,
+    playersRoute.addChildren([playerRoute, playerIndexRoute]),
+    eloSimRoute,
+    aboutRoute,
+    mapsRoute.addChildren([mapRoute, mapIndexRoute]),
+    corpRatesRoute.addChildren([corpRoute, corpIndexRoute]),
+    gamesRoute.addChildren([gamesIndexRoute, gameRoute]),
+    mapToolRoute,
+  ]),
+  wrappedRoute,
 ]);
 
 // Create the router using your route tree
@@ -249,20 +270,28 @@ function Root() {
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <TooltipProvider delayDuration={200}>
           <QueryClientProvider client={queryClient}>
-            <CommandMenu />
-            <Navbar />
-            <Content>
-              <Outlet />
-            </Content>
+            <Outlet />
             {/* <div style={{ display: "flex", gap: 20 }}>
                 <Games />
                 <Ratings />
                 <CorpRates />
               </div> */}
-            <ReactQueryDevtools initialIsOpen={false} />
+            {/*<ReactQueryDevtools initialIsOpen={false} />*/}
           </QueryClientProvider>
         </TooltipProvider>
       </ThemeProvider>
+    </>
+  );
+}
+
+function Layout() {
+  return (
+    <>
+      <CommandMenu />
+      <Navbar />
+      <Content>
+        <Outlet />
+      </Content>
     </>
   );
 }

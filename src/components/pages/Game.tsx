@@ -95,7 +95,7 @@ function SankeyNodeC(
     width: number;
     height: number;
     payload: { name: string; value: number };
-  }
+  },
 ) {
   return props.payload.value > 0 ? (
     <rect
@@ -111,18 +111,18 @@ function SankeyNodeC(
 
 export function Game() {
   const { queryKey, queryFn, options } = useRouteContext({
-    from: "/games/$game",
+    from: "/layout/games/$game",
   });
   const { data } = useQuery(queryKey, queryFn, options);
 
   const map_state = useMemo(
     () => data?.map_state && parse(data.map_state),
-    [data?.map_state]
+    [data?.map_state],
   );
 
   const map_score = useMemo(
     () => data?.map_state && mapScore(parse(data.map_state)),
-    [data?.map_state]
+    [data?.map_state],
   );
 
   const [hovered, setHovered] = useState<string | undefined>(undefined);
@@ -139,7 +139,7 @@ export function Game() {
     );
 
   const placements = data.expand?.["placements(game)"]?.sort(
-    (a, b) => a.placement - b.placement
+    (a, b) => a.placement - b.placement,
   );
 
   function getDelta(player: string) {
@@ -221,16 +221,16 @@ export function Game() {
                     map_score && owner ? map_score[owner].greenery : -1;
                   const scoreMile = data.expand?.["milestones_unlocked(game)"]
                     ? data.expand?.["milestones_unlocked(game)"].filter(
-                        (x) => x.player == p.player
+                        (x) => x.player == p.player,
                       ).length * 5
                     : -1;
                   const scoreAwards = data.expand?.["awards_unlocked(game)"]
                     ? data.expand?.["awards_unlocked(game)"].filter((x) =>
-                        x.winner.includes(p.player)
+                        x.winner.includes(p.player),
                       ).length *
                         5 +
                       data.expand?.["awards_unlocked(game)"].filter((x) =>
-                        x.second.includes(p.player)
+                        x.second.includes(p.player),
                       ).length *
                         2
                     : -1;
@@ -321,7 +321,7 @@ export function Game() {
                           <span>{p.placement}.</span>
                           {isWin(
                             p.placement,
-                            data.expand?.["placements(game)"]?.length ?? 1
+                            data.expand?.["placements(game)"]?.length ?? 1,
                           ) && (
                             <Trophy
                               className="text-yellow-500 ml-2"
@@ -488,10 +488,10 @@ export function Game() {
                       const p = placements?.find((x) => x.player == mu.player);
 
                       const winners = placements?.filter((x) =>
-                        mu.winner.includes(x.player)
+                        mu.winner.includes(x.player),
                       );
                       const seconds = placements?.filter((x) =>
-                        mu.second.includes(x.player)
+                        mu.second.includes(x.player),
                       );
                       return (
                         <TableRow key={mu.id}>

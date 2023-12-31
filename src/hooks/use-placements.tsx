@@ -5,7 +5,7 @@ import {
   useQuery,
 } from "@tanstack/react-query";
 import { Placement, Player } from "../client/placements";
-import { Corporation, Game, Group, conn } from "../conn";
+import { Corporation, Game, Group, conn, MilestoneUnlocked } from "../conn";
 import { RecordFullListQueryParams, RecordQueryParams } from "pocketbase";
 import { useId } from "react";
 
@@ -15,7 +15,7 @@ function useGetFullList<TParams, TData>(
   options?: Omit<
     UseQueryOptions<TData[], never, TData[]>,
     "queryKey" | "queryFn"
-  >
+  >,
 ) {
   const key = [collection, params];
   const id = useId();
@@ -27,7 +27,7 @@ function useGetFullList<TParams, TData>(
         ...params,
         $cancelKey: id,
       }),
-    options
+    options,
   );
 
   return query;
@@ -37,7 +37,7 @@ export function getOneQueryData<TData>(
   collection: string,
   id: string,
   params: RecordQueryParams,
-  options?: Omit<UseQueryOptions<TData, never, TData>, "queryKey" | "queryFn">
+  options?: Omit<UseQueryOptions<TData, never, TData>, "queryKey" | "queryFn">,
 ): {
   queryKey: QueryKey;
   queryFn: QueryFunction<TData>;
@@ -57,7 +57,7 @@ export function getOneQueryData<TData>(
 export function getAllQueryData<TData>(
   collection: string,
   params: RecordQueryParams,
-  options?: Omit<UseQueryOptions<TData, never, TData>, "queryKey" | "queryFn">
+  options?: Omit<UseQueryOptions<TData, never, TData>, "queryKey" | "queryFn">,
 ): {
   queryKey: QueryKey;
   queryFn: QueryFunction<TData[]>;
@@ -78,7 +78,7 @@ function useGetOne<TData>(
   collection: string,
   id: string,
   params: RecordQueryParams,
-  options?: Omit<UseQueryOptions<TData, never, TData>, "queryKey" | "queryFn">
+  options?: Omit<UseQueryOptions<TData, never, TData>, "queryKey" | "queryFn">,
 ) {
   const query = useQuery(getOneQueryData(collection, id, params, options));
 
@@ -90,14 +90,27 @@ export function usePlacements(
   options?: Omit<
     UseQueryOptions<Placement[], never, Placement[]>,
     "queryKey" | "queryFn"
-  >
+  >,
 ) {
   return useGetFullList("placements", params, options);
 }
 
+export function useMilestonesUnlocked(
+  params: RecordFullListQueryParams,
+  options?: Omit<
+    UseQueryOptions<MilestoneUnlocked[], never, MilestoneUnlocked[]>,
+    "queryKey" | "queryFn"
+  >,
+) {
+  return useGetFullList("milestones_unlocked", params, options);
+}
+
 export function useGames(
   params: RecordFullListQueryParams,
-  options?: Omit<UseQueryOptions<Game[], never, Game[]>, "queryKey" | "queryFn">
+  options?: Omit<
+    UseQueryOptions<Game[], never, Game[]>,
+    "queryKey" | "queryFn"
+  >,
 ) {
   return useGetFullList("games", params, options);
 }
@@ -113,7 +126,7 @@ export function useGames(
 export function useGameQueryOptions(
   id: string,
   params: RecordQueryParams,
-  options?: Omit<UseQueryOptions<Game, never, Game>, "queryKey" | "queryFn">
+  options?: Omit<UseQueryOptions<Game, never, Game>, "queryKey" | "queryFn">,
 ) {
   return getOneQueryData("games", id, params, options);
 }
@@ -123,7 +136,7 @@ export function usePlayers(
   options?: Omit<
     UseQueryOptions<Player[], never, Player[]>,
     "queryKey" | "queryFn"
-  >
+  >,
 ) {
   return useGetFullList("players", params, options);
 }
@@ -133,7 +146,7 @@ export function useGroups(
   options?: Omit<
     UseQueryOptions<Group[], never, Group[]>,
     "queryKey" | "queryFn"
-  >
+  >,
 ) {
   return useGetFullList("groups", params, options);
 }
@@ -143,7 +156,7 @@ export function useCorporations(
   options?: Omit<
     UseQueryOptions<Group[], never, Group[]>,
     "queryKey" | "queryFn"
-  >
+  >,
 ) {
   return useGetFullList("corporations", params, options);
 }
@@ -154,7 +167,7 @@ export function useCorporation(
   options?: Omit<
     UseQueryOptions<Corporation, never, Corporation>,
     "queryKey" | "queryFn"
-  >
+  >,
 ) {
   return useGetOne("corporations", id, params, options);
 }
@@ -162,7 +175,10 @@ export function useCorporation(
 export function usePlayer(
   id: string,
   params: RecordQueryParams,
-  options?: Omit<UseQueryOptions<Player, never, Player>, "queryKey" | "queryFn">
+  options?: Omit<
+    UseQueryOptions<Player, never, Player>,
+    "queryKey" | "queryFn"
+  >,
 ) {
   return useGetOne("players", id, params, options);
 }

@@ -8,7 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export function Corporation({ corp }: { corp: string }) {
   const { queryKey, queryFn, options } = useRouteContext({
-    from: "/corporations/$corp",
+    from: "/layout/corporations/$corp",
   });
   const { data } = useQuery(queryKey, queryFn, options);
 
@@ -49,7 +49,7 @@ export function Corporation({ corp }: { corp: string }) {
           placements={placements.sort(
             (a, b) =>
               b.expand?.game?.date.localeCompare(a.expand?.game?.date ?? "") ??
-              0
+              0,
           )}
         />
       )}

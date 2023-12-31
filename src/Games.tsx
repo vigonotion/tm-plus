@@ -18,43 +18,43 @@ import { Game } from "./conn";
 function Placements({ placements }: { placements: Placement[] }) {
   return (
     <span style={{ display: "flex", gap: 4, flexDirection: "column" }}>
-      {placements.sort(
-        (a, b) => a.placement - b.placement
-      ).map((x) => {
-        const plc = x.placement;
+      {placements
+        .sort((a, b) => a.placement - b.placement)
+        .map((x) => {
+          const plc = x.placement;
 
-        return (
-          <span key={x.player} className="flex items-center">
-            <span>
-              {plc}. {x.expand?.player?.name}
+          return (
+            <span key={x.player} className="flex items-center">
+              <span>
+                {plc}. {x.expand?.player?.name}
+              </span>
+              {isWin(plc, placements.length) && (
+                <Trophy className="text-yellow-500 ml-2" size={12} />
+              )}
             </span>
-            {isWin(plc, placements.length) && (
-              <Trophy className="text-yellow-500 ml-2" size={12} />
-            )}
-          </span>
-        );
-      })}
+          );
+        })}
     </span>
   );
 }
 
-function MapIcon({ map }: { map: string }) {
+export function MapIcon({ map, size = 16 }: { map: string; size?: number }) {
   if (map === "hellas") {
-    return <Snowflake size={16} className="text-blue-500" />;
+    return <Snowflake size={size} className="text-blue-500" />;
   }
 
   if (map === "elysium") {
-    return <Leaf size={16} className="text-green-500" />;
+    return <Leaf size={size} className="text-green-500" />;
   }
 
-  return <Circle size={16} className="text-orange-500" />;
+  return <Circle size={size} className="text-orange-500" />;
 }
 
 function Games() {
   const { isLoading, data } = useGames({
     sort: "-date",
     expand: "placements(game),placements(game).player",
-    filter: "planned = false"
+    filter: "planned = false",
   });
 
   if (isLoading || !data) {
