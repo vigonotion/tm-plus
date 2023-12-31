@@ -22,6 +22,7 @@ import "../wrapped.css";
 import { WrappedBackground } from "@/components/WrappedBackground.tsx";
 import { match, P } from "ts-pattern";
 import { MapIcon } from "@/Games.tsx";
+import { motion } from "framer-motion";
 
 export function Wrapped({ playerId }: { playerId: string }) {
   const { data: player } = usePlayer(playerId, {});
@@ -189,22 +190,43 @@ export function Wrapped({ playerId }: { playerId: string }) {
         <>
           <WrappedBackground effect={"trunk"} />
 
-          <div
+          <motion.div
+            layout
+            layoutRoot
             className={
               "text-xl w-full h-full flex flex-col items-center justify-center gap-8 p-4 absolute transition-opacity duration-1000"
             }
           >
-            <div>Most of your games happened on</div>
-            <div className={"flex justify-center items-center gap-2"}>
+            <motion.div
+              layout
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+            >
+              Most of your games happened on
+            </motion.div>
+            <motion.div
+              layout
+              className={"flex justify-center items-center gap-2"}
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 1.5 }}
+            >
               <MapIcon map={favMap as "mars"} size={24} />{" "}
               <span className={"font-proto uppercase"}>
                 {match(favMap)
                   .with("mars", () => "tharsis")
                   .otherwise((p) => p)}
               </span>
-            </div>
-            <div>You've played it {favMapTimes} times</div>
-          </div>
+            </motion.div>
+            <motion.div
+              layout
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 3 }}
+            >
+              You've played it {favMapTimes} times
+            </motion.div>
+          </motion.div>
         </>
       ),
     },

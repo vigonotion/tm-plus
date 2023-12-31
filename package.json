@@ -26,6 +26,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "cmdk": "^0.2.0",
+    "framer-motion": "^10.16.16",
     "i": "^0.3.7",
     "just-group-by": "^2.2.0",
     "linq": "^4.0.2",
