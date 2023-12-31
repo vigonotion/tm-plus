@@ -231,52 +231,52 @@ export function Wrapped({ playerId }: { playerId: string }) {
         </>
       ),
     },
-    {
-      content: (props) => (
-        <>
-          <WrappedBackground effect={"waves"} />
-
-          <motion.div
-            layout
-            layoutRoot
-            className={
-              "text-xl w-full h-full flex flex-col items-center justify-center gap-8 p-4 absolute transition-opacity duration-1000 text-center"
-            }
-          >
-            <motion.div
-              layout
-              initial={{
-                opacity: 0,
-                transform: "translateY(-20px)",
-              }}
-              animate={{ opacity: 1, transform: "translateY(0px)" }}
-            >
-              There is one milestone you unlocked the most:
-            </motion.div>
-            <motion.div
-              layout
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 1.5 }}
-            >
-              <div className={"font-proto text-2xl"}>{favMile?.name}</div>
-              <div className={"text-sm opacity-40"}>{favMile?.note}</div>
-            </motion.div>
-            <motion.div
-              layout
-              initial={{
-                opacity: 0,
-                transform: "translateY(20px)",
-              }}
-              animate={{ opacity: 1, transform: "translateY(0px)" }}
-              transition={{ delay: 3 }}
-            >
-              You've unlocked it in {favMileTimes} games.
-            </motion.div>
-          </motion.div>
-        </>
-      ),
-    },
+    // {
+    //   content: (props) => (
+    //     <>
+    //       <WrappedBackground effect={"waves"} />
+    //
+    //       <motion.div
+    //         layout
+    //         layoutRoot
+    //         className={
+    //           "text-xl w-full h-full flex flex-col items-center justify-center gap-8 p-4 absolute transition-opacity duration-1000 text-center"
+    //         }
+    //       >
+    //         <motion.div
+    //           layout
+    //           initial={{
+    //             opacity: 0,
+    //             transform: "translateY(-20px)",
+    //           }}
+    //           animate={{ opacity: 1, transform: "translateY(0px)" }}
+    //         >
+    //           There is one milestone you unlocked the most:
+    //         </motion.div>
+    //         <motion.div
+    //           layout
+    //           initial={{ opacity: 0, scale: 0.5 }}
+    //           animate={{ opacity: 1, scale: 1 }}
+    //           transition={{ delay: 1.5 }}
+    //         >
+    //           <div className={"font-proto text-2xl"}>{favMile?.name}</div>
+    //           <div className={"text-sm opacity-40"}>{favMile?.note}</div>
+    //         </motion.div>
+    //         <motion.div
+    //           layout
+    //           initial={{
+    //             opacity: 0,
+    //             transform: "translateY(20px)",
+    //           }}
+    //           animate={{ opacity: 1, transform: "translateY(0px)" }}
+    //           transition={{ delay: 3 }}
+    //         >
+    //           You've unlocked it in {favMileTimes} games.
+    //         </motion.div>
+    //       </motion.div>
+    //     </>
+    //   ),
+    // },
     {
       content: (_) => {
         const [x, setX] = useState(0);
@@ -310,12 +310,18 @@ export function Wrapped({ playerId }: { playerId: string }) {
               style={{ opacity: 1 - y }}
             >
               <div>Your total terraform score is</div>
-              <div className={"flex items-center gap-2"}>
-                <span className="countdown font-proto text-6xl tm-countdown-wrapped">
-                  <span style={{ ["--value" as string]: x }}></span>
-                </span>
+              <motion.div
+                className={"flex items-center gap-2"}
+                initial={{
+                  opacity: 0,
+                  transform: "translateY(020px)",
+                }}
+                animate={{ opacity: 1, transform: "translateY(0px)" }}
+                transition={{ delay: 0.7 }}
+              >
+                <span className="font-proto text-6xl">{terraScore}</span>
                 <img src={imgTerra} width={64} />
-              </div>
+              </motion.div>
             </div>
 
             <div
