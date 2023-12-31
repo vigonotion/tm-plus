@@ -1,5 +1,11 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import Stories from "react-insta-stories";
 import { Story } from "react-insta-stories/dist/interfaces";
 import {
@@ -13,6 +19,8 @@ import Enumerable from "linq";
 import { Circle } from "lucide-react";
 
 import "../wrapped.css";
+import { WrappedBackground } from "@/components/WrappedBackground.tsx";
+import { match, P } from "ts-pattern";
 
 export function Wrapped({ playerId }: { playerId: string }) {
   const { data: player } = usePlayer(playerId, {});
@@ -89,26 +97,30 @@ export function Wrapped({ playerId }: { playerId: string }) {
 
   const stories: Story[] = [
     {
-      content: (props) => (
-        <>
-          <div className="gradient"></div>
+      content: (props) => {
+        return (
+          <>
+            {/*<div className="gradient"></div>*/}
 
-          <div
-            className={
-              "w-full h-full flex flex-col items-center justify-center gap-8 p-4 relative tm-textshadow"
-            }
-          >
-            <span className="flex gap-2 font-head uppercase items-center">
-              <Circle className="text-orange-500" />
-              <span className="mt-[3px]">
-                Terraforming Mars <sup>WRAPPED</sup>
+            <WrappedBackground effect={"topology"} />
+
+            <div
+              className={
+                "w-full h-full flex flex-col items-center justify-center gap-8 p-4 relative tm-textshadow"
+              }
+            >
+              <span className="flex gap-2 font-head uppercase items-center">
+                <Circle className="text-orange-500" />
+                <span className="mt-[3px]">
+                  Terraforming Mars <sup>WRAPPED</sup>
+                </span>
               </span>
-            </span>
-            <div className={"font-head text-5xl"}>2023</div>
-            <div className={"text-[3em] font-proto"}>for {player?.name}</div>
-          </div>
-        </>
-      ),
+              <div className={"font-head text-5xl"}>2023</div>
+              <div className={"text-[3em] font-proto"}>for {player?.name}</div>
+            </div>
+          </>
+        );
+      },
     },
     {
       content: (_) => {
@@ -122,7 +134,7 @@ export function Wrapped({ playerId }: { playerId: string }) {
 
           const t2 = window.setTimeout(() => {
             setY(1);
-          }, 4000);
+          }, 5000);
 
           return () => {
             window.clearTimeout(t);
@@ -130,14 +142,17 @@ export function Wrapped({ playerId }: { playerId: string }) {
           };
         }, [setX]);
 
+        const hours = (placements?.length ?? 0) * 4;
+
         return (
           <>
-            <div className="gradient2"></div>
-            <div className="gradient2b"></div>
+            <WrappedBackground effect={"halo"} />
+
             <div
               className={
-                "text-2xl w-full h-full flex flex-col items-center justify-center gap-8 p-4"
+                "text-xl w-full h-full flex flex-col items-center justify-center gap-8 p-4 absolute transition-opacity duration-1000"
               }
+              style={{ opacity: 1 - y }}
             >
               <div>You've played</div>
               <div>
@@ -146,15 +161,23 @@ export function Wrapped({ playerId }: { playerId: string }) {
                 </span>
               </div>
               <div>games this year.</div>
+            </div>
 
-              <div className="h-8"></div>
-
+            <div
+              className={
+                "text-xl w-full h-full flex flex-col items-center justify-center gap-8 p-4 absolute "
+              }
+            >
               <div
-                className={"text-center transition-opacity duration-700"}
+                className={"text-center transition-opacity duration-1000 w-2/3"}
                 style={{ opacity: y }}
               >
                 With an average game duration of 4 hours, that would be{" "}
-                {Math.floor(((placements?.length ?? 0) * 4) / 24)} days!
+                {match(hours)
+                  .with(P.number.between(0, 24), (h) => hours + " hours")
+                  .with(P.number.lt(47), () => "a full day")
+                  .otherwise((p) => Math.floor(p / 24) + " days")}
+                !
               </div>
             </div>
           </>

@@ -62,7 +62,7 @@ export function Player({ player }: { player: string }) {
               </CardHeader>
               <CardContent className="p-0 flex flex-col space-between grow gap-8">
                 <div className="px-6 flex gap-2 items-center">
-                  <div className="text-3xl">
+                  <div className="text-2xl md:text-3xl">
                     <span>Check out your year in rewind</span>
                     <ArrowRight className={"inline-block ml-2"} />
                   </div>
