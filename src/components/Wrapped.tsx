@@ -17,6 +17,7 @@ import {
 import { useRatings } from "@/hooks/use-ratings.tsx";
 import Enumerable from "linq";
 import { Circle } from "lucide-react";
+import imgTerra from "../assets/terra.png";
 
 import "../wrapped.css";
 import { WrappedBackground } from "@/components/WrappedBackground.tsx";
@@ -277,15 +278,62 @@ export function Wrapped({ playerId }: { playerId: string }) {
       ),
     },
     {
-      content: (props) => (
-        <div>
-          <div>You got {terraScore} terra scores.</div>
-          <div>
-            That means you alone terraformed the mars{" "}
-            {Math.floor(terraScore / 43)} times
-          </div>
-        </div>
-      ),
+      content: (_) => {
+        const [x, setX] = useState(0);
+        const [y, setY] = useState(0);
+
+        useEffect(() => {
+          const t = window.setTimeout(() => {
+            setX(terraScore ?? 0);
+          }, 500);
+
+          const t2 = window.setTimeout(() => {
+            setY(1);
+          }, 6000);
+
+          return () => {
+            window.clearTimeout(t);
+            window.clearTimeout(t2);
+          };
+        }, [setX]);
+
+        const hours = (placements?.length ?? 0) * 4;
+
+        return (
+          <>
+            <WrappedBackground effect={"fog"} />
+
+            <div
+              className={
+                "text-xl w-full h-full flex flex-col items-center justify-center gap-4 p-4 absolute transition-opacity duration-1000"
+              }
+              style={{ opacity: 1 - y }}
+            >
+              <div>Your total terraform score is</div>
+              <div className={"flex items-center gap-2"}>
+                <span className="countdown font-proto text-6xl tm-countdown-wrapped">
+                  <span style={{ ["--value" as string]: x }}></span>
+                </span>
+                <img src={imgTerra} width={64} />
+              </div>
+            </div>
+
+            <div
+              className={
+                "text-xl w-full h-full flex flex-col items-center justify-center gap-8 p-4 absolute "
+              }
+            >
+              <div
+                className={"text-center transition-opacity duration-1000 w-2/3"}
+                style={{ opacity: y }}
+              >
+                That means you alone terraformed the mars{" "}
+                {Math.floor(terraScore / 43)} times.
+              </div>
+            </div>
+          </>
+        );
+      },
     },
     {
       content: (props) => (

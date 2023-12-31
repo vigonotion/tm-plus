@@ -4,6 +4,7 @@ import HALO from "vanta/src/vanta.halo";
 import TRUNK from "vanta/src/vanta.trunk";
 import WAVES from "vanta/src/vanta.waves";
 import CLOUDS from "vanta/src/vanta.clouds";
+import FOG from "vanta/src/vanta.fog";
 import NET from "vanta/src/vanta.net";
 import DOTS from "vanta/src/vanta.dots";
 
@@ -12,7 +13,7 @@ import p5 from "p5";
 import { match } from "ts-pattern";
 import { cn } from "@/utils.ts";
 
-export type Effect = "topology" | "halo" | "trunk" | "waves";
+export type Effect = "topology" | "halo" | "trunk" | "waves" | "fog";
 
 function Background({
   effect,
@@ -84,6 +85,18 @@ function Background({
             color: 0x140b06,
             shininess: 8.0,
             waveSpeed: 0.4,
+          }),
+        )
+        .with("fog", () =>
+          CLOUDS({
+            el: myRef.current,
+            THREE: THREE,
+            p5: p5,
+            minHeight: 200.0,
+            minWidth: 200.0,
+            skyColor: 0x181414,
+            sunColor: 0x412607,
+            speed: 0.7,
           }),
         )
         .exhaustive();
