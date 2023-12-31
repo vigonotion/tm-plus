@@ -13,7 +13,14 @@ import p5 from "p5";
 import { match } from "ts-pattern";
 import { cn } from "@/utils.ts";
 
-export type Effect = "topology" | "halo" | "trunk" | "waves" | "fog" | "net";
+export type Effect =
+  | "topology"
+  | "halo"
+  | "trunk"
+  | "waves"
+  | "fog"
+  | "net"
+  | "dots";
 
 function Background({
   effect,
@@ -113,6 +120,17 @@ function Background({
             showDots: false,
           }),
         )
+        .with("dots", () =>
+          DOTS({
+            el: myRef.current,
+            THREE: THREE,
+            p5: p5,
+            minHeight: 200.0,
+            minWidth: 200.0,
+            scale: 1.0,
+            scaleMobile: 1.0,
+          }),
+        )
         .exhaustive();
 
       setVantaEffect(e);
@@ -121,8 +139,6 @@ function Background({
       if (vantaEffect) vantaEffect.destroy();
     };
   }, [effect, vantaEffect]);
-
-  console.log("rerender");
 
   return (
     <div className={cn("w-full h-full absolute", className)} ref={myRef}></div>

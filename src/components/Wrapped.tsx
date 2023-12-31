@@ -24,6 +24,8 @@ import { WrappedBackground } from "@/components/WrappedBackground.tsx";
 import { match, P } from "ts-pattern";
 import { MapIcon } from "@/Games.tsx";
 import { motion } from "framer-motion";
+import { isMobile } from "react-device-detect";
+import { Button } from "@/components/ui/button.tsx";
 
 export function Wrapped({ playerId }: { playerId: string }) {
   const { data: player } = usePlayer(playerId, {});
@@ -102,8 +104,6 @@ export function Wrapped({ playerId }: { playerId: string }) {
       content: (props) => {
         return (
           <>
-            {/*<div className="gradient"></div>*/}
-
             <WrappedBackground effect={"topology"} />
 
             <div
@@ -385,15 +385,88 @@ export function Wrapped({ playerId }: { playerId: string }) {
       ),
     },
     {
-      content: (props) => (
-        <div>
-          <div>
-            You've won {placements?.filter((x) => x.placement === 1).length}{" "}
-            times this year
-          </div>
-          <div>And your longest streak was {winStreak} sessions long</div>
-        </div>
-      ),
+      content: (_) => {
+        const [x, setX] = useState(0);
+        const [y, setY] = useState(0);
+
+        useEffect(() => {
+          const t = window.setTimeout(() => {
+            setX(placements?.filter((x) => x.placement === 1).length ?? 0);
+          }, 500);
+
+          const t2 = window.setTimeout(() => {
+            setY(1);
+          }, 6000);
+
+          return () => {
+            window.clearTimeout(t);
+            window.clearTimeout(t2);
+          };
+        }, [setX]);
+
+        const hours = (placements?.length ?? 0) * 4;
+
+        return (
+          <>
+            <WrappedBackground effect={"halo"} />
+
+            <div
+              className={
+                "text-xl w-full h-full flex flex-col items-center justify-center gap-8 p-4 absolute transition-opacity duration-1000"
+              }
+              style={{ opacity: 1 - y }}
+            >
+              <div>You've won</div>
+              <div>
+                <span className="countdown font-proto text-6xl tm-countdown-wrapped">
+                  <span style={{ ["--value" as string]: x }}></span>
+                </span>
+              </div>
+              <div>games this year.</div>
+            </div>
+
+            <div
+              className={
+                "text-xl w-full h-full flex flex-col items-center justify-center gap-8 p-4 absolute "
+              }
+            >
+              <div
+                className={"text-center transition-opacity duration-1000 w-2/3"}
+                style={{ opacity: y }}
+              >
+                <div>Your longest streak was</div>
+                <div className={"font-proto"}>{winStreak} sessions long</div>
+              </div>
+            </div>
+          </>
+        );
+      },
+    },
+    {
+      content: (props) => {
+        return (
+          <>
+            <WrappedBackground effect={"topology"} />
+
+            <div
+              className={
+                "w-full h-full flex flex-col items-center justify-center gap-8 p-4 relative tm-textshadow"
+              }
+            >
+              <div className={"font-proto text-5xl text-center"}>
+                here's to a new year
+              </div>
+
+              <span className="flex gap-2 font-head uppercase items-center">
+                <Circle className="text-orange-500" />
+                <span className="mt-[3px]">
+                  Terraforming Mars <sup>+</sup>
+                </span>
+              </span>
+            </div>
+          </>
+        );
+      },
     },
   ];
 
@@ -401,10 +474,9 @@ export function Wrapped({ playerId }: { playerId: string }) {
     <div className={"flex content-center items-center justify-center"}>
       <Stories
         stories={stories}
-        defaultInterval={500000}
-        // width={"100dvw"}
-        // height={"100dvh"}
-
+        defaultInterval={10000}
+        width={isMobile ? "100dvw" : undefined}
+        height={isMobile ? "100dvh" : undefined}
         keyboardNavigation={true}
       />
     </div>
