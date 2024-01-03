@@ -247,7 +247,9 @@ export function Game() {
                     scorePolitics;
 
                   const scoreReady =
-                    (data.expand?.["milestones_unlocked(game)"] &&
+                    (data?.map_state !== undefined &&
+                      data?.map_state !== "" &&
+                      data.expand?.["milestones_unlocked(game)"] &&
                       data.expand?.["awards_unlocked(game)"] &&
                       scoreTw +
                         scoreCities +
@@ -262,52 +264,56 @@ export function Game() {
                   const scorings = (
                     <div className="flex gap-4">
                       <span>{p.score}</span>
-                      {scoreTw > 0 && (
-                        <span className="flex gap-2 items-center">
-                          <ArrowUpRightFromCircle
-                            size={16}
-                            className="text-orange-500"
-                          />
-                          <span>{scoreTw}</span>
-                        </span>
-                      )}
-                      {data.expand?.["awards_unlocked(game)"] && (
-                        <span className="flex gap-2 items-center">
-                          <Award size={16} className="text-yellow-600" />{" "}
-                          <span>{scoreAwards}</span>
-                        </span>
-                      )}
-                      {data.expand?.["milestones_unlocked(game)"] && (
-                        <span className="flex gap-2 items-center">
-                          <Rocket size={16} className="text-yellow-700" />{" "}
-                          <span>{scoreMile}</span>
-                        </span>
-                      )}
-                      {scoreCities >= 0 && scoreGreenery >= 0 && (
+                      {scoreReady && (
                         <>
-                          <span className="flex gap-2 items-center">
-                            <Hexagon size={16} /> <span>{scoreCities}</span>
-                          </span>
-                          <span className="flex gap-2 items-center">
-                            <Hexagon size={16} className="text-green-700" />{" "}
-                            <span>{scoreGreenery}</span>
-                          </span>
+                          {scoreTw > 0 && (
+                            <span className="flex gap-2 items-center">
+                              <ArrowUpRightFromCircle
+                                size={16}
+                                className="text-orange-500"
+                              />
+                              <span>{scoreTw}</span>
+                            </span>
+                          )}
+                          {data.expand?.["awards_unlocked(game)"] && (
+                            <span className="flex gap-2 items-center">
+                              <Award size={16} className="text-yellow-600" />{" "}
+                              <span>{scoreAwards}</span>
+                            </span>
+                          )}
+                          {data.expand?.["milestones_unlocked(game)"] && (
+                            <span className="flex gap-2 items-center">
+                              <Rocket size={16} className="text-yellow-700" />{" "}
+                              <span>{scoreMile}</span>
+                            </span>
+                          )}
+                          {scoreCities >= 0 && scoreGreenery >= 0 && (
+                            <>
+                              <span className="flex gap-2 items-center">
+                                <Hexagon size={16} /> <span>{scoreCities}</span>
+                              </span>
+                              <span className="flex gap-2 items-center">
+                                <Hexagon size={16} className="text-green-700" />{" "}
+                                <span>{scoreGreenery}</span>
+                              </span>
+                            </>
+                          )}
+                          {scoreCards >= 0 && scoreTw > 0 && (
+                            <span className="flex gap-2 items-center">
+                              <RectangleVertical
+                                size={16}
+                                className="text-blue-500"
+                              />
+                              <span>{scoreCards}</span>
+                            </span>
+                          )}
+                          {scoreCards >= 0 && scoreTw > 0 && (
+                            <span className="flex gap-2 items-center">
+                              <Gavel size={16} className="text-red-500" />
+                              <span>{scorePolitics}</span>
+                            </span>
+                          )}
                         </>
-                      )}
-                      {scoreCards >= 0 && scoreTw > 0 && (
-                        <span className="flex gap-2 items-center">
-                          <RectangleVertical
-                            size={16}
-                            className="text-blue-500"
-                          />
-                          <span>{scoreCards}</span>
-                        </span>
-                      )}
-                      {scoreCards >= 0 && scoreTw > 0 && (
-                        <span className="flex gap-2 items-center">
-                          <Gavel size={16} className="text-red-500" />
-                          <span>{scorePolitics}</span>
-                        </span>
                       )}
                     </div>
                   );
