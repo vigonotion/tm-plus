@@ -9,7 +9,8 @@
     "lint": "next lint",
     "pages:build": "npx @cloudflare/next-on-pages",
     "pages:preview": "npm run pages:build && wrangler pages dev .vercel/output/static --compatibility-date=2024-01-29 --compatibility-flag=nodejs_compat",
-    "pages:deploy": "npm run pages:build && wrangler pages deploy .vercel/output/static"
+    "pages:deploy": "npm run pages:build && wrangler pages deploy .vercel/output/static",
+    "prepare": "panda codegen"
   },
   "dependencies": {
     "next": "14.1.0",
@@ -19,6 +20,7 @@
   "devDependencies": {
     "@cloudflare/next-on-pages": "^1.8.6",
     "@cloudflare/workers-types": "^4.20240129.0",
+    "@pandacss/dev": "^0.29.1",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
