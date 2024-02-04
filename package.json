@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "concurrently \"next dev\" \"panda --watch\"",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -13,14 +13,18 @@
     "prepare": "panda codegen"
   },
   "dependencies": {
+    "concurrently": "^8.2.2",
+    "lucide-react": "^0.321.0",
     "next": "14.1.0",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-resizable-panels": "^2.0.3"
   },
   "devDependencies": {
     "@cloudflare/next-on-pages": "^1.8.6",
     "@cloudflare/workers-types": "^4.20240129.0",
     "@pandacss/dev": "^0.29.1",
+    "@radix-ui/colors": "^3.0.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
@@ -29,6 +33,7 @@
     "eslint-config-next": "14.1.0",
     "eslint-plugin-next-on-pages": "^1.8.6",
     "eslint-plugin-react-refresh": "^0.4.5",
+    "pandacss-preset-radix-colors": "^0.2.0",
     "typescript": "^5",
     "vercel": "^33.4.1",
     "wrangler": "^3.26.0"
