@@ -4,7 +4,7 @@ import { css } from "../../styled-system/css";
 
 export function Logo() {
   return (
-    <div className={hstack({ justify: "start", p: "m" })}>
+    <div className={hstack({ justify: "start" })}>
       <Circle className={css({ color: "orange.9" })} />
       <span
         className={css({

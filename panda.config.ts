@@ -28,6 +28,11 @@ export default defineConfig({
         xl: { value: "2.5rem" },
         "2xl": { value: "3rem" },
       },
+      radii: {
+        s: { value: "5px" },
+        m: { value: "10px" },
+        full: { value: "9999px" },
+      },
     },
     extend: {
       tokens: {
