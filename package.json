@@ -10,7 +10,8 @@
     "pages:build": "npx @cloudflare/next-on-pages",
     "pages:preview": "npm run pages:build && wrangler pages dev .vercel/output/static --compatibility-date=2024-01-29 --compatibility-flag=nodejs_compat",
     "pages:deploy": "npm run pages:build && wrangler pages deploy .vercel/output/static",
-    "prepare": "panda codegen"
+    "prepare": "panda codegen",
+    "postinstall": "npm run prepare"
   },
   "dependencies": {
     "concurrently": "^8.2.2",
