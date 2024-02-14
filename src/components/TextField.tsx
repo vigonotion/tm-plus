@@ -12,6 +12,7 @@ import { Input } from "@/components/atoms/Input";
 import { vstack } from "@styled-system/patterns";
 import { FieldError } from "@/components/atoms/FieldError";
 import { FieldWrapper } from "@/components/atoms/FieldWrapper";
+import { css } from "@styled-system/css";
 
 interface MyTextFieldProps extends TextFieldProps {
   label?: string;
@@ -30,7 +31,14 @@ export function TextField({
   return (
     <AriaTextField {...props}>
       {({ isInvalid }) => (
-        <>
+        <div
+          className={css({
+            gap: 0,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "stretch",
+          })}
+        >
           <FieldWrapper isInvalid={isInvalid}>
             <div className={vstack({ alignItems: "start", gap: "4xs" })}>
               <Label>{label}</Label>
@@ -39,7 +47,7 @@ export function TextField({
             </div>
           </FieldWrapper>
           <FieldError>{errorMessage}</FieldError>
-        </>
+        </div>
       )}
     </AriaTextField>
   );

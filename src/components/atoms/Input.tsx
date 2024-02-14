@@ -6,5 +6,8 @@ import { styled } from "@styled-system/jsx";
 export const Input = styled(AriaInput, {
   base: {
     all: "unset",
+    _placeholder: {
+      color: "slate.9",
+    },
   },
 });

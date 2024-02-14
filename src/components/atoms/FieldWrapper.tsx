@@ -24,7 +24,7 @@ export const FieldWrapper = styled("div", {
   variants: {
     isInvalid: {
       true: {
-        outline: "thin solid token(colors.ruby.6)",
+        roundedBottom: 0,
       },
     },
   },
