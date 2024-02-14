@@ -1,6 +1,7 @@
 import { css } from "@styled-system/css";
 import { vstack } from "@styled-system/patterns";
 import { TextField } from "@/components/TextField";
+import { NumberField } from "@/components/NumberField";
 
 export default function ComponentsPage() {
   return (
@@ -19,6 +20,7 @@ export default function ComponentsPage() {
           placeholder={"John Doe"}
           errorMessage={"Cannot be empty"}
         />
+        <NumberField label={"Age"} placeholder={"42"} />
       </div>
     </div>
   );

@@ -11,9 +11,10 @@ import { Label } from "@/components/atoms/Label";
 import { Input } from "@/components/atoms/Input";
 import { vstack } from "@styled-system/patterns";
 import { FieldError } from "@/components/atoms/FieldError";
-import { FieldInnerWrapper } from "@/components/atoms/FieldInnerWrapper";
+import { FieldBackground } from "@/components/atoms/FieldBackground";
 import { css } from "@styled-system/css";
-import { FieldOuterWrapper } from "@/components/atoms/FieldOuterWrapper";
+import { FieldWrapper } from "@/components/atoms/FieldWrapper";
+import { LabelInputStack } from "./atoms/LabelInputStack";
 
 interface MyTextFieldProps extends TextFieldProps {
   label?: string;
@@ -32,14 +33,16 @@ export function TextField({
   return (
     <AriaTextField {...props}>
       {({ isInvalid }) => (
-        <FieldOuterWrapper>
-          <FieldInnerWrapper isInvalid={isInvalid}>
-            <Label>{label}</Label>
-            <Input placeholder={placeholder} />
-            {description && <Text slot="description">{description}</Text>}
-          </FieldInnerWrapper>
+        <FieldWrapper>
+          <FieldBackground isInvalid={isInvalid}>
+            <LabelInputStack>
+              <Label>{label}</Label>
+              <Input placeholder={placeholder} />
+              {description && <Text slot="description">{description}</Text>}
+            </LabelInputStack>
+          </FieldBackground>
           <FieldError>{errorMessage}</FieldError>
-        </FieldOuterWrapper>
+        </FieldWrapper>
       )}
     </AriaTextField>
   );

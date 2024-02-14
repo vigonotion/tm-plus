@@ -50,6 +50,18 @@ export default defineConfig({
     },
   },
 
+  utilities: {
+    extend: {
+      size: {
+        className: "size",
+        values: "sizes",
+        transform(value) {
+          return { width: value, height: value };
+        },
+      },
+    },
+  },
+
   // The output directory for your css system
   outdir: "styled-system",
 

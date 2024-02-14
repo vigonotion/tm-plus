@@ -1,11 +1,10 @@
 import { styled } from "@styled-system/jsx";
 
-export const FieldOuterWrapper = styled("div", {
+export const LabelInputStack = styled("div", {
   base: {
-    gap: 0,
     display: "flex",
     flexDirection: "column",
-    alignItems: "stretch",
+    gap: "4xs",
+    flexGrow: 1,
   },
-  variants: {},
 });

@@ -1,10 +1,10 @@
 import { styled } from "@styled-system/jsx";
 
-export const FieldInnerWrapper = styled("div", {
+export const FieldBackground = styled("div", {
   base: {
     display: "flex",
-    flexDirection: "column",
-    gap: "4xs",
+    gap: "s",
+    alignItems: "center",
 
     px: "xs",
     py: "2xs",
