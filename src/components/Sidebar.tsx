@@ -20,7 +20,6 @@ export function Sidebar() {
         className={hstack({
           px: "xs",
           py: "2xs",
-          // border: "1px solid token(colors.sand.6)",
           rounded: "s",
           justify: "space-between",
           colorPalette: "sand",

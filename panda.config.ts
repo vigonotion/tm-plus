@@ -40,12 +40,13 @@ export default defineConfig({
           proto: { value: "var(--font-prototype), sans-serif" },
           headline: { value: "var(--font-hubot), sans-serif" },
         },
+        fontSizes: {
+          sm: { value: ".8em" },
+        },
       },
     },
     semanticTokens: {
-      colors: {
-        neutral: { value: "{colors.sand}" },
-      },
+      colors: {},
     },
   },
 
@@ -53,6 +54,7 @@ export default defineConfig({
   outdir: "styled-system",
 
   prefix: "tm",
+  jsxFramework: "react",
 
   globalCss,
 
