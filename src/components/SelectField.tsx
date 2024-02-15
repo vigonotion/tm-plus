@@ -4,12 +4,12 @@ import {
   Button,
   ComboBox,
   ComboBoxProps,
-  ListBox,
   Popover,
   ValidationResult,
   Text,
   ListBoxItemProps,
   ListBoxItem,
+  Group,
 } from "react-aria-components";
 import { Label } from "@/components/atoms/Label";
 import { Input } from "@/components/atoms/Input";
@@ -18,8 +18,11 @@ import { Key } from "react";
 import { FieldWrapper } from "@/components/atoms/FieldWrapper";
 import { FieldBackground } from "./atoms/FieldBackground";
 import { LabelInputStack } from "./atoms/LabelInputStack";
-import { ArrowDown, ChevronDown, Minus } from "lucide-react";
+import { ArrowDown, Check, ChevronDown, Minus } from "lucide-react";
 import { FieldButton } from "@/components/atoms/FieldButton";
+import { FieldPopover } from "@/components/atoms/FieldPopover";
+import { ListItem } from "@/components/atoms/ListItem";
+import { ListBox } from "@/components/atoms/ListBox";
 
 interface ValueType extends ListBoxItemProps<{ text: string }> {}
 
@@ -40,7 +43,7 @@ export function SelectField({
   return (
     <ComboBox {...props}>
       {({ isInvalid }) => (
-        <>
+        <Group>
           <FieldWrapper>
             <FieldBackground isInvalid={isInvalid}>
               <LabelInputStack>
@@ -52,22 +55,22 @@ export function SelectField({
               </FieldButton>
             </FieldBackground>
             <FieldError>{errorMessage}</FieldError>
-            <Popover>
+            <FieldPopover crossOffset={-12}>
               <ListBox>
                 {(item: ValueType) => (
                   <ListBoxItem {...item}>
                     {({ isSelected }) => (
-                      <div>
-                        {isSelected && <span>☑️</span>}
+                      <ListItem isSelected={isSelected}>
                         <span>{item.value?.text}</span>
-                      </div>
+                        {isSelected && <Check size={14} />}
+                      </ListItem>
                     )}
                   </ListBoxItem>
                 )}
               </ListBox>
-            </Popover>
+            </FieldPopover>
           </FieldWrapper>
-        </>
+        </Group>
       )}
     </ComboBox>
   );

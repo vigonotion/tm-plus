@@ -23,7 +23,11 @@ export default function ComponentsPage() {
         <NumberField label={"Age"} placeholder={"42"} />
         <SelectField
           label={"Favorite color"}
-          items={[{ id: "1", value: { text: "Green" } }]}
+          items={["Green", "Orange", "Blue"].map((x) => ({
+            id: x,
+            value: { text: x },
+            textValue: x,
+          }))}
           // isInvalid={true}
           // errorMessage={"Cannot be empty"}
         />
