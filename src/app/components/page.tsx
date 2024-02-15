@@ -23,7 +23,12 @@ export default function ComponentsPage() {
           errorMessage={"Cannot be empty"}
         />
         <NumberField label={"Age"} placeholder={"42"} />
-        <SelectField items={[{ id: "1", value: { text: "One" } }]} />
+        <SelectField
+          label={"Favorite color"}
+          items={[{ id: "1", value: { text: "Green" } }]}
+          // isInvalid={true}
+          // errorMessage={"Cannot be empty"}
+        />
       </div>
     </div>
   );

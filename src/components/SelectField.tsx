@@ -15,6 +15,11 @@ import { Label } from "@/components/atoms/Label";
 import { Input } from "@/components/atoms/Input";
 import { FieldError } from "@/components/atoms/FieldError";
 import { Key } from "react";
+import { FieldWrapper } from "@/components/atoms/FieldWrapper";
+import { FieldBackground } from "./atoms/FieldBackground";
+import { LabelInputStack } from "./atoms/LabelInputStack";
+import { ArrowDown, ChevronDown, Minus } from "lucide-react";
+import { FieldButton } from "@/components/atoms/FieldButton";
 
 interface ValueType extends ListBoxItemProps<{ text: string }> {}
 
@@ -22,37 +27,48 @@ interface MyComboBoxProps extends Omit<ComboBoxProps<ValueType>, "children"> {
   label?: string;
   description?: string | null;
   errorMessage?: string | ((validation: ValidationResult) => string);
+  placeholder?: string;
 }
 
 export function SelectField({
   label,
   description,
   errorMessage,
+  placeholder,
   ...props
 }: MyComboBoxProps) {
   return (
     <ComboBox {...props}>
-      <Label>{label}</Label>
-      <div className="my-combobox-container">
-        <Input />
-        <Button>▼</Button>
-      </div>
-      {description && <Text slot="description">{description}</Text>}
-      <FieldError>{errorMessage}</FieldError>
-      <Popover>
-        <ListBox>
-          {(item: ValueType) => (
-            <ListBoxItem {...item}>
-              {({ isSelected }) => (
-                <div>
-                  {isSelected && <span>☑️</span>}
-                  <span>{item.value?.text}</span>
-                </div>
-              )}
-            </ListBoxItem>
-          )}
-        </ListBox>
-      </Popover>
+      {({ isInvalid }) => (
+        <>
+          <FieldWrapper>
+            <FieldBackground isInvalid={isInvalid}>
+              <LabelInputStack>
+                <Label>{label}</Label>
+                <Input placeholder={placeholder} />
+              </LabelInputStack>
+              <FieldButton>
+                <ChevronDown size={14} />
+              </FieldButton>
+            </FieldBackground>
+            <FieldError>{errorMessage}</FieldError>
+            <Popover>
+              <ListBox>
+                {(item: ValueType) => (
+                  <ListBoxItem {...item}>
+                    {({ isSelected }) => (
+                      <div>
+                        {isSelected && <span>☑️</span>}
+                        <span>{item.value?.text}</span>
+                      </div>
+                    )}
+                  </ListBoxItem>
+                )}
+              </ListBox>
+            </Popover>
+          </FieldWrapper>
+        </>
+      )}
     </ComboBox>
   );
 }
