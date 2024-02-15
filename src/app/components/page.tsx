@@ -2,6 +2,8 @@ import { css } from "@styled-system/css";
 import { vstack } from "@styled-system/patterns";
 import { TextField } from "@/components/TextField";
 import { NumberField } from "@/components/NumberField";
+import { SelectField } from "@/components/SelectField";
+import { UseClient } from "@/components/UseClient";
 
 export default function ComponentsPage() {
   return (
@@ -21,6 +23,7 @@ export default function ComponentsPage() {
           errorMessage={"Cannot be empty"}
         />
         <NumberField label={"Age"} placeholder={"42"} />
+        <SelectField items={[{ id: "1", value: { text: "One" } }]} />
       </div>
     </div>
   );
