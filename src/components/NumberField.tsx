@@ -17,6 +17,7 @@ import { LabelInputStack } from "@/components/atoms/LabelInputStack";
 import { styled } from "@styled-system/jsx";
 import { Minus, Plus } from "lucide-react";
 import { hstack } from "@styled-system/patterns";
+import { FieldButton } from "@/components/atoms/FieldButton";
 
 interface MyNumberFieldProps extends NumberFieldProps {
   label?: string;
@@ -24,23 +25,6 @@ interface MyNumberFieldProps extends NumberFieldProps {
   errorMessage?: string | ((validation: ValidationResult) => string);
   placeholder?: string;
 }
-
-const GizmoButton = styled(AriaButton, {
-  base: {
-    width: 32,
-    height: 32,
-    rounded: "full",
-    _hover: {
-      bgColor: "black.a.3",
-    },
-    _active: {
-      bgColor: "black.a.4",
-    },
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
 
 export function NumberField({
   label,
@@ -61,12 +45,12 @@ export function NumberField({
                 {description && <Text slot="description">{description}</Text>}
               </LabelInputStack>
               <div className={hstack({ gap: "4xs" })}>
-                <GizmoButton slot="decrement">
+                <FieldButton slot="decrement">
                   <Minus size={14} />
-                </GizmoButton>
-                <GizmoButton slot="increment">
+                </FieldButton>
+                <FieldButton slot="increment">
                   <Plus size={14} />
-                </GizmoButton>
+                </FieldButton>
               </div>
             </FieldBackground>
             <FieldError>{errorMessage}</FieldError>
