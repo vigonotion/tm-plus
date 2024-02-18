@@ -2,6 +2,7 @@ import { css } from "@styled-system/css";
 import { TextField } from "@/components/TextField";
 import { NumberField } from "@/components/NumberField";
 import { SelectField } from "@/components/SelectField";
+import { Button } from "@/components/Button";
 
 export default function ComponentsPage() {
   return (
@@ -31,6 +32,7 @@ export default function ComponentsPage() {
           // isInvalid={true}
           // errorMessage={"Cannot be empty"}
         />
+        <Button>Submit</Button>
       </div>
     </div>
   );
