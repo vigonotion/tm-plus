@@ -20,7 +20,7 @@ export default defineConfig({
       spacing: {
         "4xs": { value: "0.125rem" },
         "3xs": { value: "0.25rem" },
-        "2xs": { value: "0.55rem" },
+        "2xs": { value: "0.5rem" },
         xs: { value: "0.75rem" },
         s: { value: "1rem" },
         m: { value: "1.5rem" },

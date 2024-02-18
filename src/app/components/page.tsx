@@ -2,6 +2,7 @@ import { css } from "@styled-system/css";
 import { TextField } from "@/components/TextField";
 import { NumberField } from "@/components/NumberField";
 import { SelectField } from "@/components/SelectField";
+import { Button } from "@/components/Button";
 
 export default function ComponentsPage() {
   return (
@@ -23,10 +24,15 @@ export default function ComponentsPage() {
         <NumberField label={"Age"} placeholder={"42"} />
         <SelectField
           label={"Favorite color"}
-          items={[{ id: "1", value: { text: "Green" } }]}
+          items={["Green", "Orange", "Blue"].map((x) => ({
+            id: x,
+            value: { text: x },
+            textValue: x,
+          }))}
           // isInvalid={true}
           // errorMessage={"Cannot be empty"}
         />
+        <Button>Submit</Button>
       </div>
     </div>
   );
