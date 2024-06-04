@@ -8,24 +8,53 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "./ui/navigation-menu";
-import { Circle } from "lucide-react";
+import { ArrowRight, Circle } from "lucide-react";
 import { Link, useRouter, useNavigate } from "@tanstack/react-router";
 import { cn } from "@/utils";
 import {conn} from "@/conn.ts";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 export function Navbar() {
   const router = useRouter();
 
+  const [shown, setShown] = useLocalStorage("wrappedbar_shown", true);
+
+  function handleWrapped() {
+    setShown(false);
+    router.navigate({
+      to: "/players",
+    });
+  }
+
   return (
     <>
       <NavigationMenu className="md:fixed [&>*]:w-full">
-        <NavigationMenuList>
-          <NavigationMenuItem className="flex gap-2 font-head mx-4 uppercase items-center">
-            <Circle className="text-orange-500" />
-            <span className="mt-[3px]">Terraforming Marsᐩ</span>
+        {shown && (
+          <div
+            className="p-2 bg-orange-900 w-full text-center flex justify-center items-center gap-2 cursor-pointer"
+            onClick={handleWrapped}
+          >
+            <span className="flex-shrink">
+              🍾 Your
+              <span className="font-head uppercase mx-2">
+                Terraforming Mars WRAPPED
+              </span>
+              is ready! Check it out
+            </span>
+            <ArrowRight className="flex-shrink-0" />
+          </div>
+        )}
+        <NavigationMenuList className="w-[100vw]">
+          <NavigationMenuItem className={"ml-1 mr-4"}>
+            <Link to="/" className={navigationMenuTriggerStyle()}>
+              <span className="flex gap-2 font-head uppercase items-center">
+                <Circle className="text-orange-500" />
+                <span className="mt-[3px]">Terraforming Marsᐩ</span>
+              </span>
+            </Link>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <Link to="/" className={navigationMenuTriggerStyle()}>
+            <Link to="/games" className={navigationMenuTriggerStyle()}>
               Games
             </Link>
           </NavigationMenuItem>
@@ -49,7 +78,7 @@ export function Navbar() {
                     <Link
                       className={cn(
                         "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-                        ""
+                        "",
                       )}
                       to="/elo-sim"
                     >
@@ -67,7 +96,7 @@ export function Navbar() {
                     <Link
                       className={cn(
                         "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-                        ""
+                        "",
                       )}
                       to="/mapTool"
                     >
@@ -108,7 +137,10 @@ export function Navbar() {
             }
         </NavigationMenuList>
       </NavigationMenu>
-      <span className="md:h-24 inline-block"></span>
+      <span
+        className={"inline-block"}
+        style={{ marginBottom: shown ? "8rem" : "6rem" }}
+      ></span>
     </>
   );
 }

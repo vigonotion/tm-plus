@@ -9,6 +9,7 @@ export type Placement = {
     game: string,
     corp?: string,
     color?: string,
+    politics_tw: number,
 
     expand?: {
         player?: Player,

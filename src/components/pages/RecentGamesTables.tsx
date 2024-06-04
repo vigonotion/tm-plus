@@ -41,7 +41,16 @@ export function RecentGamesTables({ placements }: { placements: Placement[] }) {
             <TableCell>
               <span key={x.player} className="flex items-center">
                 <span>
-                  {x.placement}. {x.expand?.player?.name}
+
+
+                    <Link
+                        to="/players/$player"
+                        params={{ player: x.expand?.player?.id || "" }}
+                        className="underline"
+                    >
+                    {x.placement}. {x.expand?.player?.name}
+                  </Link>
+
                 </span>
                 {/* {isWin(x.placement, placements.length) && (
                           <Trophy className="text-yellow-500 ml-2" size={12} />

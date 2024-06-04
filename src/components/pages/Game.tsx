@@ -14,13 +14,14 @@ import {
   Award,
   Calendar,
   Clock,
+  Gavel,
   Hexagon,
   Info,
   RectangleVertical,
   Rocket,
   Trophy,
 } from "lucide-react";
-import { isWin } from "@/utils";
+import { isWin, toElo } from "@/utils";
 import { Link, useRouteContext } from "@tanstack/react-router";
 import { FullLoading, Loading } from "../Loading";
 import { GridGenerator, Hex, HexUtils, Text } from "react-hexgrid";
@@ -35,6 +36,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { mapScore } from "@/utils/mapscore";
 import { ResponsiveContainer, Sankey } from "recharts";
 import { SankeyNode } from "recharts/types/util/types";
+import { useRatings } from "@/hooks/use-ratings.tsx";
 
 export const hexagons: Hex[] = GridGenerator.hexagon(4).sort((a, b) => {
   if (a.r == b.r) {
@@ -93,7 +95,7 @@ function SankeyNodeC(
     width: number;
     height: number;
     payload: { name: string; value: number };
-  }
+  },
 ) {
   return props.payload.value > 0 ? (
     <rect
@@ -109,21 +111,25 @@ function SankeyNodeC(
 
 export function Game() {
   const { queryKey, queryFn, options } = useRouteContext({
-    from: "/l/games/$game",
+    from: "/layout/games/$game",
   });
   const { data } = useQuery(queryKey, queryFn, options);
 
   const map_state = useMemo(
     () => data?.map_state && parse(data.map_state),
-    [data?.map_state]
+    [data?.map_state],
   );
 
   const map_score = useMemo(
     () => data?.map_state && mapScore(parse(data.map_state)),
-    [data?.map_state]
+    [data?.map_state],
   );
 
   const [hovered, setHovered] = useState<string | undefined>(undefined);
+
+  const { ratings, isLoading: ratingsLoading } = useRatings({
+    untilGame: data?.id,
+  });
 
   if (data === undefined)
     return (
@@ -133,8 +139,29 @@ export function Game() {
     );
 
   const placements = data.expand?.["placements(game)"]?.sort(
-    (a, b) => a.placement - b.placement
+    (a, b) => a.placement - b.placement,
   );
+
+  function getDelta(player: string) {
+    if (!ratings) return null;
+
+    const ratingPlayer = ratings.find((x) => x.playerId === player);
+
+    if (!ratingPlayer) return null;
+
+    const r = ratingPlayer.ratings;
+    const eloDiff = toElo(r[r.length - 1]) - toElo(r[r.length - 2]);
+
+    return (
+      <span
+        className={
+          eloDiff > 0 ? "text-green-700" : eloDiff < 0 ? "text-red-700" : ""
+        }
+      >
+        {eloDiff > 0 ? `+${eloDiff}` : eloDiff}
+      </span>
+    );
+  }
 
   return (
     <div>
@@ -180,6 +207,7 @@ export function Game() {
                   <TableHead>Player</TableHead>
                   <TableHead>Score</TableHead>
                   <TableHead>Corporation</TableHead>
+                  <TableHead>Δ Elo</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -193,19 +221,21 @@ export function Game() {
                     map_score && owner ? map_score[owner].greenery : -1;
                   const scoreMile = data.expand?.["milestones_unlocked(game)"]
                     ? data.expand?.["milestones_unlocked(game)"].filter(
-                        (x) => x.player == p.player
+                        (x) => x.player == p.player,
                       ).length * 5
                     : -1;
                   const scoreAwards = data.expand?.["awards_unlocked(game)"]
                     ? data.expand?.["awards_unlocked(game)"].filter((x) =>
-                        x.winner.includes(p.player)
+                        x.winner.includes(p.player),
                       ).length *
                         5 +
                       data.expand?.["awards_unlocked(game)"].filter((x) =>
-                        x.second.includes(p.player)
+                        x.second.includes(p.player),
                       ).length *
                         2
                     : -1;
+
+                  const scorePolitics = p.politics_tw;
 
                   const scoreCards =
                     p.score -
@@ -213,16 +243,20 @@ export function Game() {
                     scoreCities -
                     scoreGreenery -
                     scoreMile -
-                    scoreAwards;
+                    scoreAwards -
+                    scorePolitics;
 
                   const scoreReady =
-                    (data.expand?.["milestones_unlocked(game)"] &&
+                    (data?.map_state !== undefined &&
+                      data?.map_state !== "" &&
+                      data.expand?.["milestones_unlocked(game)"] &&
                       data.expand?.["awards_unlocked(game)"] &&
                       scoreTw +
                         scoreCities +
                         scoreGreenery +
                         scoreMile +
                         scoreAwards +
+                        scorePolitics +
                         scoreCards ===
                         p.score) ??
                     false;
@@ -230,46 +264,56 @@ export function Game() {
                   const scorings = (
                     <div className="flex gap-4">
                       <span>{p.score}</span>
-                      {scoreTw > 0 && (
-                        <span className="flex gap-2 items-center">
-                          <ArrowUpRightFromCircle
-                            size={16}
-                            className="text-orange-500"
-                          />
-                          <span>{scoreTw}</span>
-                        </span>
-                      )}
-                      {data.expand?.["awards_unlocked(game)"] && (
-                        <span className="flex gap-2 items-center">
-                          <Award size={16} className="text-yellow-600" />{" "}
-                          <span>{scoreAwards}</span>
-                        </span>
-                      )}
-                      {data.expand?.["milestones_unlocked(game)"] && (
-                        <span className="flex gap-2 items-center">
-                          <Rocket size={16} className="text-yellow-700" />{" "}
-                          <span>{scoreMile}</span>
-                        </span>
-                      )}
-                      {scoreCities >= 0 && scoreGreenery >= 0 && (
+                      {scoreReady && (
                         <>
-                          <span className="flex gap-2 items-center">
-                            <Hexagon size={16} /> <span>{scoreCities}</span>
-                          </span>
-                          <span className="flex gap-2 items-center">
-                            <Hexagon size={16} className="text-green-700" />{" "}
-                            <span>{scoreGreenery}</span>
-                          </span>
+                          {scoreTw > 0 && (
+                            <span className="flex gap-2 items-center">
+                              <ArrowUpRightFromCircle
+                                size={16}
+                                className="text-orange-500"
+                              />
+                              <span>{scoreTw}</span>
+                            </span>
+                          )}
+                          {data.expand?.["awards_unlocked(game)"] && (
+                            <span className="flex gap-2 items-center">
+                              <Award size={16} className="text-yellow-600" />{" "}
+                              <span>{scoreAwards}</span>
+                            </span>
+                          )}
+                          {data.expand?.["milestones_unlocked(game)"] && (
+                            <span className="flex gap-2 items-center">
+                              <Rocket size={16} className="text-yellow-700" />{" "}
+                              <span>{scoreMile}</span>
+                            </span>
+                          )}
+                          {scoreCities >= 0 && scoreGreenery >= 0 && (
+                            <>
+                              <span className="flex gap-2 items-center">
+                                <Hexagon size={16} /> <span>{scoreCities}</span>
+                              </span>
+                              <span className="flex gap-2 items-center">
+                                <Hexagon size={16} className="text-green-700" />{" "}
+                                <span>{scoreGreenery}</span>
+                              </span>
+                            </>
+                          )}
+                          {scoreCards >= 0 && scoreTw > 0 && (
+                            <span className="flex gap-2 items-center">
+                              <RectangleVertical
+                                size={16}
+                                className="text-blue-500"
+                              />
+                              <span>{scoreCards}</span>
+                            </span>
+                          )}
+                          {scoreCards >= 0 && scoreTw > 0 && (
+                            <span className="flex gap-2 items-center">
+                              <Gavel size={16} className="text-red-500" />
+                              <span>{scorePolitics}</span>
+                            </span>
+                          )}
                         </>
-                      )}
-                      {scoreCards >= 0 && scoreTw > 0 && (
-                        <span className="flex gap-2 items-center">
-                          <RectangleVertical
-                            size={16}
-                            className="text-blue-500"
-                          />
-                          <span>{scoreCards}</span>
-                        </span>
                       )}
                     </div>
                   );
@@ -283,7 +327,7 @@ export function Game() {
                           <span>{p.placement}.</span>
                           {isWin(
                             p.placement,
-                            data.expand?.["placements(game)"]?.length ?? 1
+                            data.expand?.["placements(game)"]?.length ?? 1,
                           ) && (
                             <Trophy
                               className="text-yellow-500 ml-2"
@@ -368,6 +412,7 @@ export function Game() {
                           </Link>
                         )}
                       </TableCell>
+                      <TableCell>{ratings && getDelta(p.player)}</TableCell>
                     </TableRow>
                   );
                 })}
@@ -449,10 +494,10 @@ export function Game() {
                       const p = placements?.find((x) => x.player == mu.player);
 
                       const winners = placements?.filter((x) =>
-                        mu.winner.includes(x.player)
+                        mu.winner.includes(x.player),
                       );
                       const seconds = placements?.filter((x) =>
-                        mu.second.includes(x.player)
+                        mu.second.includes(x.player),
                       );
                       return (
                         <TableRow key={mu.id}>

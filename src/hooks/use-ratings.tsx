@@ -5,7 +5,14 @@ import { usePlacements } from "./use-placements";
 import { isWin, toElo } from "../utils";
 import { log } from "console";
 
-export function useRatings() {
+export type UseRatingArgs = {
+  untilGame?: string;
+}
+
+export function useRatings(args: UseRatingArgs = {}) {
+
+  const { untilGame } = args;
+
   const { isLoading, data, ...other } = usePlacements({
     sort: "placement",
     expand: "player,game",
@@ -36,7 +43,8 @@ export function useRatings() {
         0
     );
 
-    games.forEach((placements) => {
+    for (const placements of games) {
+
       const R = rate(
         placements.map((x) => [players[x.player].rating]),
         {
@@ -54,7 +62,13 @@ export function useRatings() {
         players[p.player].rating = R[i][0];
         players[p.player].ratings.push(R[i][0]);
       });
-    });
+
+      // stop if untilGame is reached
+      if(untilGame && placements.some(x => x.game === untilGame))
+      {
+        break;
+      }
+    }
 
     return Object.values(players).sort(
       (a, b) => ordinal(b.rating) - ordinal(a.rating)

@@ -1,7 +1,7 @@
-import React, { useMemo } from "react";
+import React, {useMemo, useState} from "react";
 import { usePlacements } from "./hooks/use-placements";
 import groupBy from "just-group-by";
-import { isWin } from "./utils";
+import {isWin, toElo} from "./utils";
 import { Headline } from "./components/Headline";
 import {
   Table,
@@ -19,11 +19,14 @@ import {
 import { Info } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { FullLoading } from "./components/Loading";
+import {SortButton, SortButtonDirection} from "@/components/ui/sortbutton.tsx";
+import Enumerable from "linq";
 
 function CorpRates() {
   const { isLoading, data } = usePlacements({
     expand: "corp",
   });
+
 
   const ratings = useMemo(() => {
     if (data === undefined) return [];
@@ -79,19 +82,91 @@ export type CorpRating = {
 };
 
 export function CorpTable({ ratings }: { ratings: CorpRating[] }) {
+
+    const [sort, setSort] = useState<number | null>(null);
+
+    function handleSort(direction: SortButtonDirection, column: number) {
+        if(direction === "asc")
+        {
+            setSort(column);
+        }
+        else if(direction === "desc")
+        {
+            setSort(-column);
+        }
+        else {
+            setSort(null);
+        }
+    }
+
+    function getValue(column: number): SortButtonDirection
+    {
+        if(sort === column)
+        {
+            return "asc";
+        }
+
+        if(sort === -column)
+        {
+            return "desc"
+        }
+
+        return "none"
+    }
+
+    const sortedRatings = useMemo(() => {
+        if(ratings === undefined) return [];
+
+        const column = sort ? Math.abs(sort) : null;
+        let enumerable = Enumerable.from(ratings);
+
+        if(column === 1) {
+            enumerable = enumerable.orderBy(x => x.corp);
+        }
+        else if(column === 2) {
+            enumerable = enumerable.orderBy(x => x.wins);
+        }
+        else if(column === 3) {
+            enumerable = enumerable.orderBy(x => x.losses);
+        }
+        else if(column === 4) {
+            enumerable = enumerable.orderBy(x => (x.wins / (x.wins + x.losses)));
+        }
+        else if(column === 5) {
+            enumerable = enumerable.orderBy(x => x.wins + x.losses);
+        }
+        else {
+            return enumerable.toArray();
+        }
+
+        if(sort && sort > 0) return enumerable.toArray();
+
+        return enumerable.reverse().toArray();
+    }, [ratings, sort]);
+
   return (
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Corporation</TableHead>
-          <TableHead>Wins</TableHead>
-          <TableHead>Losses</TableHead>
-          <TableHead>Winrate</TableHead>
-          <TableHead>Total</TableHead>
+          <TableHead>
+              <SortButton value={getValue(1)} onChange={(nextDirection) => handleSort(nextDirection, 1)}>Corporation</SortButton>
+          </TableHead>
+          <TableHead>
+              <SortButton value={getValue(2)} onChange={(nextDirection) => handleSort(nextDirection, 2)} variant={"numeric"}>Wins</SortButton>
+          </TableHead>
+          <TableHead>
+              <SortButton value={getValue(3)} onChange={(nextDirection) => handleSort(nextDirection, 3)} variant={"numeric"}>Losses</SortButton>
+          </TableHead>
+          <TableHead>
+              <SortButton value={getValue(4)} onChange={(nextDirection) => handleSort(nextDirection, 4)} variant={"numeric"}>Winrate</SortButton>
+          </TableHead>
+          <TableHead>
+              <SortButton value={getValue(5)} onChange={(nextDirection) => handleSort(nextDirection, 5)} variant={"numeric"}>Total</SortButton>
+          </TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {ratings.map((r) => {
+        {sortedRatings.map((r) => {
           const total = r.wins + r.losses;
           return (
             <TableRow key={r.corp}>
