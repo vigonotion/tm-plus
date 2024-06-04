@@ -1,11 +1,6 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Games from "./Games";
 import Ratings from "./Ratings";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import CorpRates from "./CorpRates";
 
 import "./global.css";
@@ -15,14 +10,10 @@ import { Content } from "./components/Content";
 import {
   Outlet,
   RouterProvider,
-  Link,
-  Router,
-  Route,
-  RootRoute,
-  RouterContext,
   Navigate,
   createRoute,
   createRootRouteWithContext,
+  createRouter,
 } from "@tanstack/react-router";
 import { TooltipProvider } from "./components/ui/tooltip";
 import { Game as GamePage } from "./components/pages/Game";
@@ -77,12 +68,12 @@ const logoutRoute = createRoute({
 
 const gamesIndexRoute = createRoute({
   getParentRoute: () => gamesRoute,
-  getContext: () =>
+  beforeLoad: () =>
     getAllQueryData<Game>("games", {
       sort: "-date",
       expand: "placements(game),placements(game).player",
     }),
-  loader: async ({ context: { queryClient }, routeContext: queryOptions }) => {
+  loader: async ({ context: queryOptions }) => {
     await queryClient.ensureQueryData(queryOptions);
   },
   path: "/",
@@ -115,12 +106,12 @@ const gamesRoute = createRoute({
 
 const playersRoute = createRoute({
   getParentRoute: () => layoutRoute,
-  getContext: () =>
+  beforeLoad: () =>
     getAllQueryData<Placement>("placements", {
       sort: "placement",
       expand: "player,game",
     }),
-  loader: async ({ context: { queryClient }, routeContext: queryOptions }) => {
+  loader: async ({ context: queryOptions }) => {
     await queryClient.ensureQueryData(queryOptions);
   },
   path: "/players",
@@ -129,11 +120,11 @@ const playersRoute = createRoute({
 
 const corpRatesRoute = createRoute({
   getParentRoute: () => layoutRoute,
-  getContext: () =>
+  beforeLoad: () =>
     getAllQueryData<Placement>("placements", {
       expand: "corp",
     }),
-  loader: async ({ context: { queryClient }, routeContext: queryOptions }) => {
+  loader: async ({ context: queryOptions }) => {
     await queryClient.ensureQueryData(queryOptions);
   },
   path: "corporations",
@@ -149,12 +140,12 @@ const corpIndexRoute = createRoute({
 const corpRoute = createRoute({
   getParentRoute: () => corpRatesRoute,
   path: "$corp",
-  key: ({ params }) => params.corp,
-  getContext: ({ params: { corp } }) =>
+  // key: ({ params }) => params.corp,
+  beforeLoad: ({ params: { corp } }) =>
     getOneQueryData<CorporationResponse>("corporations", corp, {
       expand: "placements(corp).game,placements(corp).player",
     }),
-  loader: async ({ context: { queryClient }, routeContext: queryOptions }) => {
+  loader: async ({ context: queryOptions }) => {
     await queryClient.ensureQueryData(queryOptions);
   },
   component: ({ useParams }) => {
@@ -186,9 +177,9 @@ const indexRoute = createRoute({
 const playerRoute = createRoute({
   getParentRoute: () => playersRoute,
   path: "$player",
-  getContext: ({ params: { player } }) =>
+  beforeLoad: ({ params: { player } }) =>
     getOneQueryData<PlayerResponse>("players", player, {}),
-  loader: async ({ context: { queryClient }, routeContext: queryOptions }) => {
+  loader: async ({ context: queryOptions }) => {
     await queryClient.ensureQueryData(queryOptions);
   },
   component: ({ useParams }) => {
@@ -213,13 +204,13 @@ const wrappedRoute = createRoute({
 const gameRoute = createRoute({
   getParentRoute: () => gamesRoute,
   path: "$game",
-  key: ({ params }) => params.game,
-  getContext: ({ params: { game } }) =>
+  // key: ({ params }) => params.game,
+  beforeLoad: ({ params: { game } }) =>
     getOneQueryData<Game>("games", game, {
       expand:
         "placements(game),placements(game).player,placements(game).corp,milestones_unlocked(game),milestones_unlocked(game).milestone,awards_unlocked(game),awards_unlocked(game).award",
     }),
-  loader: async ({ context: { queryClient }, routeContext: queryOptions }) => {
+  loader: async ({ context: queryOptions }) => {
     await queryClient.ensureQueryData(queryOptions);
   },
   component: () => <GamePage />,
@@ -240,13 +231,13 @@ const mapIndexRoute = createRoute({
 const mapRoute = createRoute({
   getParentRoute: () => mapsRoute,
   path: "$map",
-  getContext: ({ params: { map } }) =>
+  beforeLoad: ({ params: { map } }) =>
     getAllQueryData<Game>("games", {
       sort: "-date",
       expand: "placements(game),placements(game).player",
       filter: `map = '${map}'`,
     }),
-  loader: async ({ context: { queryClient }, routeContext: queryOptions }) => {
+  loader: async ({ context: queryOptions }) => {
     await queryClient.ensureQueryData(queryOptions);
   },
   component: ({ useParams }) => {
