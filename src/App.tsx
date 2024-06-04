@@ -19,7 +19,10 @@ import {
   Router,
   Route,
   RootRoute,
-  RouterContext, Navigate,
+  RouterContext,
+  Navigate,
+  createRoute,
+  createRootRouteWithContext,
 } from "@tanstack/react-router";
 import { TooltipProvider } from "./components/ui/tooltip";
 import { Game as GamePage } from "./components/pages/Game";
@@ -30,10 +33,10 @@ import { MapPage } from "./components/pages/Map";
 import { About } from "./components/pages/About";
 import { MapTool } from "./components/pages/MapTool";
 import { getAllQueryData, getOneQueryData } from "./hooks/use-placements";
-import {conn, Corporation as CorporationResponse, Game} from "./conn";
+import { conn, Corporation as CorporationResponse, Game } from "./conn";
 import { Placement, Player as PlayerResponse } from "./client/placements";
 import { CommandMenu } from "./components/CommandMenu";
-import {LoginPage} from "@/components/pages/LoginPage.tsx";
+import { LoginPage } from "@/components/pages/LoginPage.tsx";
 import { Home } from "@/components/pages/Home.tsx";
 import { Wrapped } from "@/components/Wrapped.tsx";
 
@@ -45,48 +48,34 @@ const queryClient = new QueryClient({
   },
 });
 
-const routerContext = new RouterContext<{
-  queryClient: typeof queryClient;
-}>();
-
 // Create a root route
-const rootRoute = routerContext.createRootRoute({
+const rootRoute = createRootRouteWithContext<{
+  queryClient: typeof queryClient;
+}>()({
   component: Root,
 });
 
-const pageLayout = new Route({
-  getParentRoute: () => rootRoute,
-  component: () => (
-      <>
-        <CommandMenu />
-        <Navbar />
-        <Content>
-          <Outlet />
-        </Content>
-      </>
-  ),
-  id: 'l',
-})
-
-const loginRoute = new Route({
+const loginRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "login",
   component: LoginPage,
 });
 
-const logoutRoute = new Route({
+const logoutRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "logout",
   component: () => {
     conn.authStore.clear();
 
-    return <>
-      <Navigate to={"/login"} />
-    </>
+    return (
+      <>
+        <Navigate to={"/login"} />
+      </>
+    );
   },
 });
 
-const gamesIndexRoute = new Route({
+const gamesIndexRoute = createRoute({
   getParentRoute: () => gamesRoute,
   getContext: () =>
     getAllQueryData<Game>("games", {
@@ -100,31 +89,31 @@ const gamesIndexRoute = new Route({
   component: Games,
 });
 
-const eloSimRoute = new Route({
+const eloSimRoute = createRoute({
   getParentRoute: () => layoutRoute,
   path: "elo-sim",
   component: EloSimulator,
 });
 
-const aboutRoute = new Route({
+const aboutRoute = createRoute({
   getParentRoute: () => layoutRoute,
   path: "about",
   component: About,
 });
 
-const mapToolRoute = new Route({
+const mapToolRoute = createRoute({
   getParentRoute: () => layoutRoute,
   path: "mapTool",
   component: MapTool,
 });
 
-const gamesRoute = new Route({
+const gamesRoute = createRoute({
   getParentRoute: () => layoutRoute,
   path: "games",
   component: () => <Outlet />,
 });
 
-const playersRoute = new Route({
+const playersRoute = createRoute({
   getParentRoute: () => layoutRoute,
   getContext: () =>
     getAllQueryData<Placement>("placements", {
@@ -138,7 +127,7 @@ const playersRoute = new Route({
   component: () => <Outlet />,
 });
 
-const corpRatesRoute = new Route({
+const corpRatesRoute = createRoute({
   getParentRoute: () => layoutRoute,
   getContext: () =>
     getAllQueryData<Placement>("placements", {
@@ -151,13 +140,13 @@ const corpRatesRoute = new Route({
   component: () => <Outlet />,
 });
 
-const corpIndexRoute = new Route({
+const corpIndexRoute = createRoute({
   getParentRoute: () => corpRatesRoute,
   path: "/",
   component: CorpRates,
 });
 
-const corpRoute = new Route({
+const corpRoute = createRoute({
   getParentRoute: () => corpRatesRoute,
   path: "$corp",
   key: ({ params }) => params.corp,
@@ -176,25 +165,25 @@ const corpRoute = new Route({
   },
 });
 
-const playerIndexRoute = new Route({
+const playerIndexRoute = createRoute({
   getParentRoute: () => playersRoute,
   path: "/",
   component: Ratings,
 });
 
-const layoutRoute = new Route({
+const layoutRoute = createRoute({
   getParentRoute: () => rootRoute,
   id: "layout",
   component: Layout,
 });
 
-const indexRoute = new Route({
+const indexRoute = createRoute({
   getParentRoute: () => layoutRoute,
   path: "/",
   component: Home,
 });
 
-const playerRoute = new Route({
+const playerRoute = createRoute({
   getParentRoute: () => playersRoute,
   path: "$player",
   getContext: ({ params: { player } }) =>
@@ -210,7 +199,7 @@ const playerRoute = new Route({
   },
 });
 
-const wrappedRoute = new Route({
+const wrappedRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "wrapped/$player",
   component: ({ useParams }) => {
@@ -221,7 +210,7 @@ const wrappedRoute = new Route({
   },
 });
 
-const gameRoute = new Route({
+const gameRoute = createRoute({
   getParentRoute: () => gamesRoute,
   path: "$game",
   key: ({ params }) => params.game,
@@ -236,19 +225,19 @@ const gameRoute = new Route({
   component: () => <GamePage />,
 });
 
-const mapsRoute = new Route({
+const mapsRoute = createRoute({
   getParentRoute: () => layoutRoute,
   path: "maps",
   component: () => <Outlet />,
 });
 
-const mapIndexRoute = new Route({
+const mapIndexRoute = createRoute({
   getParentRoute: () => mapsRoute,
   path: "/",
   component: () => <span></span>,
 });
 
-const mapRoute = new Route({
+const mapRoute = createRoute({
   getParentRoute: () => mapsRoute,
   path: "$map",
   getContext: ({ params: { map } }) =>
@@ -282,11 +271,11 @@ const routeTree = rootRoute.addChildren([
   ]),
   wrappedRoute,
   loginRoute,
-  logoutRoute
+  logoutRoute,
 ]);
 
 // Create the router using your route tree
-const router = new Router({
+const router = createRouter({
   routeTree,
   defaultPreload: "intent",
   context: { queryClient },
