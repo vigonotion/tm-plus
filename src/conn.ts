@@ -1,7 +1,7 @@
 import PocketBase from "pocketbase";
 import { Placement, Player } from "./client/placements";
 
-export const conn = new PocketBase("https://tm-plus-data.vigonotion.com");
+export const conn = new PocketBase("https://tm-minus-data.vigonotion.com");
 
 export type Game = {
     id: string;
