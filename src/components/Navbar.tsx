@@ -15,35 +15,10 @@ import {conn} from "@/conn.ts";
 import { useLocalStorage } from "@uidotdev/usehooks";
 
 export function Navbar() {
-  const router = useRouter();
-
-  const [shown, setShown] = useLocalStorage("wrappedbar_shown", true);
-
-  function handleWrapped() {
-    setShown(false);
-    router.navigate({
-      to: "/players",
-    });
-  }
 
   return (
     <>
       <NavigationMenu className="md:fixed [&>*]:w-full">
-        {shown && (
-          <div
-            className="p-2 bg-orange-900 w-full text-center flex justify-center items-center gap-2 cursor-pointer"
-            onClick={handleWrapped}
-          >
-            <span className="flex-shrink">
-              🍾 Your
-              <span className="font-head uppercase mx-2">
-                Terraforming Mars WRAPPED
-              </span>
-              is ready! Check it out
-            </span>
-            <ArrowRight className="flex-shrink-0" />
-          </div>
-        )}
         <NavigationMenuList className="w-[100vw]">
           <NavigationMenuItem className={"ml-1 mr-4"}>
             <Link to="/" className={navigationMenuTriggerStyle()}>
@@ -139,7 +114,7 @@ export function Navbar() {
       </NavigationMenu>
       <span
         className={"inline-block"}
-        style={{ marginBottom: shown ? "8rem" : "6rem" }}
+        style={{ marginBottom: "6rem" }}
       ></span>
     </>
   );

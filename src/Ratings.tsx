@@ -140,14 +140,6 @@ function Ratings() {
         <GroupSelector value={group} onChange={setGroup} />
       </div>
 
-      <div className="text-muted-foreground mb-8">
-        Check out your{" "}
-        <span className="font-head uppercase text-sm text-transparent bg-gradient-to-r from-orange-500 to-orange-400 bg-clip-text">
-          Terraforming Mars WRAPPED
-        </span>{" "}
-        by clicking on your name.
-      </div>
-
       <Table>
         <TableHeader>
           <TableRow>
