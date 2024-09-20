@@ -30,6 +30,8 @@ import { CommandMenu } from "./components/CommandMenu";
 import { LoginPage } from "@/components/pages/LoginPage.tsx";
 import { Home } from "@/components/pages/Home.tsx";
 import { Wrapped } from "@/components/Wrapped.tsx";
+import "@radix-ui/themes/styles.css";
+import { Theme } from "@radix-ui/themes";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -282,19 +284,21 @@ declare module "@tanstack/react-router" {
 function Root() {
   return (
     <>
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-        <TooltipProvider delayDuration={200}>
-          <QueryClientProvider client={queryClient}>
-            <Outlet />
-            {/* <div style={{ display: "flex", gap: 20 }}>
+      <Theme>
+        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+          <TooltipProvider delayDuration={200}>
+            <QueryClientProvider client={queryClient}>
+              <Outlet />
+              {/* <div style={{ display: "flex", gap: 20 }}>
                 <Games />
                 <Ratings />
                 <CorpRates />
               </div> */}
-            {/*<ReactQueryDevtools initialIsOpen={false} />*/}
-          </QueryClientProvider>
-        </TooltipProvider>
-      </ThemeProvider>
+              {/*<ReactQueryDevtools initialIsOpen={false} />*/}
+            </QueryClientProvider>
+          </TooltipProvider>
+        </ThemeProvider>
+      </Theme>
     </>
   );
 }
