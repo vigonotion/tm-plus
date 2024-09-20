@@ -284,7 +284,7 @@ declare module "@tanstack/react-router" {
 function Root() {
   return (
     <>
-      <Theme>
+      <Theme hasBackground={false}>
         <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
           <TooltipProvider delayDuration={200}>
             <QueryClientProvider client={queryClient}>
