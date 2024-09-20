@@ -20,6 +20,7 @@ import {
   usePlayers,
 } from "@/hooks/use-placements.tsx";
 import { Controller, useForm } from "react-hook-form";
+import { NumericFormat } from "react-number-format";
 
 function InputWrapper({
   label,
@@ -40,7 +41,7 @@ const COLORS = ["black", "green", "yellow", "blue", "red"];
 type FormValues = {
   date?: string;
   map?: string;
-  generations?: string;
+  generations?: number;
   players?: number;
   notes?: string;
 
@@ -74,12 +75,21 @@ export function Submit() {
       map: "mars",
       players: 5,
       date: new Date().toISOString().slice(0, 10),
+      placements: [
+        { color: "black" },
+        { color: "yellow" },
+        { color: "green" },
+        { color: "blue" },
+        { color: "red" },
+      ],
     },
   });
 
   function onSubmit(data: FormValues) {
     console.log(data);
   }
+
+  const playerCount = watch("players");
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -131,10 +141,17 @@ export function Submit() {
               </InputWrapper>
 
               <InputWrapper label={"Generations"}>
-                <TextField.Root
-                  type={"number"}
-                  min={1}
-                  {...register("generations")}
+                <Controller
+                  control={control}
+                  render={({ field: { value, onChange } }) => (
+                    <NumericFormat
+                      customInput={TextField.Root}
+                      min={1}
+                      value={value}
+                      onValueChange={(value) => onChange(value.floatValue)}
+                    />
+                  )}
+                  name={"generations"}
                 />
               </InputWrapper>
 
@@ -179,60 +196,94 @@ export function Submit() {
             </Table.Header>
 
             <Table.Body>
-              {[1, 2, 3, 4, 5].map((placement) => (
+              {[1, 2, 3, 4, 5].slice(0, playerCount).map((placement, i) => (
                 <Table.Row key={placement} align={"center"}>
                   <Table.RowHeaderCell>{placement}.</Table.RowHeaderCell>
                   <Table.Cell>
-                    <Select.Root>
-                      <Select.Trigger className={"!w-48"} />
-                      <Select.Content>
-                        {players?.map((player) => (
-                          <Select.Item key={player.id} value={player.id}>
-                            {player.name}
-                          </Select.Item>
-                        ))}
-                      </Select.Content>
-                    </Select.Root>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Select.Root defaultValue={COLORS[placement - 1]}>
-                      <Select.Trigger className={"!w-28"} />
-                      <Select.Content>
-                        {COLORS.map((color) => (
-                          <Select.Item key={color} value={color}>
-                            <Flex gap={"2"} align={"center"}>
-                              <PlayerMarker color={color} />
-                              <span>{color}</span>
-                            </Flex>
-                          </Select.Item>
-                        ))}
-                      </Select.Content>
-                    </Select.Root>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Select.Root>
-                      <Select.Trigger className={"!w-48"} />
-                      <Select.Content>
-                        {corps?.map((corp) => (
-                          <Select.Item key={corp.id} value={corp.id}>
-                            {corp.name}
-                          </Select.Item>
-                        ))}
-                      </Select.Content>
-                    </Select.Root>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <TextField.Root
-                      type={"number"}
-                      min={1}
-                      className={"w-16"}
+                    <Controller
+                      control={control}
+                      render={({ field: { value, onChange } }) => (
+                        <Select.Root value={value} onValueChange={onChange}>
+                          <Select.Trigger className={"!w-48"} />
+                          <Select.Content>
+                            {players?.map((player) => (
+                              <Select.Item key={player.id} value={player.id}>
+                                {player.name}
+                              </Select.Item>
+                            ))}
+                          </Select.Content>
+                        </Select.Root>
+                      )}
+                      name={`placements.${i}.player`}
                     />
                   </Table.Cell>
                   <Table.Cell>
-                    <TextField.Root
-                      type={"number"}
-                      min={1}
-                      className={"w-16"}
+                    <Controller
+                      control={control}
+                      render={({ field: { value, onChange } }) => (
+                        <Select.Root value={value} onValueChange={onChange}>
+                          <Select.Trigger className={"!w-28"} />
+                          <Select.Content>
+                            {COLORS.map((color) => (
+                              <Select.Item key={color} value={color}>
+                                <Flex gap={"2"} align={"center"}>
+                                  <PlayerMarker color={color} />
+                                  <span>{color}</span>
+                                </Flex>
+                              </Select.Item>
+                            ))}
+                          </Select.Content>
+                        </Select.Root>
+                      )}
+                      name={`placements.${i}.color`}
+                    />
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Controller
+                      control={control}
+                      render={({ field: { value, onChange } }) => (
+                        <Select.Root value={value} onValueChange={onChange}>
+                          <Select.Trigger className={"!w-48"} />
+                          <Select.Content>
+                            {corps?.map((corp) => (
+                              <Select.Item key={corp.id} value={corp.id}>
+                                {corp.name}
+                              </Select.Item>
+                            ))}
+                          </Select.Content>
+                        </Select.Root>
+                      )}
+                      name={`placements.${i}.corporation`}
+                    />
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Controller
+                      control={control}
+                      render={({ field: { value, onChange } }) => (
+                        <NumericFormat
+                          customInput={TextField.Root}
+                          min={1}
+                          value={value}
+                          onValueChange={(value) => onChange(value.floatValue)}
+                          className={"w-16"}
+                        />
+                      )}
+                      name={`placements.${i}.tr`}
+                    />
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Controller
+                      control={control}
+                      render={({ field: { value, onChange } }) => (
+                        <NumericFormat
+                          customInput={TextField.Root}
+                          min={1}
+                          value={value}
+                          onValueChange={(value) => onChange(value.floatValue)}
+                          className={"w-16"}
+                        />
+                      )}
+                      name={`placements.${i}.score`}
                     />
                   </Table.Cell>
                 </Table.Row>
