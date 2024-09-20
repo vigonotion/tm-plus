@@ -148,9 +148,9 @@ const corpRoute = createRoute({
   loader: async ({ context: queryOptions }) => {
     await queryClient.ensureQueryData(queryOptions);
   },
-  component: ({ useParams }) => {
+  component: () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const params = useParams();
+    const params = corpRoute.useParams();
 
     return <Corporation corp={params.corp} key={params.corp} />;
   },
@@ -182,9 +182,9 @@ const playerRoute = createRoute({
   loader: async ({ context: queryOptions }) => {
     await queryClient.ensureQueryData(queryOptions);
   },
-  component: ({ useParams }) => {
+  component: () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const params = useParams();
+    const params = playerRoute.useParams();
 
     return <Player key={params.player} player={params.player} />;
   },
@@ -193,9 +193,9 @@ const playerRoute = createRoute({
 const wrappedRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "wrapped/$player",
-  component: ({ useParams }) => {
+  component: () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const params = useParams();
+    const params = wrappedRoute.useParams();
 
     return <Wrapped playerId={params.player} />;
   },
@@ -240,9 +240,9 @@ const mapRoute = createRoute({
   loader: async ({ context: queryOptions }) => {
     await queryClient.ensureQueryData(queryOptions);
   },
-  component: ({ useParams }) => {
+  component: () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const params = useParams();
+    const params = mapRoute.useParams();
 
     return <MapPage map={params.map} key={params.map} />;
   },
