@@ -5,13 +5,20 @@ import {
   Card,
   Flex,
   Heading,
+  SegmentedControl,
   Select,
   Table,
   Text,
+  TextArea,
   TextField,
 } from "@radix-ui/themes";
 import { Slot } from "@radix-ui/react-slot";
 import { PlayerMarker } from "@/components/pages/PlayerMarker.tsx";
+import {
+  useCorporation,
+  useCorporations,
+  usePlayers,
+} from "@/hooks/use-placements.tsx";
 
 function InputWrapper({
   label,
@@ -30,6 +37,14 @@ function InputWrapper({
 const COLORS = ["black", "green", "yellow", "blue", "red"];
 
 export function Submit() {
+  const { data: corps } = useCorporations({
+    sort: "name",
+  });
+
+  const { data: players } = usePlayers({
+    sort: "name",
+  });
+
   return (
     <div>
       <Headline>Submit tool</Headline>
@@ -69,6 +84,20 @@ export function Submit() {
             <InputWrapper label={"Generations"}>
               <TextField.Root type={"number"} min={1} />
             </InputWrapper>
+
+            <InputWrapper label={"Players"}>
+              <SegmentedControl.Root defaultValue="5">
+                {[1, 2, 3, 4, 5].map((x) => (
+                  <SegmentedControl.Item key={x} value={x.toString()}>
+                    {x}
+                  </SegmentedControl.Item>
+                ))}
+              </SegmentedControl.Root>
+            </InputWrapper>
+
+            <InputWrapper label={"Notes"}>
+              <TextArea />
+            </InputWrapper>
           </Flex>
         </Card>
       </Flex>
@@ -91,13 +120,24 @@ export function Submit() {
             {[1, 2, 3, 4, 5].map((placement) => (
               <Table.Row key={placement} align={"center"}>
                 <Table.RowHeaderCell>{placement}.</Table.RowHeaderCell>
-                <Table.Cell>Player</Table.Cell>
+                <Table.Cell>
+                  <Select.Root>
+                    <Select.Trigger className={"!w-48"} />
+                    <Select.Content>
+                      {players?.map((player) => (
+                        <Select.Item key={player.id} value={player.id}>
+                          {player.name}
+                        </Select.Item>
+                      ))}
+                    </Select.Content>
+                  </Select.Root>
+                </Table.Cell>
                 <Table.Cell>
                   <Select.Root defaultValue={COLORS[placement - 1]}>
                     <Select.Trigger />
                     <Select.Content>
                       {COLORS.map((color) => (
-                        <Select.Item value={color}>
+                        <Select.Item key={color} value={color}>
                           <Flex gap={"2"} align={"center"}>
                             <PlayerMarker color={color} />
                             <span>{color}</span>
@@ -107,7 +147,18 @@ export function Submit() {
                     </Select.Content>
                   </Select.Root>
                 </Table.Cell>
-                <Table.Cell>Corporation</Table.Cell>
+                <Table.Cell>
+                  <Select.Root>
+                    <Select.Trigger className={"!w-48"} />
+                    <Select.Content>
+                      {corps?.map((corp) => (
+                        <Select.Item key={corp.id} value={corp.id}>
+                          {corp.name}
+                        </Select.Item>
+                      ))}
+                    </Select.Content>
+                  </Select.Root>
+                </Table.Cell>
                 <Table.Cell>
                   <TextField.Root type={"number"} min={1} className={"w-16"} />
                 </Table.Cell>
