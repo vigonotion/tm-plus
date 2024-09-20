@@ -31,7 +31,7 @@ import { LoginPage } from "@/components/pages/LoginPage.tsx";
 import { Home } from "@/components/pages/Home.tsx";
 import { Wrapped } from "@/components/Wrapped.tsx";
 import "@radix-ui/themes/styles.css";
-import { Theme } from "@radix-ui/themes";
+import { Theme, ThemePanel } from "@radix-ui/themes";
 import { Submit } from "@/components/pages/Submit.tsx";
 
 const queryClient = new QueryClient({
@@ -292,7 +292,7 @@ declare module "@tanstack/react-router" {
 function Root() {
   return (
     <>
-      <Theme hasBackground={false}>
+      <Theme accentColor="brown" grayColor="sand" hasBackground={false}>
         <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
           <TooltipProvider delayDuration={200}>
             <QueryClientProvider client={queryClient}>
