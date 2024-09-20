@@ -289,11 +289,6 @@ function Root() {
           <TooltipProvider delayDuration={200}>
             <QueryClientProvider client={queryClient}>
               <Outlet />
-              {/* <div style={{ display: "flex", gap: 20 }}>
-                <Games />
-                <Ratings />
-                <CorpRates />
-              </div> */}
               {/*<ReactQueryDevtools initialIsOpen={false} />*/}
             </QueryClientProvider>
           </TooltipProvider>
