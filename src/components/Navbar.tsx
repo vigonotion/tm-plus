@@ -11,10 +11,12 @@ import {
 import { ArrowRight, Circle } from "lucide-react";
 import { Link, useRouter, useNavigate } from "@tanstack/react-router";
 import { cn } from "@/utils";
-import {conn} from "@/conn.ts";
+import { conn } from "@/conn.ts";
 import { useLocalStorage } from "@uidotdev/usehooks";
+import { useAuth } from "@/components/hooks/use-auth.ts";
 
 export function Navbar() {
+  const { isLoggedIn, email } = useAuth();
 
   return (
     <>
@@ -84,6 +86,26 @@ export function Navbar() {
                     </Link>
                   </NavigationMenuLink>
                 </li>
+                {isLoggedIn && (
+                  <li>
+                    <NavigationMenuLink asChild>
+                      <Link
+                        className={cn(
+                          "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+                          "",
+                        )}
+                        to="/submitTool"
+                      >
+                        <div className="text-sm font-medium leading-none">
+                          Submit tool
+                        </div>
+                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                          Submit a new game
+                        </p>
+                      </Link>
+                    </NavigationMenuLink>
+                  </li>
+                )}
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
@@ -96,26 +118,27 @@ export function Navbar() {
 
           <span className={"grow"}></span>
 
-
-            {
-              conn.authStore.isValid ?
-                  <>
-                    <NavigationMenuItem><span>{conn.authStore.model?.email}</span></NavigationMenuItem>
-                    <NavigationMenuItem><Link to="/logout" className={navigationMenuTriggerStyle()}>
-                      Logout
-                    </Link></NavigationMenuItem>
-                  </>
-                  :
-                  <NavigationMenuItem><Link to="/login" className={navigationMenuTriggerStyle()}>
-                    Login
-                  </Link></NavigationMenuItem>
-            }
+          {isLoggedIn ? (
+            <>
+              <NavigationMenuItem>
+                <span>{email}</span>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Link to="/logout" className={navigationMenuTriggerStyle()}>
+                  Logout
+                </Link>
+              </NavigationMenuItem>
+            </>
+          ) : (
+            <NavigationMenuItem>
+              <Link to="/login" className={navigationMenuTriggerStyle()}>
+                Login
+              </Link>
+            </NavigationMenuItem>
+          )}
         </NavigationMenuList>
       </NavigationMenu>
-      <span
-        className={"inline-block"}
-        style={{ marginBottom: "6rem" }}
-      ></span>
+      <span className={"inline-block"} style={{ marginBottom: "6rem" }}></span>
     </>
   );
 }

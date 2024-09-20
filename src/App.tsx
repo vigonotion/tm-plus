@@ -32,6 +32,7 @@ import { Home } from "@/components/pages/Home.tsx";
 import { Wrapped } from "@/components/Wrapped.tsx";
 import "@radix-ui/themes/styles.css";
 import { Theme } from "@radix-ui/themes";
+import { Submit } from "@/components/pages/Submit.tsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -250,6 +251,12 @@ const mapRoute = createRoute({
   },
 });
 
+const submitToolRoute = createRoute({
+  getParentRoute: () => layoutRoute,
+  path: "submitTool",
+  component: Submit,
+});
+
 // Create the route tree using your routes
 const routeTree = rootRoute.addChildren([
   layoutRoute.addChildren([
@@ -261,6 +268,7 @@ const routeTree = rootRoute.addChildren([
     corpRatesRoute.addChildren([corpRoute, corpIndexRoute]),
     gamesRoute.addChildren([gamesIndexRoute, gameRoute]),
     mapToolRoute,
+    submitToolRoute,
   ]),
   wrappedRoute,
   loginRoute,
