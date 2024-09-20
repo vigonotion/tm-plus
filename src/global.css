@@ -189,3 +189,7 @@ html {
   font-variant-numeric: lining-nums tabular-nums;
   text-align: center;
 }
+
+.rt-TextFieldInput[type="date"] {
+  white-space: unset;
+}
