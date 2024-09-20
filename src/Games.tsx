@@ -8,7 +8,16 @@ import {
   TableRow,
 } from "./components/ui/table";
 import { useGames, usePlacements } from "./hooks/use-placements";
-import { Circle, Snowflake, Leaf, Trophy } from "lucide-react";
+import {
+  Circle,
+  Snowflake,
+  Leaf,
+  Trophy,
+  Zap,
+  Shell,
+  Compass,
+  Hexagon,
+} from "lucide-react";
 import { isWin } from "./utils";
 import { Placement } from "./client/placements";
 import { Link } from "@tanstack/react-router";
@@ -45,6 +54,22 @@ export function MapIcon({ map, size = 16 }: { map: string; size?: number }) {
 
   if (map === "elysium") {
     return <Leaf size={size} className="text-green-500" />;
+  }
+
+  if (map === "utopia") {
+    return <Zap size={size} className="text-yellow-500" />;
+  }
+
+  if (map === "terra") {
+    return <Shell size={size} className="text-purple-500" />;
+  }
+
+  if (map === "vastitas") {
+    return <Compass size={size} className="text-blue-400" />;
+  }
+
+  if (map === "amazonis") {
+    return <Hexagon size={size} className="text-cyan-500" />;
   }
 
   return <Circle size={size} className="text-orange-500" />;
