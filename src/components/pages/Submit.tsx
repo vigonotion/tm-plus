@@ -2,6 +2,7 @@ import React, { PropsWithChildren, useId, useMemo, useState } from "react";
 import { Headline } from "@/components/Headline.tsx";
 import {
   Button,
+  Callout,
   Card,
   Flex,
   Heading,
@@ -21,6 +22,9 @@ import {
 } from "@/hooks/use-placements.tsx";
 import { Controller, useForm } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
+import { Ban } from "lucide-react";
+import toast from "react-hot-toast";
+import { conn } from "@/conn.ts";
 
 function InputWrapper({
   label,
@@ -69,24 +73,95 @@ export function Submit() {
     handleSubmit,
     control,
     watch,
-    formState: { errors },
+    setValue,
+    reset,
+    formState: { errors, isValid, isDirty, isSubmitted },
   } = useForm<FormValues>({
     defaultValues: {
       map: "mars",
       players: 5,
       date: new Date().toISOString().slice(0, 10),
       placements: [
-        { color: "black" },
-        { color: "yellow" },
-        { color: "green" },
-        { color: "blue" },
-        { color: "red" },
+        { placement: 1 },
+        { placement: 2 },
+        { placement: 3 },
+        { placement: 4 },
+        { placement: 5 },
       ],
     },
   });
 
-  function onSubmit(data: FormValues) {
-    console.log(data);
+  const placements: FormValues["placements"] = watch("placements");
+
+  const handleColorChange = (index: number, newColor: string) => {
+    if (!placements) return;
+
+    const oldColor = placements[index].color;
+    if (oldColor === newColor) return;
+
+    const newPlacements = [...placements];
+    const conflictIndex = newPlacements.findIndex((p) => p.color === newColor);
+
+    if (conflictIndex !== -1) {
+      newPlacements[conflictIndex].color = oldColor;
+    }
+
+    newPlacements[index].color = newColor;
+    setValue("placements", newPlacements);
+  };
+
+  const handlePlayerChange = (index: number, newPlayer: string) => {
+    const player = players?.find((player) => player.id === newPlayer);
+
+    if (!player || !player.default_color || !placements) return;
+
+    const oldColor = placements[index].color;
+
+    if (oldColor) return;
+
+    const newColor = player.default_color;
+
+    const newPlacements = [...placements];
+
+    newPlacements[index].color = newColor;
+    setValue("placements", newPlacements);
+  };
+
+  async function onSubmit(data: FormValues) {
+    const actualPlacements = data.placements?.slice(0, data.players) ?? [];
+
+    async function work(): Promise<void> {
+      const game = await conn.collection("games").create({
+        date: `${data.date} 17:30:00.000Z`,
+        planned: false,
+        name: data.date,
+        map: data.map,
+        generations: data.generations,
+        notes: data.notes,
+        duration_in_minutes: 0,
+        map_state: "",
+      });
+
+      let i = 1;
+      for (const placement of actualPlacements) {
+        await conn.collection("placements").create({
+          game: game.id,
+          player: placement.player,
+          color: placement.color,
+          placement: i++,
+          tw: placement.tr,
+          score: placement.score,
+          corp: placement.corporation,
+          politics_tw: 0,
+        });
+      }
+    }
+
+    await toast.promise(work(), {
+      loading: "Sending game to server...",
+      success: "Game submitted successfully.",
+      error: "Error while submitting game.",
+    });
   }
 
   const playerCount = watch("players");
@@ -107,6 +182,9 @@ export function Submit() {
               <InputWrapper label={"Map"}>
                 <Controller
                   control={control}
+                  rules={{
+                    required: true,
+                  }}
                   render={({ field: { value, onChange } }) => (
                     <Select.Root value={value} onValueChange={onChange}>
                       <Select.Trigger />
@@ -143,6 +221,14 @@ export function Submit() {
               <InputWrapper label={"Generations"}>
                 <Controller
                   control={control}
+                  rules={{
+                    required: true,
+                    min: 1,
+                    pattern: {
+                      value: /^[0-9]+$/,
+                      message: "Must be an integer value.",
+                    },
+                  }}
                   render={({ field: { value, onChange } }) => (
                     <NumericFormat
                       customInput={TextField.Root}
@@ -203,7 +289,13 @@ export function Submit() {
                     <Controller
                       control={control}
                       render={({ field: { value, onChange } }) => (
-                        <Select.Root value={value} onValueChange={onChange}>
+                        <Select.Root
+                          value={value}
+                          onValueChange={(value) => {
+                            onChange(value);
+                            handlePlayerChange(i, value);
+                          }}
+                        >
                           <Select.Trigger className={"!w-48"} />
                           <Select.Content>
                             {players?.map((player) => (
@@ -221,7 +313,12 @@ export function Submit() {
                     <Controller
                       control={control}
                       render={({ field: { value, onChange } }) => (
-                        <Select.Root value={value} onValueChange={onChange}>
+                        <Select.Root
+                          value={value}
+                          onValueChange={(newColor) => {
+                            handleColorChange(i, newColor);
+                          }}
+                        >
                           <Select.Trigger className={"!w-28"} />
                           <Select.Content>
                             {COLORS.map((color) => (
@@ -292,8 +389,17 @@ export function Submit() {
           </Table.Root>
         </Flex>
 
+        {isSubmitted && !isValid && Object.values(errors).length > 0 && (
+          <Callout.Root color="red" mb={"4"}>
+            <Callout.Icon>
+              <Ban width={15} />
+            </Callout.Icon>
+            <Callout.Text>{JSON.stringify(errors, null, 4)}</Callout.Text>
+          </Callout.Root>
+        )}
+
         <Flex justify={"end"}>
-          <Button>Submit</Button>
+          <Button disabled={!isDirty}>Submit</Button>
         </Flex>
       </div>
     </form>

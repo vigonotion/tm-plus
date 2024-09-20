@@ -33,6 +33,7 @@ import { Wrapped } from "@/components/Wrapped.tsx";
 import "@radix-ui/themes/styles.css";
 import { Theme, ThemePanel } from "@radix-ui/themes";
 import { Submit } from "@/components/pages/Submit.tsx";
+import { Toaster } from "react-hot-toast";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -314,6 +315,16 @@ function Layout() {
       <Content>
         <Outlet />
       </Content>
+      <Toaster
+        position={"bottom-left"}
+        toastOptions={{
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        }}
+      />
     </>
   );
 }
