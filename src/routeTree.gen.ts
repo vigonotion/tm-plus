@@ -13,16 +13,19 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as LogoutImport } from './routes/logout'
 import { Route as LoginImport } from './routes/login'
-import { Route as AboutImport } from './routes/about'
-import { Route as IndexImport } from './routes/index'
-import { Route as PlayersIndexImport } from './routes/players/index'
-import { Route as GamesIndexImport } from './routes/games/index'
-import { Route as CorporationsIndexImport } from './routes/corporations/index'
-import { Route as ToolsMapToolImport } from './routes/tools/map-tool'
-import { Route as ToolsEloSimulatorImport } from './routes/tools/elo-simulator'
-import { Route as PlayersPlayerIdImport } from './routes/players/$playerId'
-import { Route as GamesGameIdImport } from './routes/games/$gameId'
-import { Route as CorporationsCorporationIdImport } from './routes/corporations/$corporationId'
+import { Route as LayoutImport } from './routes/_layout'
+import { Route as AuthenticatedImport } from './routes/_authenticated'
+import { Route as LayoutIndexImport } from './routes/_layout/index'
+import { Route as LayoutAboutImport } from './routes/_layout/about'
+import { Route as LayoutPlayersIndexImport } from './routes/_layout/players/index'
+import { Route as LayoutGamesIndexImport } from './routes/_layout/games/index'
+import { Route as LayoutCorporationsIndexImport } from './routes/_layout/corporations/index'
+import { Route as LayoutToolsMapImport } from './routes/_layout/tools/map'
+import { Route as LayoutToolsEloSimulatorImport } from './routes/_layout/tools/elo-simulator'
+import { Route as LayoutPlayersPlayerIdImport } from './routes/_layout/players/$playerId'
+import { Route as LayoutGamesGameIdImport } from './routes/_layout/games/$gameId'
+import { Route as LayoutCorporationsCorporationIdImport } from './routes/_layout/corporations/$corporationId'
+import { Route as LayoutAuthenticatedToolsSubmitImport } from './routes/_layout/_authenticated/tools/submit'
 
 // Create/Update Routes
 
@@ -38,82 +41,100 @@ const LoginRoute = LoginImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const AboutRoute = AboutImport.update({
-  id: '/about',
-  path: '/about',
+const LayoutRoute = LayoutImport.update({
+  id: '/_layout',
   getParentRoute: () => rootRoute,
 } as any)
 
-const IndexRoute = IndexImport.update({
+const AuthenticatedRoute = AuthenticatedImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const LayoutIndexRoute = LayoutIndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => LayoutRoute,
 } as any)
 
-const PlayersIndexRoute = PlayersIndexImport.update({
+const LayoutAboutRoute = LayoutAboutImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => LayoutRoute,
+} as any)
+
+const LayoutPlayersIndexRoute = LayoutPlayersIndexImport.update({
   id: '/players/',
   path: '/players/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => LayoutRoute,
 } as any)
 
-const GamesIndexRoute = GamesIndexImport.update({
+const LayoutGamesIndexRoute = LayoutGamesIndexImport.update({
   id: '/games/',
   path: '/games/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => LayoutRoute,
 } as any)
 
-const CorporationsIndexRoute = CorporationsIndexImport.update({
+const LayoutCorporationsIndexRoute = LayoutCorporationsIndexImport.update({
   id: '/corporations/',
   path: '/corporations/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => LayoutRoute,
 } as any)
 
-const ToolsMapToolRoute = ToolsMapToolImport.update({
-  id: '/tools/map-tool',
-  path: '/tools/map-tool',
-  getParentRoute: () => rootRoute,
+const LayoutToolsMapRoute = LayoutToolsMapImport.update({
+  id: '/tools/map',
+  path: '/tools/map',
+  getParentRoute: () => LayoutRoute,
 } as any)
 
-const ToolsEloSimulatorRoute = ToolsEloSimulatorImport.update({
+const LayoutToolsEloSimulatorRoute = LayoutToolsEloSimulatorImport.update({
   id: '/tools/elo-simulator',
   path: '/tools/elo-simulator',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => LayoutRoute,
 } as any)
 
-const PlayersPlayerIdRoute = PlayersPlayerIdImport.update({
+const LayoutPlayersPlayerIdRoute = LayoutPlayersPlayerIdImport.update({
   id: '/players/$playerId',
   path: '/players/$playerId',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => LayoutRoute,
 } as any)
 
-const GamesGameIdRoute = GamesGameIdImport.update({
+const LayoutGamesGameIdRoute = LayoutGamesGameIdImport.update({
   id: '/games/$gameId',
   path: '/games/$gameId',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => LayoutRoute,
 } as any)
 
-const CorporationsCorporationIdRoute = CorporationsCorporationIdImport.update({
-  id: '/corporations/$corporationId',
-  path: '/corporations/$corporationId',
-  getParentRoute: () => rootRoute,
-} as any)
+const LayoutCorporationsCorporationIdRoute =
+  LayoutCorporationsCorporationIdImport.update({
+    id: '/corporations/$corporationId',
+    path: '/corporations/$corporationId',
+    getParentRoute: () => LayoutRoute,
+  } as any)
+
+const LayoutAuthenticatedToolsSubmitRoute =
+  LayoutAuthenticatedToolsSubmitImport.update({
+    id: '/_authenticated/tools/submit',
+    path: '/tools/submit',
+    getParentRoute: () => LayoutRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthenticatedImport
       parentRoute: typeof rootRoute
     }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutImport
+    '/_layout': {
+      id: '/_layout'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof LayoutImport
       parentRoute: typeof rootRoute
     }
     '/login': {
@@ -130,187 +151,237 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LogoutImport
       parentRoute: typeof rootRoute
     }
-    '/corporations/$corporationId': {
-      id: '/corporations/$corporationId'
+    '/_layout/about': {
+      id: '/_layout/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof LayoutAboutImport
+      parentRoute: typeof LayoutImport
+    }
+    '/_layout/': {
+      id: '/_layout/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof LayoutIndexImport
+      parentRoute: typeof LayoutImport
+    }
+    '/_layout/corporations/$corporationId': {
+      id: '/_layout/corporations/$corporationId'
       path: '/corporations/$corporationId'
       fullPath: '/corporations/$corporationId'
-      preLoaderRoute: typeof CorporationsCorporationIdImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof LayoutCorporationsCorporationIdImport
+      parentRoute: typeof LayoutImport
     }
-    '/games/$gameId': {
-      id: '/games/$gameId'
+    '/_layout/games/$gameId': {
+      id: '/_layout/games/$gameId'
       path: '/games/$gameId'
       fullPath: '/games/$gameId'
-      preLoaderRoute: typeof GamesGameIdImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof LayoutGamesGameIdImport
+      parentRoute: typeof LayoutImport
     }
-    '/players/$playerId': {
-      id: '/players/$playerId'
+    '/_layout/players/$playerId': {
+      id: '/_layout/players/$playerId'
       path: '/players/$playerId'
       fullPath: '/players/$playerId'
-      preLoaderRoute: typeof PlayersPlayerIdImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof LayoutPlayersPlayerIdImport
+      parentRoute: typeof LayoutImport
     }
-    '/tools/elo-simulator': {
-      id: '/tools/elo-simulator'
+    '/_layout/tools/elo-simulator': {
+      id: '/_layout/tools/elo-simulator'
       path: '/tools/elo-simulator'
       fullPath: '/tools/elo-simulator'
-      preLoaderRoute: typeof ToolsEloSimulatorImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof LayoutToolsEloSimulatorImport
+      parentRoute: typeof LayoutImport
     }
-    '/tools/map-tool': {
-      id: '/tools/map-tool'
-      path: '/tools/map-tool'
-      fullPath: '/tools/map-tool'
-      preLoaderRoute: typeof ToolsMapToolImport
-      parentRoute: typeof rootRoute
+    '/_layout/tools/map': {
+      id: '/_layout/tools/map'
+      path: '/tools/map'
+      fullPath: '/tools/map'
+      preLoaderRoute: typeof LayoutToolsMapImport
+      parentRoute: typeof LayoutImport
     }
-    '/corporations/': {
-      id: '/corporations/'
+    '/_layout/corporations/': {
+      id: '/_layout/corporations/'
       path: '/corporations'
       fullPath: '/corporations'
-      preLoaderRoute: typeof CorporationsIndexImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof LayoutCorporationsIndexImport
+      parentRoute: typeof LayoutImport
     }
-    '/games/': {
-      id: '/games/'
+    '/_layout/games/': {
+      id: '/_layout/games/'
       path: '/games'
       fullPath: '/games'
-      preLoaderRoute: typeof GamesIndexImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof LayoutGamesIndexImport
+      parentRoute: typeof LayoutImport
     }
-    '/players/': {
-      id: '/players/'
+    '/_layout/players/': {
+      id: '/_layout/players/'
       path: '/players'
       fullPath: '/players'
-      preLoaderRoute: typeof PlayersIndexImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof LayoutPlayersIndexImport
+      parentRoute: typeof LayoutImport
+    }
+    '/_layout/_authenticated/tools/submit': {
+      id: '/_layout/_authenticated/tools/submit'
+      path: '/tools/submit'
+      fullPath: '/tools/submit'
+      preLoaderRoute: typeof LayoutAuthenticatedToolsSubmitImport
+      parentRoute: typeof LayoutImport
     }
   }
 }
 
 // Create and export the route tree
 
+interface LayoutRouteChildren {
+  LayoutAboutRoute: typeof LayoutAboutRoute
+  LayoutIndexRoute: typeof LayoutIndexRoute
+  LayoutCorporationsCorporationIdRoute: typeof LayoutCorporationsCorporationIdRoute
+  LayoutGamesGameIdRoute: typeof LayoutGamesGameIdRoute
+  LayoutPlayersPlayerIdRoute: typeof LayoutPlayersPlayerIdRoute
+  LayoutToolsEloSimulatorRoute: typeof LayoutToolsEloSimulatorRoute
+  LayoutToolsMapRoute: typeof LayoutToolsMapRoute
+  LayoutCorporationsIndexRoute: typeof LayoutCorporationsIndexRoute
+  LayoutGamesIndexRoute: typeof LayoutGamesIndexRoute
+  LayoutPlayersIndexRoute: typeof LayoutPlayersIndexRoute
+  LayoutAuthenticatedToolsSubmitRoute: typeof LayoutAuthenticatedToolsSubmitRoute
+}
+
+const LayoutRouteChildren: LayoutRouteChildren = {
+  LayoutAboutRoute: LayoutAboutRoute,
+  LayoutIndexRoute: LayoutIndexRoute,
+  LayoutCorporationsCorporationIdRoute: LayoutCorporationsCorporationIdRoute,
+  LayoutGamesGameIdRoute: LayoutGamesGameIdRoute,
+  LayoutPlayersPlayerIdRoute: LayoutPlayersPlayerIdRoute,
+  LayoutToolsEloSimulatorRoute: LayoutToolsEloSimulatorRoute,
+  LayoutToolsMapRoute: LayoutToolsMapRoute,
+  LayoutCorporationsIndexRoute: LayoutCorporationsIndexRoute,
+  LayoutGamesIndexRoute: LayoutGamesIndexRoute,
+  LayoutPlayersIndexRoute: LayoutPlayersIndexRoute,
+  LayoutAuthenticatedToolsSubmitRoute: LayoutAuthenticatedToolsSubmitRoute,
+}
+
+const LayoutRouteWithChildren =
+  LayoutRoute._addFileChildren(LayoutRouteChildren)
+
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
+  '': typeof LayoutRouteWithChildren
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
-  '/corporations/$corporationId': typeof CorporationsCorporationIdRoute
-  '/games/$gameId': typeof GamesGameIdRoute
-  '/players/$playerId': typeof PlayersPlayerIdRoute
-  '/tools/elo-simulator': typeof ToolsEloSimulatorRoute
-  '/tools/map-tool': typeof ToolsMapToolRoute
-  '/corporations': typeof CorporationsIndexRoute
-  '/games': typeof GamesIndexRoute
-  '/players': typeof PlayersIndexRoute
+  '/about': typeof LayoutAboutRoute
+  '/': typeof LayoutIndexRoute
+  '/corporations/$corporationId': typeof LayoutCorporationsCorporationIdRoute
+  '/games/$gameId': typeof LayoutGamesGameIdRoute
+  '/players/$playerId': typeof LayoutPlayersPlayerIdRoute
+  '/tools/elo-simulator': typeof LayoutToolsEloSimulatorRoute
+  '/tools/map': typeof LayoutToolsMapRoute
+  '/corporations': typeof LayoutCorporationsIndexRoute
+  '/games': typeof LayoutGamesIndexRoute
+  '/players': typeof LayoutPlayersIndexRoute
+  '/tools/submit': typeof LayoutAuthenticatedToolsSubmitRoute
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
+  '': typeof AuthenticatedRoute
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
-  '/corporations/$corporationId': typeof CorporationsCorporationIdRoute
-  '/games/$gameId': typeof GamesGameIdRoute
-  '/players/$playerId': typeof PlayersPlayerIdRoute
-  '/tools/elo-simulator': typeof ToolsEloSimulatorRoute
-  '/tools/map-tool': typeof ToolsMapToolRoute
-  '/corporations': typeof CorporationsIndexRoute
-  '/games': typeof GamesIndexRoute
-  '/players': typeof PlayersIndexRoute
+  '/about': typeof LayoutAboutRoute
+  '/': typeof LayoutIndexRoute
+  '/corporations/$corporationId': typeof LayoutCorporationsCorporationIdRoute
+  '/games/$gameId': typeof LayoutGamesGameIdRoute
+  '/players/$playerId': typeof LayoutPlayersPlayerIdRoute
+  '/tools/elo-simulator': typeof LayoutToolsEloSimulatorRoute
+  '/tools/map': typeof LayoutToolsMapRoute
+  '/corporations': typeof LayoutCorporationsIndexRoute
+  '/games': typeof LayoutGamesIndexRoute
+  '/players': typeof LayoutPlayersIndexRoute
+  '/tools/submit': typeof LayoutAuthenticatedToolsSubmitRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
+  '/_authenticated': typeof AuthenticatedRoute
+  '/_layout': typeof LayoutRouteWithChildren
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
-  '/corporations/$corporationId': typeof CorporationsCorporationIdRoute
-  '/games/$gameId': typeof GamesGameIdRoute
-  '/players/$playerId': typeof PlayersPlayerIdRoute
-  '/tools/elo-simulator': typeof ToolsEloSimulatorRoute
-  '/tools/map-tool': typeof ToolsMapToolRoute
-  '/corporations/': typeof CorporationsIndexRoute
-  '/games/': typeof GamesIndexRoute
-  '/players/': typeof PlayersIndexRoute
+  '/_layout/about': typeof LayoutAboutRoute
+  '/_layout/': typeof LayoutIndexRoute
+  '/_layout/corporations/$corporationId': typeof LayoutCorporationsCorporationIdRoute
+  '/_layout/games/$gameId': typeof LayoutGamesGameIdRoute
+  '/_layout/players/$playerId': typeof LayoutPlayersPlayerIdRoute
+  '/_layout/tools/elo-simulator': typeof LayoutToolsEloSimulatorRoute
+  '/_layout/tools/map': typeof LayoutToolsMapRoute
+  '/_layout/corporations/': typeof LayoutCorporationsIndexRoute
+  '/_layout/games/': typeof LayoutGamesIndexRoute
+  '/_layout/players/': typeof LayoutPlayersIndexRoute
+  '/_layout/_authenticated/tools/submit': typeof LayoutAuthenticatedToolsSubmitRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
-    | '/about'
+    | ''
     | '/login'
     | '/logout'
+    | '/about'
+    | '/'
     | '/corporations/$corporationId'
     | '/games/$gameId'
     | '/players/$playerId'
     | '/tools/elo-simulator'
-    | '/tools/map-tool'
+    | '/tools/map'
     | '/corporations'
     | '/games'
     | '/players'
+    | '/tools/submit'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
-    | '/about'
+    | ''
     | '/login'
     | '/logout'
+    | '/about'
+    | '/'
     | '/corporations/$corporationId'
     | '/games/$gameId'
     | '/players/$playerId'
     | '/tools/elo-simulator'
-    | '/tools/map-tool'
+    | '/tools/map'
     | '/corporations'
     | '/games'
     | '/players'
+    | '/tools/submit'
   id:
     | '__root__'
-    | '/'
-    | '/about'
+    | '/_authenticated'
+    | '/_layout'
     | '/login'
     | '/logout'
-    | '/corporations/$corporationId'
-    | '/games/$gameId'
-    | '/players/$playerId'
-    | '/tools/elo-simulator'
-    | '/tools/map-tool'
-    | '/corporations/'
-    | '/games/'
-    | '/players/'
+    | '/_layout/about'
+    | '/_layout/'
+    | '/_layout/corporations/$corporationId'
+    | '/_layout/games/$gameId'
+    | '/_layout/players/$playerId'
+    | '/_layout/tools/elo-simulator'
+    | '/_layout/tools/map'
+    | '/_layout/corporations/'
+    | '/_layout/games/'
+    | '/_layout/players/'
+    | '/_layout/_authenticated/tools/submit'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AboutRoute: typeof AboutRoute
+  AuthenticatedRoute: typeof AuthenticatedRoute
+  LayoutRoute: typeof LayoutRouteWithChildren
   LoginRoute: typeof LoginRoute
   LogoutRoute: typeof LogoutRoute
-  CorporationsCorporationIdRoute: typeof CorporationsCorporationIdRoute
-  GamesGameIdRoute: typeof GamesGameIdRoute
-  PlayersPlayerIdRoute: typeof PlayersPlayerIdRoute
-  ToolsEloSimulatorRoute: typeof ToolsEloSimulatorRoute
-  ToolsMapToolRoute: typeof ToolsMapToolRoute
-  CorporationsIndexRoute: typeof CorporationsIndexRoute
-  GamesIndexRoute: typeof GamesIndexRoute
-  PlayersIndexRoute: typeof PlayersIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  AboutRoute: AboutRoute,
+  AuthenticatedRoute: AuthenticatedRoute,
+  LayoutRoute: LayoutRouteWithChildren,
   LoginRoute: LoginRoute,
   LogoutRoute: LogoutRoute,
-  CorporationsCorporationIdRoute: CorporationsCorporationIdRoute,
-  GamesGameIdRoute: GamesGameIdRoute,
-  PlayersPlayerIdRoute: PlayersPlayerIdRoute,
-  ToolsEloSimulatorRoute: ToolsEloSimulatorRoute,
-  ToolsMapToolRoute: ToolsMapToolRoute,
-  CorporationsIndexRoute: CorporationsIndexRoute,
-  GamesIndexRoute: GamesIndexRoute,
-  PlayersIndexRoute: PlayersIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -323,25 +394,30 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/",
-        "/about",
+        "/_authenticated",
+        "/_layout",
         "/login",
-        "/logout",
-        "/corporations/$corporationId",
-        "/games/$gameId",
-        "/players/$playerId",
-        "/tools/elo-simulator",
-        "/tools/map-tool",
-        "/corporations/",
-        "/games/",
-        "/players/"
+        "/logout"
       ]
     },
-    "/": {
-      "filePath": "index.tsx"
+    "/_authenticated": {
+      "filePath": "_authenticated.tsx"
     },
-    "/about": {
-      "filePath": "about.tsx"
+    "/_layout": {
+      "filePath": "_layout.tsx",
+      "children": [
+        "/_layout/about",
+        "/_layout/",
+        "/_layout/corporations/$corporationId",
+        "/_layout/games/$gameId",
+        "/_layout/players/$playerId",
+        "/_layout/tools/elo-simulator",
+        "/_layout/tools/map",
+        "/_layout/corporations/",
+        "/_layout/games/",
+        "/_layout/players/",
+        "/_layout/_authenticated/tools/submit"
+      ]
     },
     "/login": {
       "filePath": "login.tsx"
@@ -349,29 +425,49 @@ export const routeTree = rootRoute
     "/logout": {
       "filePath": "logout.tsx"
     },
-    "/corporations/$corporationId": {
-      "filePath": "corporations/$corporationId.tsx"
+    "/_layout/about": {
+      "filePath": "_layout/about.tsx",
+      "parent": "/_layout"
     },
-    "/games/$gameId": {
-      "filePath": "games/$gameId.tsx"
+    "/_layout/": {
+      "filePath": "_layout/index.tsx",
+      "parent": "/_layout"
     },
-    "/players/$playerId": {
-      "filePath": "players/$playerId.tsx"
+    "/_layout/corporations/$corporationId": {
+      "filePath": "_layout/corporations/$corporationId.tsx",
+      "parent": "/_layout"
     },
-    "/tools/elo-simulator": {
-      "filePath": "tools/elo-simulator.tsx"
+    "/_layout/games/$gameId": {
+      "filePath": "_layout/games/$gameId.tsx",
+      "parent": "/_layout"
     },
-    "/tools/map-tool": {
-      "filePath": "tools/map-tool.tsx"
+    "/_layout/players/$playerId": {
+      "filePath": "_layout/players/$playerId.tsx",
+      "parent": "/_layout"
     },
-    "/corporations/": {
-      "filePath": "corporations/index.tsx"
+    "/_layout/tools/elo-simulator": {
+      "filePath": "_layout/tools/elo-simulator.tsx",
+      "parent": "/_layout"
     },
-    "/games/": {
-      "filePath": "games/index.tsx"
+    "/_layout/tools/map": {
+      "filePath": "_layout/tools/map.tsx",
+      "parent": "/_layout"
     },
-    "/players/": {
-      "filePath": "players/index.tsx"
+    "/_layout/corporations/": {
+      "filePath": "_layout/corporations/index.tsx",
+      "parent": "/_layout"
+    },
+    "/_layout/games/": {
+      "filePath": "_layout/games/index.tsx",
+      "parent": "/_layout"
+    },
+    "/_layout/players/": {
+      "filePath": "_layout/players/index.tsx",
+      "parent": "/_layout"
+    },
+    "/_layout/_authenticated/tools/submit": {
+      "filePath": "_layout/_authenticated/tools/submit.tsx",
+      "parent": "/_layout"
     }
   }
 }

@@ -1,9 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/tools/map-tool')({
+export const Route = createFileRoute('/_layout/')({
   component: RouteComponent,
 })
 
 function RouteComponent() {
-  return <div>Hello "/tools/map-tool"!</div>
+  return <div>Hello "/"!</div>
 }
