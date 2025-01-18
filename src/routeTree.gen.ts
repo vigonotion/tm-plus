@@ -11,13 +11,90 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as LogoutImport } from './routes/logout'
+import { Route as LoginImport } from './routes/login'
+import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
+import { Route as PlayersIndexImport } from './routes/players/index'
+import { Route as GamesIndexImport } from './routes/games/index'
+import { Route as CorporationsIndexImport } from './routes/corporations/index'
+import { Route as ToolsMapToolImport } from './routes/tools/map-tool'
+import { Route as ToolsEloSimulatorImport } from './routes/tools/elo-simulator'
+import { Route as PlayersPlayerIdImport } from './routes/players/$playerId'
+import { Route as GamesGameIdImport } from './routes/games/$gameId'
+import { Route as CorporationsCorporationIdImport } from './routes/corporations/$corporationId'
 
 // Create/Update Routes
+
+const LogoutRoute = LogoutImport.update({
+  id: '/logout',
+  path: '/logout',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const LoginRoute = LoginImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AboutRoute = AboutImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const PlayersIndexRoute = PlayersIndexImport.update({
+  id: '/players/',
+  path: '/players/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const GamesIndexRoute = GamesIndexImport.update({
+  id: '/games/',
+  path: '/games/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const CorporationsIndexRoute = CorporationsIndexImport.update({
+  id: '/corporations/',
+  path: '/corporations/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ToolsMapToolRoute = ToolsMapToolImport.update({
+  id: '/tools/map-tool',
+  path: '/tools/map-tool',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ToolsEloSimulatorRoute = ToolsEloSimulatorImport.update({
+  id: '/tools/elo-simulator',
+  path: '/tools/elo-simulator',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const PlayersPlayerIdRoute = PlayersPlayerIdImport.update({
+  id: '/players/$playerId',
+  path: '/players/$playerId',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const GamesGameIdRoute = GamesGameIdImport.update({
+  id: '/games/$gameId',
+  path: '/games/$gameId',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const CorporationsCorporationIdRoute = CorporationsCorporationIdImport.update({
+  id: '/corporations/$corporationId',
+  path: '/corporations/$corporationId',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -32,6 +109,83 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutImport
+      parentRoute: typeof rootRoute
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginImport
+      parentRoute: typeof rootRoute
+    }
+    '/logout': {
+      id: '/logout'
+      path: '/logout'
+      fullPath: '/logout'
+      preLoaderRoute: typeof LogoutImport
+      parentRoute: typeof rootRoute
+    }
+    '/corporations/$corporationId': {
+      id: '/corporations/$corporationId'
+      path: '/corporations/$corporationId'
+      fullPath: '/corporations/$corporationId'
+      preLoaderRoute: typeof CorporationsCorporationIdImport
+      parentRoute: typeof rootRoute
+    }
+    '/games/$gameId': {
+      id: '/games/$gameId'
+      path: '/games/$gameId'
+      fullPath: '/games/$gameId'
+      preLoaderRoute: typeof GamesGameIdImport
+      parentRoute: typeof rootRoute
+    }
+    '/players/$playerId': {
+      id: '/players/$playerId'
+      path: '/players/$playerId'
+      fullPath: '/players/$playerId'
+      preLoaderRoute: typeof PlayersPlayerIdImport
+      parentRoute: typeof rootRoute
+    }
+    '/tools/elo-simulator': {
+      id: '/tools/elo-simulator'
+      path: '/tools/elo-simulator'
+      fullPath: '/tools/elo-simulator'
+      preLoaderRoute: typeof ToolsEloSimulatorImport
+      parentRoute: typeof rootRoute
+    }
+    '/tools/map-tool': {
+      id: '/tools/map-tool'
+      path: '/tools/map-tool'
+      fullPath: '/tools/map-tool'
+      preLoaderRoute: typeof ToolsMapToolImport
+      parentRoute: typeof rootRoute
+    }
+    '/corporations/': {
+      id: '/corporations/'
+      path: '/corporations'
+      fullPath: '/corporations'
+      preLoaderRoute: typeof CorporationsIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/games/': {
+      id: '/games/'
+      path: '/games'
+      fullPath: '/games'
+      preLoaderRoute: typeof GamesIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/players/': {
+      id: '/players/'
+      path: '/players'
+      fullPath: '/players'
+      preLoaderRoute: typeof PlayersIndexImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -39,32 +193,124 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/login': typeof LoginRoute
+  '/logout': typeof LogoutRoute
+  '/corporations/$corporationId': typeof CorporationsCorporationIdRoute
+  '/games/$gameId': typeof GamesGameIdRoute
+  '/players/$playerId': typeof PlayersPlayerIdRoute
+  '/tools/elo-simulator': typeof ToolsEloSimulatorRoute
+  '/tools/map-tool': typeof ToolsMapToolRoute
+  '/corporations': typeof CorporationsIndexRoute
+  '/games': typeof GamesIndexRoute
+  '/players': typeof PlayersIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/login': typeof LoginRoute
+  '/logout': typeof LogoutRoute
+  '/corporations/$corporationId': typeof CorporationsCorporationIdRoute
+  '/games/$gameId': typeof GamesGameIdRoute
+  '/players/$playerId': typeof PlayersPlayerIdRoute
+  '/tools/elo-simulator': typeof ToolsEloSimulatorRoute
+  '/tools/map-tool': typeof ToolsMapToolRoute
+  '/corporations': typeof CorporationsIndexRoute
+  '/games': typeof GamesIndexRoute
+  '/players': typeof PlayersIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/login': typeof LoginRoute
+  '/logout': typeof LogoutRoute
+  '/corporations/$corporationId': typeof CorporationsCorporationIdRoute
+  '/games/$gameId': typeof GamesGameIdRoute
+  '/players/$playerId': typeof PlayersPlayerIdRoute
+  '/tools/elo-simulator': typeof ToolsEloSimulatorRoute
+  '/tools/map-tool': typeof ToolsMapToolRoute
+  '/corporations/': typeof CorporationsIndexRoute
+  '/games/': typeof GamesIndexRoute
+  '/players/': typeof PlayersIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/login'
+    | '/logout'
+    | '/corporations/$corporationId'
+    | '/games/$gameId'
+    | '/players/$playerId'
+    | '/tools/elo-simulator'
+    | '/tools/map-tool'
+    | '/corporations'
+    | '/games'
+    | '/players'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/about'
+    | '/login'
+    | '/logout'
+    | '/corporations/$corporationId'
+    | '/games/$gameId'
+    | '/players/$playerId'
+    | '/tools/elo-simulator'
+    | '/tools/map-tool'
+    | '/corporations'
+    | '/games'
+    | '/players'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/login'
+    | '/logout'
+    | '/corporations/$corporationId'
+    | '/games/$gameId'
+    | '/players/$playerId'
+    | '/tools/elo-simulator'
+    | '/tools/map-tool'
+    | '/corporations/'
+    | '/games/'
+    | '/players/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  LoginRoute: typeof LoginRoute
+  LogoutRoute: typeof LogoutRoute
+  CorporationsCorporationIdRoute: typeof CorporationsCorporationIdRoute
+  GamesGameIdRoute: typeof GamesGameIdRoute
+  PlayersPlayerIdRoute: typeof PlayersPlayerIdRoute
+  ToolsEloSimulatorRoute: typeof ToolsEloSimulatorRoute
+  ToolsMapToolRoute: typeof ToolsMapToolRoute
+  CorporationsIndexRoute: typeof CorporationsIndexRoute
+  GamesIndexRoute: typeof GamesIndexRoute
+  PlayersIndexRoute: typeof PlayersIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  LoginRoute: LoginRoute,
+  LogoutRoute: LogoutRoute,
+  CorporationsCorporationIdRoute: CorporationsCorporationIdRoute,
+  GamesGameIdRoute: GamesGameIdRoute,
+  PlayersPlayerIdRoute: PlayersPlayerIdRoute,
+  ToolsEloSimulatorRoute: ToolsEloSimulatorRoute,
+  ToolsMapToolRoute: ToolsMapToolRoute,
+  CorporationsIndexRoute: CorporationsIndexRoute,
+  GamesIndexRoute: GamesIndexRoute,
+  PlayersIndexRoute: PlayersIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -77,11 +323,55 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/"
+        "/",
+        "/about",
+        "/login",
+        "/logout",
+        "/corporations/$corporationId",
+        "/games/$gameId",
+        "/players/$playerId",
+        "/tools/elo-simulator",
+        "/tools/map-tool",
+        "/corporations/",
+        "/games/",
+        "/players/"
       ]
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/about": {
+      "filePath": "about.tsx"
+    },
+    "/login": {
+      "filePath": "login.tsx"
+    },
+    "/logout": {
+      "filePath": "logout.tsx"
+    },
+    "/corporations/$corporationId": {
+      "filePath": "corporations/$corporationId.tsx"
+    },
+    "/games/$gameId": {
+      "filePath": "games/$gameId.tsx"
+    },
+    "/players/$playerId": {
+      "filePath": "players/$playerId.tsx"
+    },
+    "/tools/elo-simulator": {
+      "filePath": "tools/elo-simulator.tsx"
+    },
+    "/tools/map-tool": {
+      "filePath": "tools/map-tool.tsx"
+    },
+    "/corporations/": {
+      "filePath": "corporations/index.tsx"
+    },
+    "/games/": {
+      "filePath": "games/index.tsx"
+    },
+    "/players/": {
+      "filePath": "players/index.tsx"
     }
   }
 }
