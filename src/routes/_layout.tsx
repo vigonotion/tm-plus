@@ -134,8 +134,19 @@ function RouteComponent() {
           </Link>
         </div>
       </nav>
-      <main>
-        <Outlet />
+      <main
+        className={css({
+          padding: "6",
+        })}
+      >
+        <div
+          className={css({
+            maxWidth: "1280px",
+            margin: "0 auto",
+          })}
+        >
+          <Outlet />
+        </div>
       </main>
     </div>
   );

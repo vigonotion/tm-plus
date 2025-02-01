@@ -28,7 +28,7 @@ export default defineConfig({
     extend: {
       tokens: {
         fonts: {
-          body: { value: "'Public Sans Variable', system-ui, sans-serif" },
+          body: { value: "'Exo 2 Variable', system-ui, sans-serif" },
           display: { value: "'Hubot Sans Variable', system-ui, sans-serif" },
         },
         colors: {
