@@ -1,15 +1,20 @@
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import { css } from "../../styled-system/css";
-import {
-  BadgeInfoIcon,
-  CircleIcon,
-  ContactIcon,
-  DicesIcon,
-  FactoryIcon,
-  WrenchIcon,
-} from "lucide-react";
 import { hstack } from "../../styled-system/patterns";
 import { PropsWithChildren } from "react";
+import {
+  RiBuilding3Fill,
+  RiBuilding3Line,
+  RiChessFill,
+  RiChessLine,
+  RiCircleLine,
+  RiHammerFill,
+  RiHammerLine,
+  RiInfoCardFill,
+  RiInfoCardLine,
+  RiUser6Fill,
+  RiUser6Line,
+} from "@remixicon/react";
 
 export const Route = createFileRoute("/_layout")({
   component: RouteComponent,
@@ -34,9 +39,16 @@ function NavItem({ children }: PropsWithChildren) {
           color: "yellow.12",
         },
 
+        "& > .icon-when-active": {
+          display: "none",
+        },
+
         "a.active > &": {
           fontWeight: "bold",
           color: "yellow.9",
+
+          "& > .icon-when-active": { display: "block" },
+          "& > .icon-when-inactive": { display: "none" },
         },
       })}
     >
@@ -63,7 +75,7 @@ function RouteComponent() {
         })}
       >
         <div className={hstack({ padding: "2", marginBottom: "8" })}>
-          <CircleIcon className={css({ color: "orange.9" })} />
+          <RiCircleLine className={css({ color: "orange.9" })} />
           <span
             className={css({
               fontFamily: "display",
@@ -83,35 +95,40 @@ function RouteComponent() {
         >
           <Link to={"/games"}>
             <NavItem>
-              <DicesIcon />
+              <RiChessLine className={"icon-when-inactive"} />
+              <RiChessFill className={"icon-when-active"} />
               <span>Games</span>
             </NavItem>
           </Link>
 
           <Link to={"/players"}>
             <NavItem>
-              <ContactIcon />
+              <RiUser6Line className={"icon-when-inactive"} />
+              <RiUser6Fill className={"icon-when-active"} />
               <span>Players</span>
             </NavItem>
           </Link>
 
           <Link to={"/corporations"}>
             <NavItem>
-              <FactoryIcon />
+              <RiBuilding3Line className={"icon-when-inactive"} />
+              <RiBuilding3Fill className={"icon-when-active"} />
               <span>Corporations</span>
             </NavItem>
           </Link>
 
           <Link to={"/tools/map"}>
             <NavItem>
-              <WrenchIcon />
+              <RiHammerLine className={"icon-when-inactive"} />
+              <RiHammerFill className={"icon-when-active"} />
               <span>Tools</span>
             </NavItem>
           </Link>
 
           <Link to={"/about"}>
             <NavItem>
-              <BadgeInfoIcon />
+              <RiInfoCardLine className={"icon-when-inactive"} />
+              <RiInfoCardFill className={"icon-when-active"} />
               <span>About</span>
             </NavItem>
           </Link>
