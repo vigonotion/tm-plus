@@ -1,9 +1,14 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from "@tanstack/react-router";
+import { Title } from "../../../components/title.tsx";
 
-export const Route = createFileRoute('/_layout/corporations/$corporationId')({
+export const Route = createFileRoute("/_layout/corporations/$corporationId")({
   component: RouteComponent,
-})
+});
 
 function RouteComponent() {
-  return <div>Hello "/corporations/$corporationId"!</div>
+  return (
+    <div>
+      <Title>Corporation</Title>Hello "/corporations/$corporationId"!
+    </div>
+  );
 }

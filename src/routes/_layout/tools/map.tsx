@@ -1,9 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Title } from "../../../components/title.tsx";
 
 export const Route = createFileRoute("/_layout/tools/map")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  return <div>Hello "/tools/map"!</div>;
+  return (
+    <div>
+      <Title>Map</Title>Hello "/tools/map"!
+    </div>
+  );
 }

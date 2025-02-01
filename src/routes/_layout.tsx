@@ -74,7 +74,13 @@ function RouteComponent() {
           padding: "4",
         })}
       >
-        <div className={hstack({ padding: "2", marginBottom: "8" })}>
+        <div
+          className={hstack({
+            padding: "2",
+            marginBottom: "8",
+            //marginTop: "3",
+          })}
+        >
           <RiCircleLine className={css({ color: "orange.9" })} />
           <span
             className={css({
