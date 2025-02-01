@@ -6,6 +6,8 @@ const globalCss = defineGlobalStyles({
     color: "gray.12",
     minHeight: "100vh",
     lineHeight: "1.5",
+
+    fontFamily: "body",
   },
 });
 
@@ -25,6 +27,10 @@ export default defineConfig({
   theme: {
     extend: {
       tokens: {
+        fonts: {
+          body: { value: "'Public Sans Variable', system-ui, sans-serif" },
+          display: { value: "'Hubot Sans Variable', system-ui, sans-serif" },
+        },
         colors: {
           page: { value: "#0c0a09" },
           yellow: {
