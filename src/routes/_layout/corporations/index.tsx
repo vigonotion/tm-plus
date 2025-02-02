@@ -7,8 +7,8 @@ export const Route = createFileRoute("/_layout/corporations/")({
 
 function RouteComponent() {
   return (
-    <div>
+    <>
       <Title>Corporations</Title>Hello "/corporations/"!
-    </div>
+    </>
   );
 }

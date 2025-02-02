@@ -7,8 +7,8 @@ export const Route = createFileRoute("/_layout/_authenticated/tools/submit")({
 
 function RouteComponent() {
   return (
-    <div>
+    <>
       <Title>Submit</Title>Hello "/_authenticated/tools/submit"!
-    </div>
+    </>
   );
 }

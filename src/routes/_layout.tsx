@@ -63,8 +63,13 @@ function RouteComponent() {
       className={css({
         display: "grid",
         gridTemplateColumns: "300px 1fr",
+        gridTemplateRows:
+          "80px minmax(calc(100vh - 80px - token(spacing.4)), max-content)",
         gap: "4",
-        minHeight: "100vh",
+
+        "& > *": {
+          gridRowEnd: "span 2",
+        },
       })}
     >
       <nav
@@ -72,13 +77,13 @@ function RouteComponent() {
           backgroundColor: "gray.1",
           borderRight: "1px solid token(colors.gray.3)",
           padding: "4",
+          display: "grid",
+          grid: "subgrid / subgrid",
         })}
       >
         <div
           className={hstack({
             padding: "2",
-            marginBottom: "8",
-            //marginTop: "3",
           })}
         >
           <RiCircleLine className={css({ color: "orange.9" })} />
@@ -142,17 +147,14 @@ function RouteComponent() {
       </nav>
       <main
         className={css({
-          padding: "6",
+          px: "6",
+          py: "4",
+
+          display: "grid",
+          grid: "subgrid / subgrid",
         })}
       >
-        <div
-          className={css({
-            maxWidth: "1280px",
-            margin: "0 auto",
-          })}
-        >
-          <Outlet />
-        </div>
+        <Outlet />
       </main>
     </div>
   );

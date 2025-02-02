@@ -7,8 +7,8 @@ export const Route = createFileRoute("/_layout/games/$gameId")({
 
 function RouteComponent() {
   return (
-    <div>
+    <>
       <Title>Game</Title>Hello "/games/$gameId"!
-    </div>
+    </>
   );
 }

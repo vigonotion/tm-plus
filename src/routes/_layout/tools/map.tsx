@@ -7,8 +7,8 @@ export const Route = createFileRoute("/_layout/tools/map")({
 
 function RouteComponent() {
   return (
-    <div>
+    <>
       <Title>Map</Title>Hello "/tools/map"!
-    </div>
+    </>
   );
 }
