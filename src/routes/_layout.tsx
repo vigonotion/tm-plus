@@ -83,21 +83,23 @@ function RouteComponent() {
           grid: "subgrid / subgrid",
         })}
       >
-        <div
-          className={hstack({
-            padding: "2",
-          })}
-        >
-          <RiCircleLine className={css({ color: "orange.9" })} />
-          <span
-            className={css({
-              fontFamily: "display",
-              textTransform: "uppercase",
+        <Link to={"/"} className={css({ display: "contents" })}>
+          <div
+            className={hstack({
+              padding: "2",
             })}
           >
-            Terraforming Marsᐩ
-          </span>
-        </div>
+            <RiCircleLine className={css({ color: "orange.9" })} />
+            <span
+              className={css({
+                fontFamily: "display",
+                textTransform: "uppercase",
+              })}
+            >
+              Terraforming Marsᐩ
+            </span>
+          </div>
+        </Link>
 
         <div
           className={css({
