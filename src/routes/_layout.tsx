@@ -11,6 +11,7 @@ import {
   RiHammerLine,
   RiInfoCardFill,
   RiInfoCardLine,
+  RiSearchEyeLine,
   RiTerminalWindowFill,
   RiTerminalWindowLine,
   RiUser6Fill,
@@ -135,13 +136,22 @@ function RouteComponent() {
           </Link>
 
           {process.env.NODE_ENV === "development" && (
-            <Link to={"/ui"}>
-              <NavItem>
-                <RiTerminalWindowLine className={"icon-when-inactive"} />
-                <RiTerminalWindowFill className={"icon-when-active"} />
-                <span>UI</span>
-              </NavItem>
-            </Link>
+            <>
+              <Link to={"/ui"}>
+                <NavItem>
+                  <RiTerminalWindowLine className={"icon-when-inactive"} />
+                  <RiTerminalWindowFill className={"icon-when-active"} />
+                  <span>UI</span>
+                </NavItem>
+              </Link>
+
+              <a href={"/404thispagedoesnotexist"}>
+                <NavItem>
+                  <RiSearchEyeLine className={"icon-when-inactive"} />
+                  <span>404 page</span>
+                </NavItem>
+              </a>
+            </>
           )}
         </div>
       </nav>
