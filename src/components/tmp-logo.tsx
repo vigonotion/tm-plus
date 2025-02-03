@@ -1,10 +1,11 @@
 import { hstack } from "../../styled-system/patterns";
 import { RiCircleLine } from "@remixicon/react";
 import { css } from "../../styled-system/css";
+import { Link } from "@tanstack/react-router";
 
 export function TmpLogo() {
   return (
-    <div className={hstack()}>
+    <Link to={"/"} className={hstack()}>
       <RiCircleLine className={css({ color: "orange.9" })} />
       <span
         className={css({
@@ -14,6 +15,6 @@ export function TmpLogo() {
       >
         Terraforming Marsᐩ
       </span>
-    </div>
+    </Link>
   );
 }

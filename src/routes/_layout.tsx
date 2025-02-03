@@ -84,9 +84,9 @@ function RouteComponent() {
           grid: "subgrid / subgrid",
         })}
       >
-        <Link to={"/"} className={hstack({ padding: "2" })}>
+        <div className={hstack({ padding: "2" })}>
           <TmpLogo />
-        </Link>
+        </div>
 
         <div
           className={css({
