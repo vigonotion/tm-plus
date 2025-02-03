@@ -1,13 +1,12 @@
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import { css } from "../../styled-system/css";
-import { hstack } from "../../styled-system/patterns";
+import { hstack, vstack } from "../../styled-system/patterns";
 import { PropsWithChildren } from "react";
 import {
   RiBuilding3Fill,
   RiBuilding3Line,
   RiChessFill,
   RiChessLine,
-  RiCircleLine,
   RiHammerFill,
   RiHammerLine,
   RiInfoCardFill,
@@ -17,6 +16,7 @@ import {
   RiUser6Fill,
   RiUser6Line,
 } from "@remixicon/react";
+import { TmpLogo } from "../components/tmp-logo.tsx";
 
 export const Route = createFileRoute("/_layout")({
   component: RouteComponent,
@@ -83,22 +83,8 @@ function RouteComponent() {
           grid: "subgrid / subgrid",
         })}
       >
-        <Link to={"/"} className={css({ display: "contents" })}>
-          <div
-            className={hstack({
-              padding: "2",
-            })}
-          >
-            <RiCircleLine className={css({ color: "orange.9" })} />
-            <span
-              className={css({
-                fontFamily: "display",
-                textTransform: "uppercase",
-              })}
-            >
-              Terraforming Marsᐩ
-            </span>
-          </div>
+        <Link to={"/"} className={hstack({ padding: "2" })}>
+          <TmpLogo />
         </Link>
 
         <div
