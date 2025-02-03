@@ -16,6 +16,7 @@ import { Route as LoginImport } from './routes/login'
 import { Route as LayoutImport } from './routes/_layout'
 import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as LayoutIndexImport } from './routes/_layout/index'
+import { Route as LayoutUiImport } from './routes/_layout/ui'
 import { Route as LayoutAboutImport } from './routes/_layout/about'
 import { Route as LayoutPlayersIndexImport } from './routes/_layout/players/index'
 import { Route as LayoutGamesIndexImport } from './routes/_layout/games/index'
@@ -54,6 +55,12 @@ const AuthenticatedRoute = AuthenticatedImport.update({
 const LayoutIndexRoute = LayoutIndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => LayoutRoute,
+} as any)
+
+const LayoutUiRoute = LayoutUiImport.update({
+  id: '/ui',
+  path: '/ui',
   getParentRoute: () => LayoutRoute,
 } as any)
 
@@ -158,6 +165,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutAboutImport
       parentRoute: typeof LayoutImport
     }
+    '/_layout/ui': {
+      id: '/_layout/ui'
+      path: '/ui'
+      fullPath: '/ui'
+      preLoaderRoute: typeof LayoutUiImport
+      parentRoute: typeof LayoutImport
+    }
     '/_layout/': {
       id: '/_layout/'
       path: '/'
@@ -235,6 +249,7 @@ declare module '@tanstack/react-router' {
 
 interface LayoutRouteChildren {
   LayoutAboutRoute: typeof LayoutAboutRoute
+  LayoutUiRoute: typeof LayoutUiRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
   LayoutCorporationsCorporationIdRoute: typeof LayoutCorporationsCorporationIdRoute
   LayoutGamesGameIdRoute: typeof LayoutGamesGameIdRoute
@@ -249,6 +264,7 @@ interface LayoutRouteChildren {
 
 const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutAboutRoute: LayoutAboutRoute,
+  LayoutUiRoute: LayoutUiRoute,
   LayoutIndexRoute: LayoutIndexRoute,
   LayoutCorporationsCorporationIdRoute: LayoutCorporationsCorporationIdRoute,
   LayoutGamesGameIdRoute: LayoutGamesGameIdRoute,
@@ -269,6 +285,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
   '/about': typeof LayoutAboutRoute
+  '/ui': typeof LayoutUiRoute
   '/': typeof LayoutIndexRoute
   '/corporations/$corporationId': typeof LayoutCorporationsCorporationIdRoute
   '/games/$gameId': typeof LayoutGamesGameIdRoute
@@ -286,6 +303,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
   '/about': typeof LayoutAboutRoute
+  '/ui': typeof LayoutUiRoute
   '/': typeof LayoutIndexRoute
   '/corporations/$corporationId': typeof LayoutCorporationsCorporationIdRoute
   '/games/$gameId': typeof LayoutGamesGameIdRoute
@@ -305,6 +323,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
   '/_layout/about': typeof LayoutAboutRoute
+  '/_layout/ui': typeof LayoutUiRoute
   '/_layout/': typeof LayoutIndexRoute
   '/_layout/corporations/$corporationId': typeof LayoutCorporationsCorporationIdRoute
   '/_layout/games/$gameId': typeof LayoutGamesGameIdRoute
@@ -324,6 +343,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/logout'
     | '/about'
+    | '/ui'
     | '/'
     | '/corporations/$corporationId'
     | '/games/$gameId'
@@ -340,6 +360,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/logout'
     | '/about'
+    | '/ui'
     | '/'
     | '/corporations/$corporationId'
     | '/games/$gameId'
@@ -357,6 +378,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/logout'
     | '/_layout/about'
+    | '/_layout/ui'
     | '/_layout/'
     | '/_layout/corporations/$corporationId'
     | '/_layout/games/$gameId'
@@ -407,6 +429,7 @@ export const routeTree = rootRoute
       "filePath": "_layout.tsx",
       "children": [
         "/_layout/about",
+        "/_layout/ui",
         "/_layout/",
         "/_layout/corporations/$corporationId",
         "/_layout/games/$gameId",
@@ -427,6 +450,10 @@ export const routeTree = rootRoute
     },
     "/_layout/about": {
       "filePath": "_layout/about.tsx",
+      "parent": "/_layout"
+    },
+    "/_layout/ui": {
+      "filePath": "_layout/ui.tsx",
       "parent": "/_layout"
     },
     "/_layout/": {

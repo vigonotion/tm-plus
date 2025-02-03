@@ -6,6 +6,18 @@ export const BlockText = styled(
   cva({
     base: {
       maxWidth: "80ch",
+
+      "& a": {
+        textDecoration: "underline",
+      },
+
+      "& p, & ul": {
+        marginBottom: "2",
+      },
+
+      "& ul": {
+        listStyle: "disc inside",
+      },
     },
   }),
 );

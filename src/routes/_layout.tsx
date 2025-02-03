@@ -12,6 +12,8 @@ import {
   RiHammerLine,
   RiInfoCardFill,
   RiInfoCardLine,
+  RiTerminalWindowFill,
+  RiTerminalWindowLine,
   RiUser6Fill,
   RiUser6Line,
 } from "@remixicon/react";
@@ -143,6 +145,16 @@ function RouteComponent() {
               <span>About</span>
             </NavItem>
           </Link>
+
+          {process.env.NODE_ENV === "development" && (
+            <Link to={"/ui"}>
+              <NavItem>
+                <RiTerminalWindowLine className={"icon-when-inactive"} />
+                <RiTerminalWindowFill className={"icon-when-active"} />
+                <span>UI</span>
+              </NavItem>
+            </Link>
+          )}
         </div>
       </nav>
       <main
