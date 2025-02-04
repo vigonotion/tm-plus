@@ -14,7 +14,7 @@ export const pb = new PocketBase(
   "https://tm-plus-data.vigonotion.com",
 ) as TypedPocketBase;
 
-export function getOneQueryData<
+export function record<
   TCollection extends Collections,
   TData = CollectionResponses[TCollection],
 >(
@@ -38,7 +38,7 @@ export function getOneQueryData<
   return { queryKey: key, queryFn, options };
 }
 
-export function getListQueryData<
+export function collection<
   TCollection extends Collections,
   TData = CollectionResponses[TCollection][],
 >(
