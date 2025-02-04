@@ -94,6 +94,24 @@ export default defineConfig({
     },
   },
 
+  patterns: {
+    extend: {
+      link: {
+        description: "Applies the default link styles.",
+        blocklist: [],
+        transform: (props) => {
+          return {
+            textDecoration: "underline",
+            _hover: {
+              color: "orange.11",
+            },
+            ...props,
+          };
+        },
+      },
+    },
+  },
+
   // The output directory for your css system
   outdir: "styled-system",
   jsxFramework: "react",

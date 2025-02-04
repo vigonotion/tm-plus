@@ -70,6 +70,12 @@ export function DataTable<TData extends RowData>({
               paddingRight: "4",
             },
           },
+
+          "& tbody > tr": {
+            _hover: {
+              backgroundColor: "orange.2",
+            },
+          },
         })}
       >
         <thead>
