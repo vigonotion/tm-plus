@@ -25,7 +25,9 @@ export function DataTable<TData extends RowData>({
       className={css({
         border: "thin solid token(colors.gray.3)",
         borderRadius: "md",
-        overflow: "hidden",
+        overflow: "auto",
+        maxHeight: "60vh",
+        position: "relative",
       })}
     >
       <div
@@ -40,7 +42,10 @@ export function DataTable<TData extends RowData>({
       <table
         className={css({
           width: "100%",
-          "& thead": {},
+          "& thead": {
+            position: "sticky",
+            top: 0,
+          },
           "& th": {
             textAlign: "left",
             padding: "2",
