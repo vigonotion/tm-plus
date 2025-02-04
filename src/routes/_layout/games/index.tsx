@@ -105,7 +105,7 @@ const columns = [
 ];
 
 function RouteComponent() {
-  const { data, isLoading } = useQuery({
+  const { data } = useQuery({
     ...collection(Collections.Games, {
       sort: "-date",
       expand: "placements(game),placements(game).player",

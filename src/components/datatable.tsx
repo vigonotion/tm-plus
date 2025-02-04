@@ -6,13 +6,16 @@ import {
   TableOptions,
 } from "@tanstack/react-table";
 import { css } from "../../styled-system/css";
+import { ReactNode } from "react";
 
 export function DataTable<TData extends RowData>({
   columns,
   data,
+  controls,
 }: {
   columns: TableOptions<TData>["columns"];
   data: TData[];
+  controls?: ReactNode;
 }) {
   const table = useReactTable({
     data,
@@ -37,7 +40,7 @@ export function DataTable<TData extends RowData>({
           py: "2",
         })}
       >
-        CONTROLS
+        CONTROLS: {controls}
       </div>
       <table
         className={css({

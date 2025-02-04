@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Title } from "../../components/title.tsx";
 import { BlockText } from "../../components/block-text.tsx";
-import { VStack } from "../../../styled-system/jsx";
 import { DataTable } from "../../components/datatable.tsx";
 import { createColumnHelper } from "@tanstack/react-table";
+import { Select } from "../../components/select.tsx";
 
 export const Route = createFileRoute("/_layout/ui")({
   component: RouteComponent,
@@ -57,7 +57,11 @@ function RouteComponent() {
       <div>
         <BlockText>UI Components</BlockText>
         <br />
-        <DataTable columns={columns} data={data} />
+
+        <Select />
+
+        <br />
+        <DataTable columns={columns} data={data} controls={<Select />} />
       </div>
     </>
   );
