@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import { css } from "../../styled-system/css";
-import { hstack, vstack } from "../../styled-system/patterns";
+import { hstack } from "../../styled-system/patterns";
 import { PropsWithChildren } from "react";
 import {
   RiBuilding3Fill,
