@@ -2,11 +2,7 @@ import * as select from "@zag-js/select";
 import { useMachine, normalizeProps, Portal } from "@zag-js/react";
 import { useId } from "react";
 import { css } from "../../styled-system/css";
-import {
-  RiArrowDownLine,
-  RiArrowDownSLine,
-  RiArrowDownWideLine,
-} from "@remixicon/react";
+import { RiArrowDownSLine } from "@remixicon/react";
 import { hstack } from "../../styled-system/patterns";
 
 const selectData = [
@@ -30,6 +26,7 @@ export function Select() {
     select.machine({
       id: useId(),
       collection,
+      multiple: true,
       positioning: {
         offset: {
           mainAxis: 0,
@@ -39,6 +36,14 @@ export function Select() {
   );
 
   const api = select.connect(state, send, normalizeProps);
+
+  function handleBulk() {
+    if (api.selectedItems.length < collection.size) {
+      api.selectAll();
+    } else {
+      api.clearValue();
+    }
+  }
 
   return (
     <div {...api.getRootProps()} className={css({ display: "inline-block" })}>
@@ -67,25 +72,34 @@ export function Select() {
               borderRadius: "sm",
               overflow: "hidden",
               minWidth: "200px",
+
+              "& li": {
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                cursor: "pointer",
+                p: "2",
+                _hover: {
+                  backgroundColor: "yellow.3",
+                  color: "yellow.12",
+                },
+                '&[data-state="checked"]': {
+                  fontWeight: "bold",
+                  color: "token(colors.yellow.11) !important",
+                },
+              },
             })}
           >
+            <li
+              onClick={() => {
+                handleBulk();
+              }}
+              className={css({ fontStyle: "italic" })}
+            >
+              Toggle all
+            </li>
             {selectData.map((item) => (
-              <li
-                key={item.value}
-                {...api.getItemProps({ item })}
-                className={hstack({
-                  justifyContent: "space-between",
-                  p: "2",
-                  _hover: {
-                    backgroundColor: "yellow.3",
-                    color: "yellow.12",
-                  },
-                  '&[data-state="checked"]': {
-                    fontWeight: "bold",
-                    color: "token(colors.yellow.11) !important",
-                  },
-                })}
-              >
+              <li key={item.value} {...api.getItemProps({ item })}>
                 <span>{item.label}</span>
                 <span {...api.getItemIndicatorProps({ item })}>✓</span>
               </li>
