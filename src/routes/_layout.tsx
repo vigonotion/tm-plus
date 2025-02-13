@@ -36,7 +36,7 @@ function NavItem({ children }: PropsWithChildren) {
           width: "16px",
         },
 
-        "&:hover": {
+        _hover: {
           border: "1px solid token(colors.yellow.6)",
           backgroundColor: "yellow.3",
           color: "yellow.12",

@@ -56,9 +56,22 @@ export function Select() {
             px: "2",
             py: "1",
             borderRadius: "sm",
+            border: "1px solid transparent",
+
+            _hover: {
+              border: "1px solid token(colors.yellow.6)",
+              backgroundColor: "yellow.3",
+              color: "yellow.12",
+            },
+
+            '&&[data-state="open"]': {
+              backgroundColor: "yellow.5",
+              border: "1px solid token(colors.yellow.7)",
+              color: "yellow.12",
+            },
           })}
         >
-          <span>{api.valueAsString || "Select option"}</span>
+          <span>Columns: {api.selectedItems.length}</span>
           <RiArrowDownSLine size={16} />
         </button>
       </div>
@@ -68,7 +81,8 @@ export function Select() {
           <ul
             {...api.getContentProps()}
             className={css({
-              backgroundColor: "gray.3",
+              backgroundColor: "gray.1",
+              border: "1px solid token(colors.gray.3)",
               borderRadius: "sm",
               overflow: "hidden",
               minWidth: "200px",

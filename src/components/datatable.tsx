@@ -49,6 +49,10 @@ export function DataTable<TData extends RowData>({
             position: "sticky",
             top: 0,
           },
+          "& tfoot": {
+            position: "sticky",
+            bottom: 0,
+          },
           "& th": {
             textAlign: "left",
             padding: "2",

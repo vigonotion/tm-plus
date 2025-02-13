@@ -57,10 +57,8 @@ function RouteComponent() {
       <div>
         <BlockText>UI Components</BlockText>
         <br />
-
         <Select />
-
-        <br />
+        <br /> <br />
         <DataTable columns={columns} data={data} controls={<Select />} />
       </div>
     </>
