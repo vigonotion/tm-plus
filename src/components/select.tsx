@@ -29,7 +29,7 @@ export function Select() {
       multiple: true,
       positioning: {
         offset: {
-          mainAxis: 0,
+          // mainAxis: 2,
         },
       },
     }),
@@ -56,17 +56,18 @@ export function Select() {
             px: "2",
             py: "1",
             borderRadius: "sm",
-            border: "1px solid transparent",
+            border: "1px solid token(colors.gray.a.2)",
+            borderBottom: "2px solid token(colors.gray.a.2)",
 
             _hover: {
-              border: "1px solid token(colors.yellow.6)",
+              borderColor: "token(colors.yellow.6)",
               backgroundColor: "yellow.3",
               color: "yellow.12",
             },
 
             '&&[data-state="open"]': {
               backgroundColor: "yellow.5",
-              border: "1px solid token(colors.yellow.7)",
+              borderColor: "token(colors.yellow.7)",
               color: "yellow.12",
             },
           })}
