@@ -46,6 +46,21 @@ export default defineConfig({
             "10": { value: "#d28437" },
             "11": { value: "#f0ad73" },
             "12": { value: "#fbdfc8" },
+
+            a: {
+              "1": { value: "#d1000004" },
+              "2": { value: "#fd87390d" },
+              "3": { value: "#ff95351d" },
+              "4": { value: "#ff881d2d" },
+              "5": { value: "#ff8d273c" },
+              "6": { value: "#fd99434d" },
+              "7": { value: "#fea65562" },
+              "8": { value: "#ffa75883" },
+              "9": { value: "#ffa44ddc" },
+              "10": { value: "#ff9f40cf" },
+              "11": { value: "#ffb87aef" },
+              "12": { value: "#ffe3cbfb" },
+            },
           },
           orange: {
             "1": { value: "#170f0d" },

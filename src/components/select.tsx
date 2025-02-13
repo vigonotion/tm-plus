@@ -82,7 +82,8 @@ export function Select() {
           <ul
             {...api.getContentProps()}
             className={css({
-              backgroundColor: "gray.1",
+              backgroundColor: "gray.a.2",
+              backdropFilter: "blur(15px) brightness(60%)",
               border: "1px solid token(colors.gray.3)",
               borderRadius: "sm",
               overflow: "hidden",
@@ -95,7 +96,7 @@ export function Select() {
                 cursor: "pointer",
                 p: "2",
                 _hover: {
-                  backgroundColor: "yellow.3",
+                  backgroundColor: "yellow.a.3",
                   color: "yellow.12",
                 },
                 '&[data-state="checked"]': {
