@@ -40,7 +40,7 @@ export function DataTable<TData extends RowData>({
           py: "2",
         })}
       >
-        CONTROLS: {controls}
+        {controls}
       </div>
       <table
         className={css({

@@ -4,6 +4,7 @@ import { BlockText } from "../../components/block-text.tsx";
 import { DataTable } from "../../components/datatable.tsx";
 import { createColumnHelper } from "@tanstack/react-table";
 import { Select } from "../../components/select.tsx";
+import { HStack } from "../../../styled-system/jsx";
 
 export const Route = createFileRoute("/_layout/ui")({
   component: RouteComponent,
@@ -59,7 +60,15 @@ function RouteComponent() {
         <br />
         <Select />
         <br /> <br />
-        <DataTable columns={columns} data={data} controls={<Select />} />
+        <DataTable
+          columns={columns}
+          data={data}
+          controls={
+            <HStack justifyContent={"end"}>
+              <Select />
+            </HStack>
+          }
+        />
       </div>
     </>
   );
