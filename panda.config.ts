@@ -1,4 +1,8 @@
-import { defineConfig, defineGlobalStyles } from "@pandacss/dev";
+import {
+  defineConfig,
+  defineGlobalStyles,
+  defineKeyframes,
+} from "@pandacss/dev";
 
 const globalCss = defineGlobalStyles({
   ":root": {
@@ -118,6 +122,16 @@ export default defineConfig({
               "12": { value: "#fdfdffef" },
             },
           },
+        },
+      },
+      keyframes: {
+        slideInFromTop: {
+          "0%": { opacity: "0", transform: "translateY(-5px)" },
+          "100%": { opacity: "1", transform: "0 0" },
+        },
+        slideInFromBottom: {
+          "0%": { opacity: "0", transform: "translateY(5px)" },
+          "100%": { opacity: "1", transform: "0 0" },
         },
       },
     },

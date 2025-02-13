@@ -89,6 +89,15 @@ export function Select() {
               overflow: "hidden",
               minWidth: "200px",
 
+              '&[data-state="open"][data-placement^="bottom"]': {
+                animation:
+                  "slideInFromTop 0.1s cubic-bezier(0.445, 0.050, 0.550, 0.950) forwards",
+              },
+              '&[data-state="open"][data-placement^="top"]': {
+                animation:
+                  "slideInFromBottom 0.1s cubic-bezier(0.445, 0.050, 0.550, 0.950) forwards",
+              },
+
               "& li": {
                 display: "flex",
                 alignItems: "center",
