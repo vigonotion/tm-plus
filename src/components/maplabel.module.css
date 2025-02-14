@@ -1,0 +1,31 @@
+.text {
+  text-transform: capitalize;
+}
+
+.vastitas {
+  color: rgb(96, 165, 250);
+}
+
+.amazonis {
+  color: rgb(6, 182, 212);
+}
+
+.terra {
+  color: rgb(168, 85, 247);
+}
+
+.utopia {
+  color: rgb(234, 179, 8);
+}
+
+.elysium {
+  color: rgb(34, 197, 94);
+}
+
+.hellas {
+  color: rgb(59, 130, 246);
+}
+
+.mars {
+  color: var(--orange-9);
+}
