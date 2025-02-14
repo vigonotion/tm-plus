@@ -2,7 +2,6 @@
   display: grid;
   grid-template-columns: 300px 1fr;
   grid-template-rows: 80px minmax(calc(100vh - 80px - var(--space-2)), max-content);
-  gap: var(--space-4);
 
   & > * {
     grid-row-end: span 2;
@@ -59,8 +58,8 @@
 }
 
 .main {
-  padding-inline: var(--space-3);
-  padding-block: var(--space-2);
+  padding-inline: var(--space-8);
+  padding-block: var(--space-4);
 
   display: grid;
   grid: subgrid / subgrid;

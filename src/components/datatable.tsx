@@ -6,6 +6,7 @@ import {
   TableOptions,
 } from "@tanstack/react-table";
 import { ReactNode } from "react";
+import { Table } from "@radix-ui/themes";
 
 export function DataTable<TData extends RowData>({
   columns,
@@ -25,51 +26,35 @@ export function DataTable<TData extends RowData>({
   return (
     <div>
       <div>{controls}</div>
-      <table>
-        <thead>
+      <Table.Root variant={"surface"}>
+        <Table.Header>
           {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
+            <Table.Row key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <th key={header.id}>
+                <Table.ColumnHeaderCell key={header.id}>
                   {header.isPlaceholder
                     ? null
                     : flexRender(
                         header.column.columnDef.header,
                         header.getContext(),
                       )}
-                </th>
+                </Table.ColumnHeaderCell>
               ))}
-            </tr>
+            </Table.Row>
           ))}
-        </thead>
-        <tbody>
+        </Table.Header>
+        <Table.Body>
           {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
+            <Table.Row key={row.id}>
               {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>
+                <Table.Cell key={cell.id}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
+                </Table.Cell>
               ))}
-            </tr>
+            </Table.Row>
           ))}
-        </tbody>
-        <tfoot>
-          {table.getFooterGroups().map((footerGroup) => (
-            <tr key={footerGroup.id}>
-              {footerGroup.headers.map((header) => (
-                <th key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.footer,
-                        header.getContext(),
-                      )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </tfoot>
-      </table>
+        </Table.Body>
+      </Table.Root>
     </div>
   );
 }

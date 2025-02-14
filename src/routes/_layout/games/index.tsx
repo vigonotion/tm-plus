@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { Title } from "../../../components/title.tsx";
 import { useQuery } from "@tanstack/react-query";
 import { collection } from "../../../client/conn.ts";
@@ -11,6 +11,8 @@ import {
 import { createColumnHelper } from "@tanstack/react-table";
 import { DataTable } from "../../../components/datatable.tsx";
 import { MapLabel } from "../../../components/maplabel.tsx";
+import { StyledLink } from "../../../components/styled-link.tsx";
+import { Box, Text } from "@radix-ui/themes";
 
 export const Route = createFileRoute("/_layout/games/")({
   component: RouteComponent,
@@ -61,9 +63,12 @@ const columns = [
   columnHelper.accessor("date", {
     header: "Date",
     cell: (info) => (
-      <Link to={"/games/$gameId"} params={{ gameId: info.row.original.id }}>
+      <StyledLink
+        to={"/games/$gameId"}
+        params={{ gameId: info.row.original.id }}
+      >
         {info.getValue().substring(0, 10)}
-      </Link>
+      </StyledLink>
     ),
     footer: (info) => info.column.id,
   }),
@@ -87,12 +92,12 @@ const columns = [
   columnHelper.accessor("winner.name", {
     header: "Winner",
     cell: (info) => (
-      <Link
+      <StyledLink
         to={"/players/$playerId"}
         params={{ playerId: info.row.original.winner.id ?? "" }}
       >
         {info.getValue()}
-      </Link>
+      </StyledLink>
     ),
     footer: (info) => info.column.id,
   }),
@@ -111,7 +116,15 @@ function RouteComponent() {
   return (
     <>
       <Title>Games</Title>
-      <div>{data && <DataTable columns={columns} data={data} />}</div>
+      <div>
+        <Box mb={"4"}>
+          <Text color={"gray"}>
+            A game is considered won if on the first place, or in a game with
+            five players, on the first or second place.
+          </Text>
+        </Box>
+        {data && <DataTable columns={columns} data={data} />}
+      </div>
     </>
   );
 }
