@@ -7,69 +7,39 @@ import {
   RiLeafLine,
   RiSnowflakeLine,
 } from "@remixicon/react";
-import { css } from "../../styled-system/css";
-import { hstack } from "../../styled-system/patterns";
-
 function MapIcon({ map, size = 16 }: { map: string; size?: number }) {
   if (map === "hellas") {
-    return (
-      <RiSnowflakeLine
-        size={size}
-        className={css({ color: "rgb(59, 130, 246)" })}
-      />
-    );
+    return <RiSnowflakeLine size={size} />;
   }
 
   if (map === "elysium") {
-    return (
-      <RiLeafLine size={size} className={css({ color: "rgb(34, 197, 94)" })} />
-    );
+    return <RiLeafLine size={size} />;
   }
 
   if (map === "utopia") {
-    return (
-      <RiFlashlightLine
-        size={size}
-        className={css({ color: "rgb(234, 179, 8)" })}
-      />
-    );
+    return <RiFlashlightLine size={size} />;
   }
 
   if (map === "terra") {
-    return (
-      <RiEarthLine
-        size={size}
-        className={css({ color: "rgb(168, 85, 247)" })}
-      />
-    );
+    return <RiEarthLine size={size} />;
   }
 
   if (map === "vastitas") {
-    return (
-      <RiCompassLine
-        size={size}
-        className={css({ color: "rgb(96, 165, 250)" })}
-      />
-    );
+    return <RiCompassLine size={size} />;
   }
 
   if (map === "amazonis") {
-    return (
-      <RiHexagonLine
-        size={size}
-        className={css({ color: "rgb(6, 182, 212)" })}
-      />
-    );
+    return <RiHexagonLine size={size} />;
   }
 
-  return <RiCircleLine size={size} className={css({ color: "orange.9" })} />;
+  return <RiCircleLine size={size} />;
 }
 
 export function MapLabel({ map }: { map: string }) {
   return (
-    <span className={hstack()}>
+    <span>
       <MapIcon map={map} />
-      <span className={css({ textTransform: "capitalize" })}>{map}</span>
+      <span>{map}</span>
     </span>
   );
 }

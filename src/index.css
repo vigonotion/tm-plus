@@ -1,5 +1,3 @@
-@layer reset, base, tokens, recipes, utilities;
-
 /* hubot-sans-latin-wght-normal */
 @font-face {
   font-family: 'Hubot Sans Variable';

@@ -1,12 +1,10 @@
-import { css } from "../../styled-system/css";
-
 export function VigonotionLogo() {
   return (
     <svg
-      className={css({
-        filter: "invert(1)",
-        width: "48",
-      })}
+      // className={css({
+      //   filter: "invert(1)",
+      //   width: "48",
+      // })}
       aria-label="VIGONOTION Logo"
       fill="#000"
       version="1.1"

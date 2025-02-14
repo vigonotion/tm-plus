@@ -5,7 +5,6 @@ import {
   flexRender,
   TableOptions,
 } from "@tanstack/react-table";
-import { css } from "../../styled-system/css";
 import { ReactNode } from "react";
 
 export function DataTable<TData extends RowData>({
@@ -24,67 +23,9 @@ export function DataTable<TData extends RowData>({
   });
 
   return (
-    <div
-      className={css({
-        border: "thin solid token(colors.gray.3)",
-        borderRadius: "md",
-        overflow: "auto",
-        maxHeight: "60vh",
-        position: "relative",
-      })}
-    >
-      <div
-        className={css({
-          backgroundColor: "gray.2",
-          px: "4",
-          py: "2",
-        })}
-      >
-        {controls}
-      </div>
-      <table
-        className={css({
-          width: "100%",
-          "& thead": {
-            position: "sticky",
-            top: 0,
-          },
-          "& tfoot": {
-            position: "sticky",
-            bottom: 0,
-          },
-          "& th": {
-            textAlign: "left",
-            padding: "2",
-
-            backgroundColor: "gray.1",
-
-            "&:first-of-type": {
-              paddingLeft: "4",
-            },
-            "&:last-of-type": {
-              paddingRight: "4",
-            },
-          },
-
-          "& td": {
-            padding: "2",
-
-            "&:first-of-type": {
-              paddingLeft: "4",
-            },
-            "&:last-of-type": {
-              paddingRight: "4",
-            },
-          },
-
-          "& tbody > tr": {
-            _hover: {
-              backgroundColor: "orange.2",
-            },
-          },
-        })}
-      >
+    <div>
+      <div>{controls}</div>
+      <table>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>

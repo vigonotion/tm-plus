@@ -10,7 +10,6 @@ import {
 } from "../../../client/types.gen.ts";
 import { createColumnHelper } from "@tanstack/react-table";
 import { DataTable } from "../../../components/datatable.tsx";
-import { link } from "../../../../styled-system/patterns";
 import { MapLabel } from "../../../components/maplabel.tsx";
 
 export const Route = createFileRoute("/_layout/games/")({
@@ -62,11 +61,7 @@ const columns = [
   columnHelper.accessor("date", {
     header: "Date",
     cell: (info) => (
-      <Link
-        className={link()}
-        to={"/games/$gameId"}
-        params={{ gameId: info.row.original.id }}
-      >
+      <Link to={"/games/$gameId"} params={{ gameId: info.row.original.id }}>
         {info.getValue().substring(0, 10)}
       </Link>
     ),
@@ -93,7 +88,6 @@ const columns = [
     header: "Winner",
     cell: (info) => (
       <Link
-        className={link()}
         to={"/players/$playerId"}
         params={{ playerId: info.row.original.winner.id ?? "" }}
       >

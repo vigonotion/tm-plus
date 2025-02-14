@@ -3,31 +3,22 @@ import { routeTree } from "./routeTree.gen.ts";
 import { ImageLayout } from "./components/image-layout.tsx";
 import { Title } from "./components/title.tsx";
 import starship from "./assets/starship-above-mars.png";
-import { BlockText } from "./components/block-text.tsx";
-import { vstack } from "../styled-system/patterns";
 import { TmpLogo } from "./components/tmp-logo.tsx";
-import { css } from "../styled-system/css";
 
 const router = createRouter({
   routeTree,
   defaultNotFoundComponent: () => {
     return (
       <ImageLayout imageSrc={starship}>
-        <div
-          className={vstack({
-            alignItems: "start",
-            justifyContent: "space-between",
-            height: "100%",
-          })}
-        >
-          <div className={css({ mb: "10" })}>
+        <div>
+          <div>
             <TmpLogo />
           </div>
-          <div className={css({ mb: "20vh" })}>
+          <div>
             <Title>Page not found</Title>
-            <BlockText>
+            <p>
               It seems like you are lost! Go <Link to={"/"}>back home</Link>.
-            </BlockText>
+            </p>
           </div>
           <div></div>
         </div>

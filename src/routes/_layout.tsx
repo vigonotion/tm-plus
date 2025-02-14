@@ -1,6 +1,4 @@
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
-import { css } from "../../styled-system/css";
-import { hstack } from "../../styled-system/patterns";
 import { PropsWithChildren } from "react";
 import {
   RiBuilding3Fill,
@@ -24,77 +22,18 @@ export const Route = createFileRoute("/_layout")({
 });
 
 function NavItem({ children }: PropsWithChildren) {
-  return (
-    <div
-      className={hstack({
-        color: "gray.11",
-        padding: "2",
-        borderRadius: "lg",
-        border: "1px solid transparent",
-
-        "& > svg": {
-          width: "16px",
-        },
-
-        _hover: {
-          border: "1px solid token(colors.yellow.6)",
-          backgroundColor: "yellow.3",
-          color: "yellow.12",
-        },
-
-        "& > .icon-when-active": {
-          display: "none",
-        },
-
-        "a.active > &": {
-          fontWeight: "bold",
-          color: "yellow.9",
-
-          "& > .icon-when-active": { display: "block" },
-          "& > .icon-when-inactive": { display: "none" },
-        },
-      })}
-    >
-      {children}
-    </div>
-  );
+  return <div>{children}</div>;
 }
 
 function RouteComponent() {
   return (
-    <div
-      className={css({
-        display: "grid",
-        gridTemplateColumns: "300px 1fr",
-        gridTemplateRows:
-          "80px minmax(calc(100vh - 80px - token(spacing.4)), max-content)",
-        gap: "4",
-
-        "& > *": {
-          gridRowEnd: "span 2",
-        },
-      })}
-    >
-      <nav
-        className={css({
-          backgroundColor: "gray.1",
-          borderRight: "1px solid token(colors.gray.3)",
-          padding: "4",
-          display: "grid",
-          grid: "subgrid / subgrid",
-        })}
-      >
-        <div className={hstack({ padding: "2" })}>
+    <div>
+      <nav>
+        <div>
           <TmpLogo />
         </div>
 
-        <div
-          className={css({
-            display: "flex",
-            flexDirection: "column",
-            gap: "2",
-          })}
-        >
+        <div>
           <Link to={"/games"}>
             <NavItem>
               <RiChessLine className={"icon-when-inactive"} />
@@ -155,15 +94,7 @@ function RouteComponent() {
           )}
         </div>
       </nav>
-      <main
-        className={css({
-          px: "6",
-          py: "4",
-
-          display: "grid",
-          grid: "subgrid / subgrid",
-        })}
-      >
+      <main>
         <Outlet />
       </main>
     </div>

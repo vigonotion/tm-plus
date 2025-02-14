@@ -1,10 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Title } from "../../components/title.tsx";
-import { BlockText } from "../../components/block-text.tsx";
 import { DataTable } from "../../components/datatable.tsx";
 import { createColumnHelper } from "@tanstack/react-table";
-import { Select } from "../../components/select.tsx";
-import { HStack } from "../../../styled-system/jsx";
+import { Flex } from "@radix-ui/themes";
 
 export const Route = createFileRoute("/_layout/ui")({
   component: RouteComponent,
@@ -56,18 +54,13 @@ function RouteComponent() {
     <>
       <Title>UI</Title>
       <div>
-        <BlockText>UI Components</BlockText>
+        <p>UI Components</p>
         <br />
-        <Select />
         <br /> <br />
         <DataTable
           columns={columns}
           data={data}
-          controls={
-            <HStack justifyContent={"end"}>
-              <Select />
-            </HStack>
-          }
+          controls={<Flex justify={"end"}>Options</Flex>}
         />
       </div>
     </>
