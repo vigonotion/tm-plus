@@ -17,84 +17,87 @@ import {
 } from "@remixicon/react";
 import { TmpLogo } from "../components/tmp-logo.tsx";
 
+import css from "./_layout.module.css";
+import { Flex, Slot } from "@radix-ui/themes";
+
 export const Route = createFileRoute("/_layout")({
   component: RouteComponent,
 });
 
 function NavItem({ children }: PropsWithChildren) {
-  return <div>{children}</div>;
+  return <Slot className={css.navitem}>{children}</Slot>;
 }
 
 function RouteComponent() {
   return (
-    <div>
-      <nav>
-        <div>
+    <div className={css.root}>
+      <nav className={css.nav}>
+        <Flex align={"center"} p={"2"}>
           <TmpLogo />
-        </div>
+        </Flex>
 
-        <div>
-          <Link to={"/games"}>
-            <NavItem>
-              <RiChessLine className={"icon-when-inactive"} />
-              <RiChessFill className={"icon-when-active"} />
+        <Flex direction={"column"} gap={"2"}>
+          <NavItem>
+            <Link to={"/games"}>
+              <RiChessLine className={"icon_when_inactive"} />
+              <RiChessFill className={"icon_when_active"} />
               <span>Games</span>
-            </NavItem>
-          </Link>
+            </Link>
+          </NavItem>
 
-          <Link to={"/players"}>
-            <NavItem>
-              <RiUser6Line className={"icon-when-inactive"} />
-              <RiUser6Fill className={"icon-when-active"} />
+          <NavItem>
+            <Link to={"/players"}>
+              <RiUser6Line className={"icon_when_inactive"} />
+              <RiUser6Fill className={"icon_when_active"} />
               <span>Players</span>
-            </NavItem>
-          </Link>
+            </Link>
+          </NavItem>
 
-          <Link to={"/corporations"}>
-            <NavItem>
-              <RiBuilding3Line className={"icon-when-inactive"} />
-              <RiBuilding3Fill className={"icon-when-active"} />
+          <NavItem>
+            <Link to={"/corporations"}>
+              <RiBuilding3Line className={"icon_when_inactive"} />
+              <RiBuilding3Fill className={"icon_when_active"} />
               <span>Corporations</span>
-            </NavItem>
-          </Link>
+            </Link>
+          </NavItem>
 
-          <Link to={"/tools/map"}>
-            <NavItem>
-              <RiHammerLine className={"icon-when-inactive"} />
-              <RiHammerFill className={"icon-when-active"} />
+          <NavItem>
+            <Link to={"/tools/map"}>
+              <RiHammerLine className={"icon_when_inactive"} />
+              <RiHammerFill className={"icon_when_active"} />
               <span>Tools</span>
-            </NavItem>
-          </Link>
+            </Link>
+          </NavItem>
 
-          <Link to={"/about"}>
-            <NavItem>
-              <RiInfoCardLine className={"icon-when-inactive"} />
-              <RiInfoCardFill className={"icon-when-active"} />
+          <NavItem>
+            <Link to={"/about"}>
+              <RiInfoCardLine className={"icon_when_inactive"} />
+              <RiInfoCardFill className={"icon_when_active"} />
               <span>About</span>
-            </NavItem>
-          </Link>
+            </Link>
+          </NavItem>
 
           {process.env.NODE_ENV === "development" && (
             <>
-              <Link to={"/ui"}>
-                <NavItem>
-                  <RiTerminalWindowLine className={"icon-when-inactive"} />
-                  <RiTerminalWindowFill className={"icon-when-active"} />
+              <NavItem>
+                <Link to={"/ui"}>
+                  <RiTerminalWindowLine className={"icon_when_inactive"} />
+                  <RiTerminalWindowFill className={"icon_when_active"} />
                   <span>UI</span>
-                </NavItem>
-              </Link>
+                </Link>
+              </NavItem>
 
-              <a href={"/404thispagedoesnotexist"}>
-                <NavItem>
-                  <RiSearchEyeLine className={"icon-when-inactive"} />
+              <NavItem>
+                <a href={"/404thispagedoesnotexist"}>
+                  <RiSearchEyeLine className={"icon_when_inactive"} />
                   <span>404 page</span>
-                </NavItem>
-              </a>
+                </a>
+              </NavItem>
             </>
           )}
-        </div>
+        </Flex>
       </nav>
-      <main>
+      <main className={css.main}>
         <Outlet />
       </main>
     </div>

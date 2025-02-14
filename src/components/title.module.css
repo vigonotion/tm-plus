@@ -1,0 +1,8 @@
+.root {
+  font-family: var(--font-display);
+
+  &:after {
+    content: '.';
+    color: var(--orange-9)
+  }
+}

@@ -1,0 +1,67 @@
+.root {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  grid-template-rows: 80px minmax(calc(100vh - 80px - var(--space-2)), max-content);
+  gap: var(--space-4);
+
+  & > * {
+    grid-row-end: span 2;
+  }
+}
+
+.nav {
+  background-color: var(--color-panel);
+  border-right: 1px solid var(--gray-5);
+  padding: var(--space-2);
+  display: grid;
+  grid: subgrid / subgrid;
+}
+
+.navitem {
+  color: var(--gray-11);
+  padding: 0.5rem; /* Assuming padding "2" is 0.5rem */
+  border-radius: 0.5rem; /* Assuming "lg" is 0.5rem */
+  border: 1px solid transparent;
+
+  &:hover {
+    border: 1px solid var(--orange-6);
+    background-color: var(--orange-3);
+    color: var(--orange-12);
+  }
+
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+
+  :global(.icon_when_active) {
+    display: none;
+  }
+
+  svg {
+    width: 16px;
+  }
+
+
+  &:global(.active) {
+    font-weight: bold;
+    color: var(--orange-9);
+  }
+
+  &:global(.active) :global(.icon_when_active) {
+    display: block;
+  }
+
+  &:global(.active) :global(.icon_when_inactive) {
+    display: none;
+  }
+}
+
+.main {
+  padding-inline: var(--space-3);
+  padding-block: var(--space-2);
+
+  display: grid;
+  grid: subgrid / subgrid;
+}

@@ -1,0 +1,13 @@
+.root {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+.text {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+}
+
+.icon {
+  color: var(--orange-9)
+}
