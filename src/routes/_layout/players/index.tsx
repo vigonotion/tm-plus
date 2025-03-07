@@ -23,6 +23,10 @@ type ExpandedPlayer = PlayersResponse<{
   "placements(player)": PlacementsResponse<{ game: GamesResponse }>[];
 }>;
 
+type ExpandedGame = GamesResponse<{
+  "placements(game)": PlacementsResponse<{ game: GamesResponse }>[];
+}>;
+
 interface PlayerRow {
   id: string;
   name: string;
@@ -43,9 +47,10 @@ function expandedPlayerToRow(
   // A game is considered won if on the first place, or in a game with five players, on the first or second place
   const gamesWon = placements.filter((placement) => {
     // Safely access the placements array length with type checking
-    const totalPlayers = placement.expand?.game.expand?.["placements(game)"] 
-      ? placement.expand.game.expand["placements(game)"].length 
-      : 0;
+    const totalPlayers =
+      (placement.expand?.game as ExpandedGame).expand?.["placements(game)"]
+        ?.length ?? 0;
+
     return (
       placement.placement === 1 ||
       (totalPlayers === 5 && placement.placement === 2)
