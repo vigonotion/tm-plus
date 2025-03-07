@@ -7,6 +7,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { DataTable } from "../../../components/datatable.tsx";
 import { MapLabel } from "../../../components/maplabel.tsx";
 import { Box, Flex, Text } from "@radix-ui/themes";
+import { StyledLink } from "../../../components/styled-link.tsx";
 import { useAtom } from "jotai";
 import { dateRangeAtom, getDateRangeDisplayName } from "../../../atoms/dateRange.ts";
 import { groupFilterAtom, getGroupDisplayName, useGroups } from "../../../atoms/groupFilter.ts";
@@ -20,6 +21,7 @@ interface MapStats {
   name: string;
   gamesPlayed: number;
   lastPlayed: string;
+  lastPlayedGameId: string;
 }
 
 const columnHelper = createColumnHelper<MapStats>();
@@ -39,7 +41,17 @@ const columns = [
     header: "Last Played",
     cell: (info) => {
       const date = info.getValue();
-      return date ? date.substring(0, 10) : "Never";
+      const gameId = info.row.original.lastPlayedGameId;
+      
+      if (!date) return "Never";
+      
+      return gameId ? (
+        <StyledLink to={"/games/$gameId"} params={{ gameId }}>
+          {date.substring(0, 10)}
+        </StyledLink>
+      ) : (
+        date.substring(0, 10)
+      );
     },
     footer: (info) => info.column.id,
   }),
@@ -98,6 +110,7 @@ function RouteComponent() {
         name: mapName,
         gamesPlayed: mapGames.length,
         lastPlayed: sortedGames.length > 0 ? sortedGames[0].date : "",
+        lastPlayedGameId: sortedGames.length > 0 ? sortedGames[0].id : "",
       };
     }).sort((a, b) => b.gamesPlayed - a.gamesPlayed); // Sort by most played
   }, [games, dateRange, groupFilter]);
