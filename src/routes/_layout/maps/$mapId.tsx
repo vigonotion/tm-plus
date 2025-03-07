@@ -170,10 +170,11 @@ function RouteComponent() {
       <div>
         <Box mb="4">
           <Flex direction="column" gap="2">
-            <Flex align="center" gap="2">
-              <MapLabel map={mapId} />
-            </Flex>
-            <Text color="gray">Games played on the {mapId} map.</Text>
+            <Text color="gray">
+              <Flex gap={"2"}>
+                Games played on the <MapLabel map={mapId} /> map.
+              </Flex>
+            </Text>
             <Text size="2" color="gray">
               Showing data for: {getDateRangeDisplayName(dateRange)}, Group:{" "}
               {getGroupDisplayName(groupFilter, groups)}
@@ -183,17 +184,17 @@ function RouteComponent() {
 
         <Box mb="6">
           <Flex gap="4">
-            <KpiCard 
-              title="Games played" 
-              value={gamesCount} 
-              icon={<RiGamepadLine />} 
+            <KpiCard
+              title="Games played"
+              value={gamesCount}
+              icon={<RiGamepadLine />}
               color="orange"
             />
             {gamesCount > 0 && (
-              <KpiCard 
-                title="Avg. generations" 
-                value={avgGenerations} 
-                icon={<RiTimeLine />} 
+              <KpiCard
+                title="Avg. generations"
+                value={avgGenerations}
+                icon={<RiTimeLine />}
                 color="blue"
               />
             )}

@@ -1,5 +1,5 @@
 import { Box, Flex, Text } from "@radix-ui/themes";
-import { ReactNode } from "react";
+import { cloneElement, ReactNode } from "react";
 
 interface KpiCardProps {
   title: string;
@@ -8,7 +8,12 @@ interface KpiCardProps {
   color?: "default" | "orange" | "blue" | "green";
 }
 
-export function KpiCard({ title, value, icon, color = "default" }: KpiCardProps) {
+export function KpiCard({
+  title,
+  value,
+  icon,
+  color = "default",
+}: KpiCardProps) {
   // Define color styles based on the color prop
   const getColorStyles = () => {
     switch (color) {
@@ -49,12 +54,16 @@ export function KpiCard({ title, value, icon, color = "default" }: KpiCardProps)
     >
       <Flex direction="column" gap="1">
         <Flex align="center" justify="between">
-          <Text size="2" color="gray" weight="medium">
+          <Text
+            size="2"
+            color={color === "default" ? "gray" : color}
+            weight="medium"
+          >
             {title}
           </Text>
           {icon && (
             <Box style={{ color: `var(--${color}-11)` }}>
-              {React.cloneElement(icon as React.ReactElement, { size: 14 })}
+              {cloneElement(icon as React.ReactElement, { size: 14 })}
             </Box>
           )}
         </Flex>
