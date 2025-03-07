@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Title } from "../../../components/title.tsx";
 import { useQuery } from "@tanstack/react-query";
 import { collection } from "../../../client/conn.ts";
-import { Collections, GamesResponse } from "../../../client/types.gen.ts";
+import { Collections } from "../../../client/types.gen.ts";
 import { createColumnHelper } from "@tanstack/react-table";
 import { DataTable } from "../../../components/datatable.tsx";
 import { MapLabel } from "../../../components/maplabel.tsx";

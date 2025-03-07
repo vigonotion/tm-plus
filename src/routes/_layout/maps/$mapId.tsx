@@ -59,7 +59,7 @@ function expandedGameToRow(game: ExpandedGame): GameRow {
     )
     .map((winner) => ({
       id: winner.player,
-      name: winner.expand?.player.name || "Unknown",
+      name: winner.expand?.player.name ?? "Unknown",
     }));
 
   return {
@@ -157,7 +157,7 @@ function RouteComponent() {
   });
 
   // Get map statistics
-  const gamesCount = data?.length || 0;
+  const gamesCount = data?.length ?? 0;
   const avgGenerations = data?.length
     ? Math.round(
         data.reduce((sum, game) => sum + game.generations, 0) / data.length,

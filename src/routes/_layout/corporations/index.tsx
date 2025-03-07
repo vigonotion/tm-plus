@@ -12,7 +12,7 @@ import { DataTable } from "../../../components/datatable.tsx";
 import { StyledLink } from "../../../components/styled-link.tsx";
 import { Box, Text, HoverCard, Flex } from "@radix-ui/themes";
 import { useAtom } from "jotai";
-import { dateRangeAtom, getDateRanges, getDateRangeDisplayName } from "../../../atoms/dateRange.ts";
+import { dateRangeAtom, getDateRangeDisplayName } from "../../../atoms/dateRange.ts";
 import { groupFilterAtom, getGroupDisplayName, useGroups } from "../../../atoms/groupFilter.ts";
 
 export const Route = createFileRoute("/_layout/corporations/")({
@@ -133,6 +133,21 @@ function RouteComponent() {
   const [groupFilter] = useAtom(groupFilterAtom);
   const { data: groups = [] } = useGroups();
   
+  // Define date ranges here since we're not importing getDateRanges
+  const dateRanges = {
+    all: undefined,
+    year: new Date(
+      new Date().getFullYear() - 1,
+      new Date().getMonth(),
+      new Date().getDate()
+    ).toISOString(),
+    three_months: new Date(
+      new Date().getFullYear(),
+      new Date().getMonth() - 3,
+      new Date().getDate()
+    ).toISOString(),
+  };
+
   const { data } = useQuery({
     ...collection(Collections.Corporations, {
       sort: "name",
@@ -140,7 +155,7 @@ function RouteComponent() {
     }),
     select: (x) => {
       const corporations = x;
-      const dateLimit = dateRanges[dateRange];
+      const dateLimit = dateRanges[dateRange as keyof typeof dateRanges];
       
       return corporations.map((c) => {
         const corp = c as ExpandedCorporation;

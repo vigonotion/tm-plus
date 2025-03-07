@@ -14,7 +14,6 @@ import {
   RiTerminalWindowLine,
   RiUser6Fill,
   RiUser6Line,
-  RiFilterLine,
   RiCalendar2Line,
   RiTeamLine,
   RiMapLine,
@@ -23,7 +22,7 @@ import {
 import { TmpLogo } from "../components/tmp-logo.tsx";
 
 import css from "./_layout.module.css";
-import { Flex, Slot, Select, Text, Separator } from "@radix-ui/themes";
+import { Flex, Slot, Select, Text } from "@radix-ui/themes";
 import { useAtom } from "jotai";
 import {
   dateRangeAtom,

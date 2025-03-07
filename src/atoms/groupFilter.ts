@@ -1,4 +1,3 @@
-import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import { useQuery } from "@tanstack/react-query";
 import { collection } from "../client/conn";
@@ -15,7 +14,7 @@ export function getGroupDisplayName(groupId: string | null, groups: GroupsRespon
   if (!groupId) return "All groups";
   
   const group = groups.find(g => g.id === groupId);
-  return group?.name || "Unknown group";
+  return group?.name ?? "Unknown group";
 }
 
 // Hook to fetch all available groups

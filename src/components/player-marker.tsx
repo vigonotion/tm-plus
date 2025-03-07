@@ -1,5 +1,4 @@
 import { Box, Flex, Text } from "@radix-ui/themes";
-import { PlacementsColorOptions } from "../client/types.gen";
 
 interface PlayerMarkerProps {
   color?: string;
@@ -31,14 +30,14 @@ export function PlayerMarker({ color, showText = true, size = 16 }: PlayerMarker
     <Flex align="center" gap="2">
       <Box
         style={{
-          width: `${size}px`,
-          height: `${size}px`,
+          width: `${String(size)}px`,
+          height: `${String(size)}px`,
           borderRadius: "4px",
           border: "1px solid var(--gray-6)",
           ...getColorStyle(color),
         }}
       />
-      {showText && <Text>{color || "none"}</Text>}
+      {showText && <Text>{color ?? "none"}</Text>}
     </Flex>
   );
 }

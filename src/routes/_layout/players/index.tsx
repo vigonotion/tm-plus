@@ -69,7 +69,7 @@ function expandedPlayerToRow(
     id: player.id,
     name: player.name || "Unknown",
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    defaultColor: player.default_color || "none",
+    defaultColor: player.default_color ?? "none",
     gamesPlayed,
     gamesWon,
     winRate: gamesPlayed > 0 ? Math.round((gamesWon / gamesPlayed) * 100) : 0,

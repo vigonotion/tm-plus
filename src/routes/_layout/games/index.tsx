@@ -57,7 +57,7 @@ function expandedGameToRow(game: ExpandedGame): GameRow {
     )
     .map((winner) => ({
       id: winner.id,
-      name: winner.expand?.player.name || "Unknown",
+      name: winner.expand?.player.name ?? "Unknown",
     }));
 
   return {
