@@ -68,7 +68,8 @@ export function groupBy<T>(
   return array.reduce<Record<string, T[]>>((result, item) => {
     const key = keyFn(item);
     // Initialize array if it doesn't exist
-    if (!result[key]) {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (result[key] === undefined) {
       result[key] = [];
     }
     result[key].push(item);
@@ -145,7 +146,7 @@ export function calculateRatings(
     // Update player stats
     gamePlacements.forEach((p, i) => {
       const player = players[p.player];
-      
+
       player.gamesPlayed += 1;
 
       if (isWin(p.placement, gamePlacements.length)) {

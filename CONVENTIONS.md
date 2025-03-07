@@ -30,3 +30,7 @@ When writing code, you MUST follow these principles:
 When writing views, you SHOULD use components from the radix themes catalog. If there is no applicable
 component, you MAY write one yourself. In this case, you MUST use colors based on the Radix Colors system.
 
+## Typescript
+
+- Always use nullish coalescing operator (`??`) instead of a logical or (`||`), as it is a safer operator
+- Don't use numbers in template literal expressions, convert them to string instead

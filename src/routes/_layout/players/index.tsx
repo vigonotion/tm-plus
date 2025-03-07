@@ -33,23 +33,31 @@ interface PlayerRow {
   elo: number;
 }
 
-function expandedPlayerToRow(player: ExpandedPlayer, playerRatings?: PlayerRating[]): PlayerRow {
-  const placements = player.expand?.["placements(player)"] || [];
+function expandedPlayerToRow(
+  player: ExpandedPlayer,
+  playerRatings?: PlayerRating[],
+): PlayerRow {
+  const placements = player.expand?.["placements(player)"] ?? [];
   const gamesPlayed = placements.length;
-  
+
   // A game is considered won if on the first place, or in a game with five players, on the first or second place
-  const gamesWon = placements.filter(placement => {
-    const totalPlayers = placement.expand?.game.expand?.["placements(game)"]?.length || 0;
-    return placement.placement === 1 || (totalPlayers === 5 && placement.placement === 2);
+  const gamesWon = placements.filter((placement) => {
+    const totalPlayers =
+      placement.expand?.game.expand?.["placements(game)"]?.length || 0;
+    return (
+      placement.placement === 1 ||
+      (totalPlayers === 5 && placement.placement === 2)
+    );
   }).length;
 
   // Find player's rating from the ratings calculation
-  const playerRating = playerRatings?.find(p => p.playerId === player.id);
+  const playerRating = playerRatings?.find((p) => p.playerId === player.id);
   const elo = playerRating ? toElo(playerRating.rating) : 1500;
 
   return {
     id: player.id,
     name: player.name || "Unknown",
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     defaultColor: player.default_color || "none",
     gamesPlayed,
     gamesWon,
@@ -84,14 +92,14 @@ const columns = [
       const color = info.getValue();
       return (
         <Flex align="center" gap="2">
-          <Box 
-            style={{ 
-              width: '16px', 
-              height: '16px', 
-              backgroundColor: color, 
-              borderRadius: '50%',
-              border: '1px solid #ccc'
-            }} 
+          <Box
+            style={{
+              width: "16px",
+              height: "16px",
+              backgroundColor: color,
+              borderRadius: "50%",
+              border: "1px solid #ccc",
+            }}
           />
           <Text>{color}</Text>
         </Flex>
@@ -111,32 +119,41 @@ const columns = [
   }),
   columnHelper.accessor("winRate", {
     header: "Win Rate",
-    cell: (info) => `${info.getValue()}%`,
+    cell: (info) => `${info.getValue().toString()}%`,
     footer: (info) => info.column.id,
   }),
 ];
 
 function RouteComponent() {
   const [dateRange, setDateRange] = useState<string>("all");
-  
+
   // Calculate date ranges
   const now = new Date();
   const startOfYear = new Date(now.getFullYear(), 0, 1).toISOString();
-  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
-  
+  const startOfMonth = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    1,
+  ).toISOString();
+
   // Get ratings based on selected date range
   const { ratings, isLoading: ratingsLoading } = useRatings({
-    startDate: dateRange === "year" ? startOfYear : 
-               dateRange === "month" ? startOfMonth : 
-               undefined,
+    startDate:
+      dateRange === "year"
+        ? startOfYear
+        : dateRange === "month"
+          ? startOfMonth
+          : undefined,
   });
 
   const { data, isLoading: playersLoading } = useQuery({
     ...collection(Collections.Players, {
       sort: "name",
-      expand: "placements(player),placements(player).game,placements(player).game.placements(game)",
+      expand:
+        "placements(player),placements(player).game,placements(player).game.placements(game)",
     }),
-    select: (x) => x.map((p) => expandedPlayerToRow(p as ExpandedPlayer, ratings)),
+    select: (x) =>
+      x.map((p) => expandedPlayerToRow(p as ExpandedPlayer, ratings)),
   });
 
   const isLoading = ratingsLoading || playersLoading;
@@ -150,7 +167,7 @@ function RouteComponent() {
             A game is considered won if on the first place, or in a game with
             five players, on the first or second place.
           </Text>
-          
+
           <Select.Root value={dateRange} onValueChange={setDateRange}>
             <Select.Trigger placeholder="Select date range" />
             <Select.Content>
@@ -160,7 +177,7 @@ function RouteComponent() {
             </Select.Content>
           </Select.Root>
         </Flex>
-        
+
         {isLoading ? (
           <Text>Loading player data...</Text>
         ) : (
