@@ -136,20 +136,16 @@ function RouteComponent() {
 
   // Calculate date ranges
   const now = new Date();
-  const startOfYear = new Date(now.getFullYear(), 0, 1).toISOString();
-  const startOfMonth = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    1,
-  ).toISOString();
+  const startOfYear = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()).toISOString();
+  const startOfThreeMonths = new Date(now.getFullYear(), now.getMonth() - 3, now.getDate()).toISOString();
 
   // Get ratings based on selected date range
   const { ratings, isLoading: ratingsLoading } = useRatings({
     startDate:
       dateRange === "year"
         ? startOfYear
-        : dateRange === "month"
-          ? startOfMonth
+        : dateRange === "three_months"
+          ? startOfThreeMonths
           : undefined,
   });
 
@@ -179,8 +175,8 @@ function RouteComponent() {
             <Select.Trigger placeholder="Select date range" />
             <Select.Content>
               <Select.Item value="all">All time</Select.Item>
-              <Select.Item value="year">This year</Select.Item>
-              <Select.Item value="month">This month</Select.Item>
+              <Select.Item value="three_months">Past 3 months</Select.Item>
+              <Select.Item value="year">Past year</Select.Item>
             </Select.Content>
           </Select.Root>
         </Flex>
