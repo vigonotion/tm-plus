@@ -156,48 +156,58 @@ function RouteComponent() {
 
   // Get map statistics
   const gamesCount = data?.length || 0;
-  const avgGenerations = data?.length 
-    ? Math.round(data.reduce((sum, game) => sum + game.generations, 0) / data.length) 
+  const avgGenerations = data?.length
+    ? Math.round(
+        data.reduce((sum, game) => sum + game.generations, 0) / data.length,
+      )
     : 0;
 
   return (
     <>
       <Title>Map: {mapId}</Title>
-      <Box mb="4">
-        <Flex direction="column" gap="2">
-          <Flex align="center" gap="2">
-            <MapLabel map={mapId} />
+      <div>
+        <Box mb="4">
+          <Flex direction="column" gap="2">
+            <Flex align="center" gap="2">
+              <MapLabel map={mapId} />
+            </Flex>
+            <Text color="gray">Games played on the {mapId} map.</Text>
+            <Text size="2" color="gray">
+              Showing data for: {getDateRangeDisplayName(dateRange)}, Group:{" "}
+              {getGroupDisplayName(groupFilter, groups)}
+            </Text>
           </Flex>
-          <Text color="gray">
-            Games played on the {mapId} map.
-          </Text>
-          <Text size="2" color="gray">
-            Showing data for: {getDateRangeDisplayName(dateRange)}, Group:{" "}
-            {getGroupDisplayName(groupFilter, groups)}
-          </Text>
-        </Flex>
-      </Box>
+        </Box>
 
-      <Box mb="4">
-        <Flex gap="4">
-          <Box>
-            <Text size="2" color="gray">Games played</Text>
-            <Text size="5" weight="bold">{gamesCount}</Text>
-          </Box>
-          {gamesCount > 0 && (
+        <Box mb="4">
+          <Flex gap="4">
             <Box>
-              <Text size="2" color="gray">Avg. generations</Text>
-              <Text size="5" weight="bold">{avgGenerations}</Text>
+              <Text size="2" color="gray">
+                Games played
+              </Text>
+              <Text size="5" weight="bold">
+                {gamesCount}
+              </Text>
             </Box>
-          )}
-        </Flex>
-      </Box>
+            {gamesCount > 0 && (
+              <Box>
+                <Text size="2" color="gray">
+                  Avg. generations
+                </Text>
+                <Text size="5" weight="bold">
+                  {avgGenerations}
+                </Text>
+              </Box>
+            )}
+          </Flex>
+        </Box>
 
-      {isLoading ? (
-        <Text>Loading game data...</Text>
-      ) : (
-        data && <DataTable columns={columns} data={data} />
-      )}
+        {isLoading ? (
+          <Text>Loading game data...</Text>
+        ) : (
+          data && <DataTable columns={columns} data={data} />
+        )}
+      </div>
     </>
   );
 }
