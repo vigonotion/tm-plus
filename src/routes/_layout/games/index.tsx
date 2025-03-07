@@ -1,3 +1,4 @@
+import * as React from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Title } from "../../../components/title.tsx";
 import { useQuery } from "@tanstack/react-query";
@@ -12,7 +13,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { DataTable } from "../../../components/datatable.tsx";
 import { MapLabel } from "../../../components/maplabel.tsx";
 import { StyledLink } from "../../../components/styled-link.tsx";
-import { Box, Text } from "@radix-ui/themes";
+import { Box, Text, Flex } from "@radix-ui/themes";
 
 export const Route = createFileRoute("/_layout/games/")({
   component: RouteComponent,
@@ -27,28 +28,34 @@ interface GameRow {
   date: string;
   map: string;
   generations: number;
-  winner: {
-    id?: string;
-    name?: string;
-  };
+  winners: {
+    id: string;
+    name: string;
+  }[];
   playerCount: number;
 }
 
 function expandedGameToRow(game: ExpandedGame): GameRow {
-  const winner = game.expand?.["placements(game)"].find(
-    (x) => x.placement === 1,
-  );
+  const placements = game.expand?.["placements(game)"] || [];
+  const totalPlayers = placements.length;
+  
+  // Find all winners according to the win condition
+  const winners = placements
+    .filter(x => 
+      x.placement === 1 || (totalPlayers === 5 && x.placement === 2)
+    )
+    .map(winner => ({
+      id: winner.id,
+      name: winner.expand?.player.name || "Unknown"
+    }));
 
   return {
     id: game.id,
     date: game.date,
     map: game.map,
     generations: game.generations,
-    winner: {
-      id: winner?.id,
-      name: winner?.expand?.player.name,
-    },
-    playerCount: game.expand?.["placements(game)"].length ?? 0,
+    winners: winners,
+    playerCount: totalPlayers,
   };
 }
 
@@ -89,16 +96,31 @@ const columns = [
     footer: (info) => info.column.id,
   }),
 
-  columnHelper.accessor("winner.name", {
-    header: "Winner",
-    cell: (info) => (
-      <StyledLink
-        to={"/players/$playerId"}
-        params={{ playerId: info.row.original.winner.id ?? "" }}
-      >
-        {info.getValue()}
-      </StyledLink>
-    ),
+  columnHelper.accessor("winners", {
+    header: "Winners",
+    cell: (info) => {
+      const winners = info.getValue();
+      
+      if (winners.length === 0) {
+        return <Text color="gray">No winners</Text>;
+      }
+      
+      return (
+        <Flex gap="1">
+          {winners.map((winner, index) => (
+            <React.Fragment key={winner.id}>
+              {index > 0 && <Text>, </Text>}
+              <StyledLink
+                to={"/players/$playerId"}
+                params={{ playerId: winner.id }}
+              >
+                {winner.name}
+              </StyledLink>
+            </React.Fragment>
+          ))}
+        </Flex>
+      );
+    },
     footer: (info) => info.column.id,
   }),
 ];
