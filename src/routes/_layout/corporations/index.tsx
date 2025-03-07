@@ -10,7 +10,7 @@ import {
 import { createColumnHelper } from "@tanstack/react-table";
 import { DataTable } from "../../../components/datatable.tsx";
 import { StyledLink } from "../../../components/styled-link.tsx";
-import { Box, Text } from "@radix-ui/themes";
+import { Box, Text, HoverCard, Flex } from "@radix-ui/themes";
 
 export const Route = createFileRoute("/_layout/corporations/")({
   component: RouteComponent,
@@ -23,9 +23,19 @@ type ExpandedCorporation = CorporationsResponse<{
 interface CorporationRow {
   id: string;
   name: string;
+  description: string;
   timesPlayed: number;
   timesWon: number;
   winRate: number;
+}
+
+// Function to convert string to title case
+function toTitleCase(str: string): string {
+  return str
+    .toLowerCase()
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
 }
 
 function expandedCorporationToRow(
@@ -44,6 +54,7 @@ function expandedCorporationToRow(
   return {
     id: corporation.id,
     name: corporation.name || "Unknown",
+    description: corporation.description || "",
     timesPlayed,
     timesWon,
     winRate: timesPlayed > 0 ? Math.round((timesWon / timesPlayed) * 100) : 0,
@@ -55,14 +66,31 @@ const columnHelper = createColumnHelper<CorporationRow>();
 const columns = [
   columnHelper.accessor("name", {
     header: "Name",
-    cell: (info) => (
-      <StyledLink
-        to={"/corporations/$corporationId"}
-        params={{ corporationId: info.row.original.id }}
-      >
-        {info.getValue()}
-      </StyledLink>
-    ),
+    cell: (info) => {
+      const name = toTitleCase(info.getValue());
+      const description = info.row.original.description;
+      
+      return (
+        <HoverCard.Root>
+          <HoverCard.Trigger>
+            <StyledLink
+              to={"/corporations/$corporationId"}
+              params={{ corporationId: info.row.original.id }}
+            >
+              {name}
+            </StyledLink>
+          </HoverCard.Trigger>
+          <HoverCard.Content>
+            <Flex direction="column" gap="2" style={{ maxWidth: "300px" }}>
+              <Text weight="bold" size="3">{name}</Text>
+              {description && (
+                <Text size="2" dangerouslySetInnerHTML={{ __html: description }} />
+              )}
+            </Flex>
+          </HoverCard.Content>
+        </HoverCard.Root>
+      );
+    },
     footer: (info) => info.column.id,
   }),
   columnHelper.accessor("timesPlayed", {
