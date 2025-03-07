@@ -12,9 +12,11 @@ import { PlayerMarker } from "../../../components/player-marker.tsx";
 import { createColumnHelper } from "@tanstack/react-table";
 import { DataTable } from "../../../components/datatable.tsx";
 import { StyledLink } from "../../../components/styled-link.tsx";
-import { Box, Flex, Text, Select } from "@radix-ui/themes";
+import { Box, Flex, Text } from "@radix-ui/themes";
 import { useRatings, toElo, PlayerRating } from "../../../utils/elo.ts";
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
+import { useAtom } from "jotai";
+import { dateRangeAtom, getDateRanges, getDateRangeDisplayName } from "../../../atoms/dateRange.ts";
 
 export const Route = createFileRoute("/_layout/players/")({
   component: RouteComponent,
@@ -117,21 +119,12 @@ const columns = [
 ];
 
 function RouteComponent() {
-  const [dateRange, setDateRange] = useState<string>("all");
-
-  // Calculate date ranges
-  const now = new Date();
-  const startOfYear = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()).toISOString();
-  const startOfThreeMonths = new Date(now.getFullYear(), now.getMonth() - 3, now.getDate()).toISOString();
+  const [dateRange] = useAtom(dateRangeAtom);
+  const dateRanges = getDateRanges();
 
   // Get ratings based on selected date range
   const { ratings, isLoading: ratingsLoading } = useRatings({
-    startDate:
-      dateRange === "year"
-        ? startOfYear
-        : dateRange === "three_months"
-          ? startOfThreeMonths
-          : undefined,
+    startDate: dateRanges[dateRange],
   });
 
   const { data: playersData, isLoading: playersLoading } = useQuery({
@@ -148,13 +141,8 @@ function RouteComponent() {
   const data = useMemo(() => {
     if (!playersData) return undefined;
 
-    // Get date limits based on selected range
-    const dateLimit = 
-      dateRange === "year" 
-        ? startOfYear 
-        : dateRange === "three_months" 
-          ? startOfThreeMonths 
-          : undefined;
+    // Get date limit based on selected range
+    const dateLimit = dateRanges[dateRange];
 
     return playersData
       .map((p) => {
@@ -179,32 +167,23 @@ function RouteComponent() {
       })
       // Filter out players with 0 games played in the selected time frame
       .filter(player => player.gamesPlayed > 0);
-  }, [playersData, dateRange, startOfYear, startOfThreeMonths, ratings]);
+  }, [playersData, dateRange, dateRanges, ratings]);
 
   return (
     <>
       <Title>Players</Title>
       <div>
-        <Flex justify="between" align="center" mb="4">
+        <Box mb="4">
           <Flex direction="column" gap="1">
             <Text color={"gray"}>
               A game is considered won if on the first place, or in a game with
               five players, on the first or second place.
             </Text>
             <Text size="2" color="gray">
-              Showing data for: {dateRange === "all" ? "All time" : dateRange === "three_months" ? "Past 3 months" : "Past year"}
+              Showing data for: {getDateRangeDisplayName(dateRange)}
             </Text>
           </Flex>
-
-          <Select.Root value={dateRange} onValueChange={setDateRange}>
-            <Select.Trigger placeholder="Select date range" />
-            <Select.Content>
-              <Select.Item value="all">All time</Select.Item>
-              <Select.Item value="three_months">Past 3 months</Select.Item>
-              <Select.Item value="year">Past year</Select.Item>
-            </Select.Content>
-          </Select.Root>
-        </Flex>
+        </Box>
 
         {isLoading ? (
           <Text>Loading player data...</Text>

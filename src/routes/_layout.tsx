@@ -48,7 +48,7 @@ function RouteComponent() {
           </Flex>
           <Select.Root value={dateRange} onValueChange={setDateRange}>
             <Select.Trigger placeholder="Select date range" />
-            <Select.Content>
+            <Select.Content position="popper">
               <Select.Item value="all">All time</Select.Item>
               <Select.Item value="three_months">Past 3 months</Select.Item>
               <Select.Item value="year">Past year</Select.Item>
