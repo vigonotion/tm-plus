@@ -38,15 +38,15 @@ interface GameRow {
 function expandedGameToRow(game: ExpandedGame): GameRow {
   const placements = game.expand?.["placements(game)"] || [];
   const totalPlayers = placements.length;
-  
+
   // Find all winners according to the win condition
   const winners = placements
-    .filter(x => 
-      x.placement === 1 || (totalPlayers === 5 && x.placement === 2)
+    .filter(
+      (x) => x.placement === 1 || (totalPlayers === 5 && x.placement === 2),
     )
-    .map(winner => ({
+    .map((winner) => ({
       id: winner.id,
-      name: winner.expand?.player.name || "Unknown"
+      name: winner.expand?.player.name || "Unknown",
     }));
 
   return {
@@ -100,13 +100,13 @@ const columns = [
     header: "Winners",
     cell: (info) => {
       const winners = info.getValue();
-      
+
       if (winners.length === 0) {
         return <Text color="gray">No winners</Text>;
       }
-      
+
       return (
-        <Flex gap="1">
+        <div>
           {winners.map((winner, index) => (
             <React.Fragment key={winner.id}>
               {index > 0 && <Text>, </Text>}
@@ -118,7 +118,7 @@ const columns = [
               </StyledLink>
             </React.Fragment>
           ))}
-        </Flex>
+        </div>
       );
     },
     footer: (info) => info.column.id,
