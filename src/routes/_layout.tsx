@@ -79,9 +79,9 @@ function RouteComponent() {
             </Select.Root>
             
             <Select.Root
-              value={groupFilter || ""}
+              value={groupFilter || "all_groups"}
               onValueChange={(value) => {
-                setGroupFilter(value || null);
+                setGroupFilter(value === "all_groups" ? null : value);
               }}
             >
               <Select.Trigger placeholder="Select group">
@@ -91,7 +91,7 @@ function RouteComponent() {
                 </Flex>
               </Select.Trigger>
               <Select.Content position="popper">
-                <Select.Item value="">All groups</Select.Item>
+                <Select.Item value="all_groups">All groups</Select.Item>
                 {groups.map((group) => (
                   <Select.Item key={group.id} value={group.id}>
                     {group.name}
