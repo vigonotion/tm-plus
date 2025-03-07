@@ -135,7 +135,7 @@ export function calculateRatings(
     const R = rate(
       gamePlacements.map((x) => {
         const player = players[x.player];
-        return player ? [player.rating] : [rating()];
+        return [player.rating];
       }),
       {
         rank: gamePlacements.map((x) => x.placement),
@@ -145,8 +145,7 @@ export function calculateRatings(
     // Update player stats
     gamePlacements.forEach((p, i) => {
       const player = players[p.player];
-      if (!player) return;
-
+      
       player.gamesPlayed += 1;
 
       if (isWin(p.placement, gamePlacements.length)) {
