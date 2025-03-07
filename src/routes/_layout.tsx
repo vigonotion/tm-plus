@@ -14,11 +14,14 @@ import {
   RiTerminalWindowLine,
   RiUser6Fill,
   RiUser6Line,
+  RiFilterLine,
 } from "@remixicon/react";
 import { TmpLogo } from "../components/tmp-logo.tsx";
 
 import css from "./_layout.module.css";
-import { Flex, Slot } from "@radix-ui/themes";
+import { Flex, Slot, Select, Text, Separator } from "@radix-ui/themes";
+import { useAtom } from "jotai";
+import { dateRangeAtom, getDateRangeDisplayName } from "../atoms/dateRange.ts";
 
 export const Route = createFileRoute("/_layout")({
   component: RouteComponent,
@@ -29,12 +32,34 @@ function NavItem({ children }: PropsWithChildren) {
 }
 
 function RouteComponent() {
+  const [dateRange, setDateRange] = useAtom(dateRangeAtom);
+
   return (
     <div className={css.root}>
       <nav className={css.nav}>
         <Flex align={"center"} p={"2"}>
           <TmpLogo />
         </Flex>
+
+        <div className={css.dateFilter}>
+          <Flex align="center" gap="2" mb="2">
+            <RiFilterLine size={16} />
+            <Text size="2" weight="medium">Date Range</Text>
+          </Flex>
+          <Select.Root value={dateRange} onValueChange={setDateRange}>
+            <Select.Trigger placeholder="Select date range" />
+            <Select.Content>
+              <Select.Item value="all">All time</Select.Item>
+              <Select.Item value="three_months">Past 3 months</Select.Item>
+              <Select.Item value="year">Past year</Select.Item>
+            </Select.Content>
+          </Select.Root>
+          <Text size="1" color="gray" mt="1">
+            Showing: {getDateRangeDisplayName(dateRange)}
+          </Text>
+        </div>
+
+        <Separator my="3" size="4" />
 
         <Flex direction={"column"} gap={"2"}>
           <NavItem>
