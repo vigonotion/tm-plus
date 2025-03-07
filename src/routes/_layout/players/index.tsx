@@ -8,6 +8,7 @@ import {
   PlacementsResponse,
   GamesResponse,
 } from "../../../client/types.gen.ts";
+import { PlayerMarker } from "../../../components/player-marker.tsx";
 import { createColumnHelper } from "@tanstack/react-table";
 import { DataTable } from "../../../components/datatable.tsx";
 import { StyledLink } from "../../../components/styled-link.tsx";
@@ -95,23 +96,7 @@ const columns = [
   }),
   columnHelper.accessor("defaultColor", {
     header: "Default Color",
-    cell: (info) => {
-      const color = info.getValue();
-      return (
-        <Flex align="center" gap="2">
-          <Box
-            style={{
-              width: "16px",
-              height: "16px",
-              backgroundColor: color,
-              borderRadius: "50%",
-              border: "1px solid #ccc",
-            }}
-          />
-          <Text>{color}</Text>
-        </Flex>
-      );
-    },
+    cell: (info) => <PlayerMarker color={info.getValue()} />,
     footer: (info) => info.column.id,
   }),
   columnHelper.accessor("gamesPlayed", {
