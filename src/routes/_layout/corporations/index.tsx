@@ -182,7 +182,7 @@ function RouteComponent() {
             const passesGroupFilter = !groupFilter || gameGroup === groupFilter;
 
             return passesDateFilter && passesGroupFilter;
-          }) || [];
+          }) ?? [];
 
         // Create a modified corporation object with filtered placements
         const filteredCorp: ExpandedCorporation = {
