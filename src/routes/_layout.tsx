@@ -127,6 +127,14 @@ function RouteComponent() {
             </NavItem>
 
             <NavItem>
+              <Link to={"/maps"}>
+                <RiFilterLine className={"icon_when_inactive"} />
+                <RiFilterLine className={"icon_when_active"} />
+                <span>Maps</span>
+              </Link>
+            </NavItem>
+
+            <NavItem>
               <Link to={"/tools/map"}>
                 <RiHammerLine className={"icon_when_inactive"} />
                 <RiHammerFill className={"icon_when_active"} />
