@@ -152,12 +152,14 @@ function RouteComponent() {
         filteredGames = filteredGames.filter(game => {
           const placements = (game as ExpandedGame).expand?.["placements(game)"] || [];
           
-          // Check if all players in this game belong to the selected group
+          // Check if any player in this game belongs to the selected group
           if (placements.length === 0) return false;
           
-          // Check if every player in this game is a member of the selected group
-          return placements.every(placement => {
-            const playerGroups = placement.expand?.player?.expand?.groups || [];
+          return placements.some(placement => {
+            const player = placement.expand?.player;
+            if (!player) return false;
+            
+            const playerGroups = player.expand?.groups || [];
             return playerGroups.some(group => group.id === groupFilter);
           });
         });

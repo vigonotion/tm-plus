@@ -166,19 +166,8 @@ function RouteComponent() {
           return !dateLimit || (gameDate && gameDate >= dateLimit);
         }) || [];
         
-        // If group filter is active, only include games where all players are in the group
-        if (groupFilter) {
-          filteredPlacements = filteredPlacements.filter(placement => {
-            const game = placement.expand?.game;
-            const gamePlacements = game?.expand?.["placements(game)"] || [];
-            
-            // Check if all players in this game belong to the selected group
-            return gamePlacements.every(p => {
-              const playerGroups = p.expand?.player?.expand?.groups || [];
-              return playerGroups.some(g => g.id === groupFilter);
-            });
-          });
-        }
+        // If group filter is active, we don't need additional filtering here
+        // since we already filtered the players by group membership above
         
         // Create a modified player object with filtered placements
         const filteredPlayer: ExpandedPlayer = {

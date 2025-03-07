@@ -12,7 +12,7 @@ import { DataTable } from "../../../components/datatable.tsx";
 import { StyledLink } from "../../../components/styled-link.tsx";
 import { Box, Text, HoverCard, Flex } from "@radix-ui/themes";
 import { useAtom } from "jotai";
-import { dateRangeAtom, getDateRangeDisplayName } from "../../../atoms/dateRange.ts";
+import { dateRangeAtom, getDateRanges, getDateRangeDisplayName } from "../../../atoms/dateRange.ts";
 import { groupFilterAtom, getGroupDisplayName, useGroups } from "../../../atoms/groupFilter.ts";
 
 export const Route = createFileRoute("/_layout/corporations/")({
@@ -20,7 +20,18 @@ export const Route = createFileRoute("/_layout/corporations/")({
 });
 
 type ExpandedCorporation = CorporationsResponse<{
-  "placements(corp)": PlacementsResponse[];
+  "placements(corp)": PlacementsResponse<{
+    player: {
+      id: string;
+      name?: string;
+      expand?: {
+        groups?: {
+          id: string;
+          name?: string;
+        }[];
+      };
+    };
+  }>[];
 }>;
 
 interface CorporationRow {
@@ -43,8 +54,18 @@ function toTitleCase(str: string): string {
 
 function expandedCorporationToRow(
   corporation: ExpandedCorporation,
+  dateLimit?: string
 ): CorporationRow {
-  const placements = corporation.expand?.["placements(corp)"] ?? [];
+  // Filter placements by date if a date limit is provided
+  let placements = corporation.expand?.["placements(corp)"] ?? [];
+  
+  if (dateLimit) {
+    placements = placements.filter(placement => {
+      const gameDate = placement.created; // Using created as a fallback since game date isn't expanded
+      return gameDate >= dateLimit;
+    });
+  }
+  
   const timesPlayed = placements.length;
 
   // A game is considered won if on the first place, or in a game with five players, on the first or second place
@@ -126,10 +147,30 @@ function RouteComponent() {
   const { data } = useQuery({
     ...collection(Collections.Corporations, {
       sort: "name",
-      expand: "placements(corp)",
+      expand: "placements(corp),placements(corp).player,placements(corp).player.groups",
     }),
-    select: (x) =>
-      x.map((c) => expandedCorporationToRow(c as ExpandedCorporation)),
+    select: (x) => {
+      let corporations = x;
+      const dateLimit = dateRanges[dateRange];
+      
+      // Filter by group if a group filter is selected
+      if (groupFilter) {
+        corporations = corporations.filter(corp => {
+          const placements = (corp as ExpandedCorporation).expand?.["placements(corp)"] || [];
+          
+          // Check if this corporation was ever used by a player in the selected group
+          return placements.some(placement => {
+            const player = placement.expand?.player;
+            if (!player) return false;
+            
+            const playerGroups = player.expand?.groups || [];
+            return playerGroups.some(group => group.id === groupFilter);
+          });
+        });
+      }
+      
+      return corporations.map((c) => expandedCorporationToRow(c as ExpandedCorporation, dateLimit));
+    },
   });
 
   return (
