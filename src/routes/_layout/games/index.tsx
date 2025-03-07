@@ -9,6 +9,8 @@ import {
   PlacementsResponse,
   PlayersResponse,
 } from "../../../client/types.gen.ts";
+import { useAtom } from "jotai";
+import { dateRangeAtom, getDateRanges, getDateRangeDisplayName } from "../../../atoms/dateRange.ts";
 import { createColumnHelper } from "@tanstack/react-table";
 import { DataTable } from "../../../components/datatable.tsx";
 import { MapLabel } from "../../../components/maplabel.tsx";
@@ -126,13 +128,24 @@ const columns = [
 ];
 
 function RouteComponent() {
-  const { data } = useQuery({
+  const [dateRange] = useAtom(dateRangeAtom);
+  const dateRanges = getDateRanges();
+  
+  const { data, isLoading } = useQuery({
     ...collection(Collections.Games, {
       sort: "-date",
       expand: "placements(game),placements(game).player",
       filter: "planned = false",
     }),
-    select: (x) => x.map((g) => expandedGameToRow(g as ExpandedGame)),
+    select: (x) => {
+      // Filter games by date range
+      const dateLimit = dateRanges[dateRange];
+      const filteredGames = dateLimit 
+        ? x.filter(game => game.date >= dateLimit)
+        : x;
+      
+      return filteredGames.map((g) => expandedGameToRow(g as ExpandedGame));
+    },
   });
 
   return (
@@ -140,12 +153,21 @@ function RouteComponent() {
       <Title>Games</Title>
       <div>
         <Box mb={"4"}>
-          <Text color={"gray"}>
-            A game is considered won if on the first place, or in a game with
-            five players, on the first or second place.
-          </Text>
+          <Flex direction="column" gap="1">
+            <Text color={"gray"}>
+              A game is considered won if on the first place, or in a game with
+              five players, on the first or second place.
+            </Text>
+            <Text size="2" color="gray">
+              Showing data for: {getDateRangeDisplayName(dateRange)}
+            </Text>
+          </Flex>
         </Box>
-        {data && <DataTable columns={columns} data={data} />}
+        {isLoading ? (
+          <Text>Loading game data...</Text>
+        ) : (
+          data && <DataTable columns={columns} data={data} />
+        )}
       </div>
     </>
   );
