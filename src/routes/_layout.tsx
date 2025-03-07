@@ -60,7 +60,7 @@ function RouteComponent() {
               <Select.Trigger placeholder="Select date range">
                 <Flex as="span" align="center" gap="2">
                   <RiCalendar2Line size={16} />
-                  <span>{dateRange}</span>
+                  <span>{getDateRangeDisplayName(dateRange)}</span>
                 </Flex>
               </Select.Trigger>
               <Select.Content position="popper">
