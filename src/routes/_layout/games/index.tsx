@@ -87,7 +87,11 @@ const columns = [
   }),
   columnHelper.accessor("map", {
     header: "Map",
-    cell: (info) => <MapLabel map={info.getValue()} />,
+    cell: (info) => (
+      <StyledLink to={"/maps/$mapId"} params={{ mapId: info.getValue() }}>
+        <MapLabel map={info.getValue()} />
+      </StyledLink>
+    ),
     footer: (info) => info.column.id,
   }),
   columnHelper.accessor("generations", {
