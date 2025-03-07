@@ -11,6 +11,7 @@ import {
 } from "../../../client/types.gen.ts";
 import { useAtom } from "jotai";
 import { dateRangeAtom, getDateRanges, getDateRangeDisplayName } from "../../../atoms/dateRange.ts";
+import { groupFilterAtom, getGroupDisplayName, useGroups } from "../../../atoms/groupFilter.ts";
 import { createColumnHelper } from "@tanstack/react-table";
 import { DataTable } from "../../../components/datatable.tsx";
 import { MapLabel } from "../../../components/maplabel.tsx";
@@ -129,20 +130,38 @@ const columns = [
 
 function RouteComponent() {
   const [dateRange] = useAtom(dateRangeAtom);
+  const [groupFilter] = useAtom(groupFilterAtom);
+  const { data: groups = [] } = useGroups();
   const dateRanges = getDateRanges();
   
   const { data, isLoading } = useQuery({
     ...collection(Collections.Games, {
       sort: "-date",
-      expand: "placements(game),placements(game).player",
+      expand: "placements(game),placements(game).player,placements(game).player.groups",
       filter: "planned = false",
     }),
     select: (x) => {
       // Filter games by date range
       const dateLimit = dateRanges[dateRange];
-      const filteredGames = dateLimit 
+      let filteredGames = dateLimit 
         ? x.filter(game => game.date >= dateLimit)
         : x;
+      
+      // Filter games by group if a group is selected
+      if (groupFilter) {
+        filteredGames = filteredGames.filter(game => {
+          const placements = (game as ExpandedGame).expand?.["placements(game)"] || [];
+          
+          // Check if all players in this game belong to the selected group
+          if (placements.length === 0) return false;
+          
+          // Check if every player in this game is a member of the selected group
+          return placements.every(placement => {
+            const playerGroups = placement.expand?.player?.expand?.groups || [];
+            return playerGroups.some(group => group.id === groupFilter);
+          });
+        });
+      }
       
       return filteredGames.map((g) => expandedGameToRow(g as ExpandedGame));
     },
@@ -159,7 +178,8 @@ function RouteComponent() {
               five players, on the first or second place.
             </Text>
             <Text size="2" color="gray">
-              Showing data for: {getDateRangeDisplayName(dateRange)}
+              Showing data for: {getDateRangeDisplayName(dateRange)}, 
+              Group: {getGroupDisplayName(groupFilter, groups)}
             </Text>
           </Flex>
         </Box>

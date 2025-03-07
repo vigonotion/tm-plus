@@ -11,6 +11,9 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { DataTable } from "../../../components/datatable.tsx";
 import { StyledLink } from "../../../components/styled-link.tsx";
 import { Box, Text, HoverCard, Flex } from "@radix-ui/themes";
+import { useAtom } from "jotai";
+import { dateRangeAtom, getDateRangeDisplayName } from "../../../atoms/dateRange.ts";
+import { groupFilterAtom, getGroupDisplayName, useGroups } from "../../../atoms/groupFilter.ts";
 
 export const Route = createFileRoute("/_layout/corporations/")({
   component: RouteComponent,
@@ -116,6 +119,10 @@ const columns = [
 ];
 
 function RouteComponent() {
+  const [dateRange] = useAtom(dateRangeAtom);
+  const [groupFilter] = useAtom(groupFilterAtom);
+  const { data: groups = [] } = useGroups();
+  
   const { data } = useQuery({
     ...collection(Collections.Corporations, {
       sort: "name",
@@ -130,10 +137,16 @@ function RouteComponent() {
       <Title>Corporations</Title>
       <div>
         <Box mb={"4"}>
-          <Text color={"gray"}>
-            A game is considered won if on the first place, or in a game with
-            five players, on the first or second place.
-          </Text>
+          <Flex direction="column" gap="1">
+            <Text color={"gray"}>
+              A game is considered won if on the first place, or in a game with
+              five players, on the first or second place.
+            </Text>
+            <Text size="2" color="gray">
+              Showing data for: {getDateRangeDisplayName(dateRange)}, 
+              Group: {getGroupDisplayName(groupFilter, groups)}
+            </Text>
+          </Flex>
         </Box>
         {data && <DataTable columns={columns} data={data} />}
       </div>

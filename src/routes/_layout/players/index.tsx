@@ -17,6 +17,7 @@ import { useRatings, toElo, PlayerRating } from "../../../utils/elo.ts";
 import { useMemo } from "react";
 import { useAtom } from "jotai";
 import { dateRangeAtom, getDateRanges, getDateRangeDisplayName } from "../../../atoms/dateRange.ts";
+import { groupFilterAtom, getGroupDisplayName, useGroups } from "../../../atoms/groupFilter.ts";
 
 export const Route = createFileRoute("/_layout/players/")({
   component: RouteComponent,
@@ -120,6 +121,8 @@ const columns = [
 
 function RouteComponent() {
   const [dateRange] = useAtom(dateRangeAtom);
+  const [groupFilter] = useAtom(groupFilterAtom);
+  const { data: groups = [] } = useGroups();
   const dateRanges = getDateRanges();
 
   // Get ratings based on selected date range
@@ -131,28 +134,51 @@ function RouteComponent() {
     ...collection(Collections.Players, {
       sort: "name",
       expand:
-        "placements(player),placements(player).game,placements(player).game.placements(game)",
+        "placements(player),placements(player).game,placements(player).game.placements(game),groups",
     }),
   });
 
   const isLoading = ratingsLoading || playersLoading;
 
-  // Process player data with date filtering
+  // Process player data with date and group filtering
   const data = useMemo(() => {
     if (!playersData) return undefined;
 
     // Get date limit based on selected range
     const dateLimit = dateRanges[dateRange];
 
-    return playersData
+    // First filter players by group if a group is selected
+    let filteredPlayers = playersData;
+    if (groupFilter) {
+      filteredPlayers = playersData.filter(player => {
+        const playerGroups = player.expand?.groups || [];
+        return playerGroups.some(group => group.id === groupFilter);
+      });
+    }
+
+    return filteredPlayers
       .map((p) => {
         const player = p as ExpandedPlayer;
         
         // Filter placements by date if a date range is selected
-        const filteredPlacements = player.expand?.["placements(player)"]?.filter(placement => {
+        let filteredPlacements = player.expand?.["placements(player)"]?.filter(placement => {
           const gameDate = placement.expand?.game?.date;
           return !dateLimit || (gameDate && gameDate >= dateLimit);
         }) || [];
+        
+        // If group filter is active, only include games where all players are in the group
+        if (groupFilter) {
+          filteredPlacements = filteredPlacements.filter(placement => {
+            const game = placement.expand?.game;
+            const gamePlacements = game?.expand?.["placements(game)"] || [];
+            
+            // Check if all players in this game belong to the selected group
+            return gamePlacements.every(p => {
+              const playerGroups = p.expand?.player?.expand?.groups || [];
+              return playerGroups.some(g => g.id === groupFilter);
+            });
+          });
+        }
         
         // Create a modified player object with filtered placements
         const filteredPlayer: ExpandedPlayer = {
@@ -167,7 +193,7 @@ function RouteComponent() {
       })
       // Filter out players with 0 games played in the selected time frame
       .filter(player => player.gamesPlayed > 0);
-  }, [playersData, dateRange, dateRanges, ratings]);
+  }, [playersData, dateRange, dateRanges, ratings, groupFilter]);
 
   return (
     <>
@@ -180,7 +206,8 @@ function RouteComponent() {
               five players, on the first or second place.
             </Text>
             <Text size="2" color="gray">
-              Showing data for: {getDateRangeDisplayName(dateRange)}
+              Showing data for: {getDateRangeDisplayName(dateRange)}, 
+              Group: {getGroupDisplayName(groupFilter, groups)}
             </Text>
           </Flex>
         </Box>

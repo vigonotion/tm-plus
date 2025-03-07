@@ -22,7 +22,7 @@
   padding: var(--space-3);
   border-radius: var(--radius-3);
   background-color: var(--gray-3);
-  max-height: 120px;
+  max-height: 180px;
 }
 
 .navitem {

@@ -16,6 +16,7 @@ import {
   RiUser6Line,
   RiFilterLine,
   RiCalendar2Line,
+  RiTeamLine,
 } from "@remixicon/react";
 import { TmpLogo } from "../components/tmp-logo.tsx";
 
@@ -27,6 +28,11 @@ import {
   DateRangeValue,
   getDateRangeDisplayName,
 } from "../atoms/dateRange.ts";
+import {
+  groupFilterAtom,
+  getGroupDisplayName,
+  useGroups,
+} from "../atoms/groupFilter.ts";
 
 export const Route = createFileRoute("/_layout")({
   component: RouteComponent,
@@ -38,6 +44,8 @@ function NavItem({ children }: PropsWithChildren) {
 
 function RouteComponent() {
   const [dateRange, setDateRange] = useAtom(dateRangeAtom);
+  const [groupFilter, setGroupFilter] = useAtom(groupFilterAtom);
+  const { data: groups = [] } = useGroups();
 
   return (
     <div className={css.root}>
@@ -49,7 +57,7 @@ function RouteComponent() {
         <div>
           <Flex direction={"column"} gap={"2"} className={css.dateFilter}>
             <Text size="2" weight="medium">
-              Global filter
+              Global filters
             </Text>
             <Select.Root
               value={dateRange}
@@ -67,6 +75,28 @@ function RouteComponent() {
                 <Select.Item value="all">All time</Select.Item>
                 <Select.Item value="three_months">Past 3 months</Select.Item>
                 <Select.Item value="year">Past year</Select.Item>
+              </Select.Content>
+            </Select.Root>
+            
+            <Select.Root
+              value={groupFilter || ""}
+              onValueChange={(value) => {
+                setGroupFilter(value || null);
+              }}
+            >
+              <Select.Trigger placeholder="Select group">
+                <Flex as="span" align="center" gap="2">
+                  <RiTeamLine size={16} />
+                  <span>{getGroupDisplayName(groupFilter, groups)}</span>
+                </Flex>
+              </Select.Trigger>
+              <Select.Content position="popper">
+                <Select.Item value="">All groups</Select.Item>
+                {groups.map((group) => (
+                  <Select.Item key={group.id} value={group.id}>
+                    {group.name}
+                  </Select.Item>
+                ))}
               </Select.Content>
             </Select.Root>
           </Flex>
