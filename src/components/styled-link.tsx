@@ -21,8 +21,4 @@ const BasicLinkComponent = forwardRef<HTMLAnchorElement, BasicLinkProps>(
 
 const CreatedLinkComponent = createLink(BasicLinkComponent);
 
-export const StyledLink: LinkComponent<typeof BasicLinkComponent> = forwardRef(
-  (props, ref) => {
-    return <CreatedLinkComponent preload={"intent"} {...props} ref={ref} />;
-  }
-);
+export const StyledLink = CreatedLinkComponent;
