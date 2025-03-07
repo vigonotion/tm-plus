@@ -13,7 +13,7 @@ import { DataTable } from "../../../components/datatable.tsx";
 import { StyledLink } from "../../../components/styled-link.tsx";
 import { Box, Flex, Text, Select } from "@radix-ui/themes";
 import { useRatings, toElo, PlayerRating } from "../../../utils/elo.ts";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 export const Route = createFileRoute("/_layout/players/")({
   component: RouteComponent,
@@ -149,27 +149,64 @@ function RouteComponent() {
           : undefined,
   });
 
-  const { data, isLoading: playersLoading } = useQuery({
+  const { data: playersData, isLoading: playersLoading } = useQuery({
     ...collection(Collections.Players, {
       sort: "name",
       expand:
         "placements(player),placements(player).game,placements(player).game.placements(game)",
     }),
-    select: (x) =>
-      x.map((p) => expandedPlayerToRow(p as ExpandedPlayer, ratings)),
   });
 
   const isLoading = ratingsLoading || playersLoading;
+
+  // Process player data with date filtering
+  const data = useMemo(() => {
+    if (!playersData) return undefined;
+
+    // Get date limits based on selected range
+    const dateLimit = 
+      dateRange === "year" 
+        ? startOfYear 
+        : dateRange === "three_months" 
+          ? startOfThreeMonths 
+          : undefined;
+
+    return playersData.map((p) => {
+      const player = p as ExpandedPlayer;
+      
+      // Filter placements by date if a date range is selected
+      const filteredPlacements = player.expand?.["placements(player)"]?.filter(placement => {
+        const gameDate = placement.expand?.game?.date;
+        return !dateLimit || (gameDate && gameDate >= dateLimit);
+      }) || [];
+      
+      // Create a modified player object with filtered placements
+      const filteredPlayer: ExpandedPlayer = {
+        ...player,
+        expand: {
+          ...player.expand,
+          "placements(player)": filteredPlacements
+        }
+      };
+      
+      return expandedPlayerToRow(filteredPlayer, ratings);
+    });
+  }, [playersData, dateRange, startOfYear, startOfThreeMonths, ratings]);
 
   return (
     <>
       <Title>Players</Title>
       <div>
         <Flex justify="between" align="center" mb="4">
-          <Text color={"gray"}>
-            A game is considered won if on the first place, or in a game with
-            five players, on the first or second place.
-          </Text>
+          <Flex direction="column" gap="1">
+            <Text color={"gray"}>
+              A game is considered won if on the first place, or in a game with
+              five players, on the first or second place.
+            </Text>
+            <Text size="2" color="gray">
+              Showing data for: {dateRange === "all" ? "All time" : dateRange === "three_months" ? "Past 3 months" : "Past year"}
+            </Text>
+          </Flex>
 
           <Select.Root value={dateRange} onValueChange={setDateRange}>
             <Select.Trigger placeholder="Select date range" />
