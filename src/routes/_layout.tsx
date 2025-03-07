@@ -17,6 +17,8 @@ import {
   RiFilterLine,
   RiCalendar2Line,
   RiTeamLine,
+  RiMapLine,
+  RiMapFill,
 } from "@remixicon/react";
 import { TmpLogo } from "../components/tmp-logo.tsx";
 
@@ -77,7 +79,7 @@ function RouteComponent() {
                 <Select.Item value="year">Past year</Select.Item>
               </Select.Content>
             </Select.Root>
-            
+
             <Select.Root
               value={groupFilter || "all_groups"}
               onValueChange={(value) => {
@@ -128,8 +130,8 @@ function RouteComponent() {
 
             <NavItem>
               <Link to={"/maps"}>
-                <RiFilterLine className={"icon_when_inactive"} />
-                <RiFilterLine className={"icon_when_active"} />
+                <RiMapLine className={"icon_when_inactive"} />
+                <RiMapFill className={"icon_when_active"} />
                 <span>Maps</span>
               </Link>
             </NavItem>
