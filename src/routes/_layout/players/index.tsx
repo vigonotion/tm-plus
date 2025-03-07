@@ -153,9 +153,9 @@ function RouteComponent() {
         const player = p as ExpandedPlayer;
         
         // Filter placements by date and group
-        let filteredPlacements = player.expand?.["placements(player)"]?.filter(placement => {
-          const gameDate = placement.expand?.game?.date;
-          const gameGroup = placement.expand?.game?.group;
+        const filteredPlacements = player.expand?.["placements(player)"]?.filter(placement => {
+          const gameDate = placement.expand?.game.date;
+          const gameGroup = placement.expand?.game.group;
           
           // Apply date filter
           const passesDateFilter = !dateLimit || (gameDate && gameDate >= dateLimit);

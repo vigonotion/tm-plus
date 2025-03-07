@@ -139,16 +139,16 @@ function RouteComponent() {
       expand: "placements(corp),placements(corp).game",
     }),
     select: (x) => {
-      let corporations = x;
+      const corporations = x;
       const dateLimit = dateRanges[dateRange];
       
       return corporations.map((c) => {
         const corp = c as ExpandedCorporation;
         
         // Filter placements by date and group
-        let filteredPlacements = corp.expand?.["placements(corp)"]?.filter(placement => {
-          const gameDate = placement.expand?.game?.date;
-          const gameGroup = placement.expand?.game?.group;
+        const filteredPlacements = corp.expand?.["placements(corp)"]?.filter(placement => {
+          const gameDate = placement.expand?.game.date;
+          const gameGroup = placement.expand?.game.group;
           
           // Apply date filter
           const passesDateFilter = !dateLimit || (gameDate && gameDate >= dateLimit);
