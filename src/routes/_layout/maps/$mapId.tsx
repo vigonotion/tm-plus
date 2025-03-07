@@ -49,7 +49,7 @@ interface GameRow {
 }
 
 function expandedGameToRow(game: ExpandedGame): GameRow {
-  const placements = game.expand?.["placements(game)"] || [];
+  const placements = game.expand?.["placements(game)"] ?? [];
   const totalPlayers = placements.length;
 
   // Find all winners according to the win condition

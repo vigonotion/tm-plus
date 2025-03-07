@@ -67,7 +67,7 @@ function expandedPlayerToRow(
 
   return {
     id: player.id,
-    name: player.name || "Unknown",
+    name: player.name ?? "Unknown",
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     defaultColor: player.default_color ?? "none",
     gamesPlayed,

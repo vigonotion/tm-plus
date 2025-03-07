@@ -66,7 +66,7 @@ function expandedCorporationToRow(
 
   return {
     id: corporation.id,
-    name: corporation.name || "Unknown",
+    name: corporation.name ?? "Unknown",
     description: corporation.description || "",
     timesPlayed,
     timesWon,

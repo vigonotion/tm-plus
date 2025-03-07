@@ -137,7 +137,7 @@ function RouteComponent() {
         {isLoading ? (
           <Text>Loading map data...</Text>
         ) : (
-          mapStats && <DataTable columns={columns} data={mapStats} />
+          <DataTable columns={columns} data={mapStats} />
         )}
       </div>
     </>
