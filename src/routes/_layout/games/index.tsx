@@ -10,8 +10,16 @@ import {
   PlayersResponse,
 } from "../../../client/types.gen.ts";
 import { useAtom } from "jotai";
-import { dateRangeAtom, getDateRanges, getDateRangeDisplayName } from "../../../atoms/dateRange.ts";
-import { groupFilterAtom, getGroupDisplayName, useGroups } from "../../../atoms/groupFilter.ts";
+import {
+  dateRangeAtom,
+  getDateRanges,
+  getDateRangeDisplayName,
+} from "../../../atoms/dateRange.ts";
+import {
+  groupFilterAtom,
+  getGroupDisplayName,
+  useGroups,
+} from "../../../atoms/groupFilter.ts";
 import { createColumnHelper } from "@tanstack/react-table";
 import { DataTable } from "../../../components/datatable.tsx";
 import { MapLabel } from "../../../components/maplabel.tsx";
@@ -65,11 +73,6 @@ function expandedGameToRow(game: ExpandedGame): GameRow {
 const columnHelper = createColumnHelper<GameRow>();
 
 const columns = [
-  columnHelper.accessor("id", {
-    header: "ID",
-    cell: (info) => info.getValue(),
-    footer: (info) => info.column.id,
-  }),
   columnHelper.accessor("date", {
     header: "Date",
     cell: (info) => (
@@ -133,7 +136,7 @@ function RouteComponent() {
   const [groupFilter] = useAtom(groupFilterAtom);
   const { data: groups = [] } = useGroups();
   const dateRanges = getDateRanges();
-  
+
   const { data, isLoading } = useQuery({
     ...collection(Collections.Games, {
       sort: "-date",
@@ -143,15 +146,17 @@ function RouteComponent() {
     select: (x) => {
       // Filter games by date range
       const dateLimit = dateRanges[dateRange];
-      let filteredGames = dateLimit 
-        ? x.filter(game => game.date >= dateLimit)
+      let filteredGames = dateLimit
+        ? x.filter((game) => game.date >= dateLimit)
         : x;
-      
+
       // Filter games by group if a group is selected
       if (groupFilter) {
-        filteredGames = filteredGames.filter(game => game.group === groupFilter);
+        filteredGames = filteredGames.filter(
+          (game) => game.group === groupFilter,
+        );
       }
-      
+
       return filteredGames.map((g) => expandedGameToRow(g as ExpandedGame));
     },
   });
@@ -167,8 +172,8 @@ function RouteComponent() {
               five players, on the first or second place.
             </Text>
             <Text size="2" color="gray">
-              Showing data for: {getDateRangeDisplayName(dateRange)}, 
-              Group: {getGroupDisplayName(groupFilter, groups)}
+              Showing data for: {getDateRangeDisplayName(dateRange)}, Group:{" "}
+              {getGroupDisplayName(groupFilter, groups)}
             </Text>
           </Flex>
         </Box>
