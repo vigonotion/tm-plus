@@ -24,12 +24,11 @@ type ExpandedCorporation = CorporationsResponse<{
     player: {
       id: string;
       name?: string;
-      expand?: {
-        groups?: {
-          id: string;
-          name?: string;
-        }[];
-      };
+    };
+    game: {
+      id: string;
+      date?: string;
+      group?: string;
     };
   }>[];
 }>;
@@ -53,19 +52,9 @@ function toTitleCase(str: string): string {
 }
 
 function expandedCorporationToRow(
-  corporation: ExpandedCorporation,
-  dateLimit?: string
+  corporation: ExpandedCorporation
 ): CorporationRow {
-  // Filter placements by date if a date limit is provided
-  let placements = corporation.expand?.["placements(corp)"] ?? [];
-  
-  if (dateLimit) {
-    placements = placements.filter(placement => {
-      const gameDate = placement.created; // Using created as a fallback since game date isn't expanded
-      return gameDate >= dateLimit;
-    });
-  }
-  
+  const placements = corporation.expand?.["placements(corp)"] ?? [];
   const timesPlayed = placements.length;
 
   // A game is considered won if on the first place, or in a game with five players, on the first or second place
@@ -147,29 +136,40 @@ function RouteComponent() {
   const { data } = useQuery({
     ...collection(Collections.Corporations, {
       sort: "name",
-      expand: "placements(corp),placements(corp).player,placements(corp).player.groups",
+      expand: "placements(corp),placements(corp).game",
     }),
     select: (x) => {
       let corporations = x;
       const dateLimit = dateRanges[dateRange];
       
-      // Filter by group if a group filter is selected
-      if (groupFilter) {
-        corporations = corporations.filter(corp => {
-          const placements = (corp as ExpandedCorporation).expand?.["placements(corp)"] || [];
+      return corporations.map((c) => {
+        const corp = c as ExpandedCorporation;
+        
+        // Filter placements by date and group
+        let filteredPlacements = corp.expand?.["placements(corp)"]?.filter(placement => {
+          const gameDate = placement.expand?.game?.date;
+          const gameGroup = placement.expand?.game?.group;
           
-          // Check if this corporation was ever used by a player in the selected group
-          return placements.some(placement => {
-            const player = placement.expand?.player;
-            if (!player) return false;
-            
-            const playerGroups = player.expand?.groups || [];
-            return playerGroups.some(group => group.id === groupFilter);
-          });
-        });
-      }
-      
-      return corporations.map((c) => expandedCorporationToRow(c as ExpandedCorporation, dateLimit));
+          // Apply date filter
+          const passesDateFilter = !dateLimit || (gameDate && gameDate >= dateLimit);
+          
+          // Apply group filter if active
+          const passesGroupFilter = !groupFilter || gameGroup === groupFilter;
+          
+          return passesDateFilter && passesGroupFilter;
+        }) || [];
+        
+        // Create a modified corporation object with filtered placements
+        const filteredCorp: ExpandedCorporation = {
+          ...corp,
+          expand: {
+            ...corp.expand,
+            "placements(corp)": filteredPlacements
+          }
+        };
+        
+        return expandedCorporationToRow(filteredCorp);
+      });
     },
   });
 

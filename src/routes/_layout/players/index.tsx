@@ -134,7 +134,7 @@ function RouteComponent() {
     ...collection(Collections.Players, {
       sort: "name",
       expand:
-        "placements(player),placements(player).game,placements(player).game.placements(game),groups",
+        "placements(player),placements(player).game,placements(player).game.placements(game)",
     }),
   });
 
@@ -147,27 +147,23 @@ function RouteComponent() {
     // Get date limit based on selected range
     const dateLimit = dateRanges[dateRange];
 
-    // First filter players by group if a group is selected
-    let filteredPlayers = playersData;
-    if (groupFilter) {
-      filteredPlayers = playersData.filter(player => {
-        const playerGroups = player.expand?.groups || [];
-        return playerGroups.some(group => group.id === groupFilter);
-      });
-    }
-
-    return filteredPlayers
+    return playersData
       .map((p) => {
         const player = p as ExpandedPlayer;
         
-        // Filter placements by date if a date range is selected
+        // Filter placements by date and group
         let filteredPlacements = player.expand?.["placements(player)"]?.filter(placement => {
           const gameDate = placement.expand?.game?.date;
-          return !dateLimit || (gameDate && gameDate >= dateLimit);
+          const gameGroup = placement.expand?.game?.group;
+          
+          // Apply date filter
+          const passesDateFilter = !dateLimit || (gameDate && gameDate >= dateLimit);
+          
+          // Apply group filter if active
+          const passesGroupFilter = !groupFilter || gameGroup === groupFilter;
+          
+          return passesDateFilter && passesGroupFilter;
         }) || [];
-        
-        // If group filter is active, we don't need additional filtering here
-        // since we already filtered the players by group membership above
         
         // Create a modified player object with filtered placements
         const filteredPlayer: ExpandedPlayer = {

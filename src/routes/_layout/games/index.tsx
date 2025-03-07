@@ -137,7 +137,7 @@ function RouteComponent() {
   const { data, isLoading } = useQuery({
     ...collection(Collections.Games, {
       sort: "-date",
-      expand: "placements(game),placements(game).player,placements(game).player.groups",
+      expand: "placements(game),placements(game).player",
       filter: "planned = false",
     }),
     select: (x) => {
@@ -149,20 +149,7 @@ function RouteComponent() {
       
       // Filter games by group if a group is selected
       if (groupFilter) {
-        filteredGames = filteredGames.filter(game => {
-          const placements = (game as ExpandedGame).expand?.["placements(game)"] || [];
-          
-          // Check if any player in this game belongs to the selected group
-          if (placements.length === 0) return false;
-          
-          return placements.some(placement => {
-            const player = placement.expand?.player;
-            if (!player) return false;
-            
-            const playerGroups = player.expand?.groups || [];
-            return playerGroups.some(group => group.id === groupFilter);
-          });
-        });
+        filteredGames = filteredGames.filter(game => game.group === groupFilter);
       }
       
       return filteredGames.map((g) => expandedGameToRow(g as ExpandedGame));
