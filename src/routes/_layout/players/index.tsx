@@ -11,7 +11,9 @@ import {
 import { createColumnHelper } from "@tanstack/react-table";
 import { DataTable } from "../../../components/datatable.tsx";
 import { StyledLink } from "../../../components/styled-link.tsx";
-import { Box, Flex, Text } from "@radix-ui/themes";
+import { Box, Flex, Text, Select } from "@radix-ui/themes";
+import { useRatings, toElo } from "../../../utils/elo.ts";
+import { useState } from "react";
 
 export const Route = createFileRoute("/_layout/players/")({
   component: RouteComponent,
@@ -28,9 +30,10 @@ interface PlayerRow {
   gamesPlayed: number;
   gamesWon: number;
   winRate: number;
+  elo: number;
 }
 
-function expandedPlayerToRow(player: ExpandedPlayer): PlayerRow {
+function expandedPlayerToRow(player: ExpandedPlayer, playerRatings?: any[]): PlayerRow {
   const placements = player.expand?.["placements(player)"] || [];
   const gamesPlayed = placements.length;
   
@@ -40,6 +43,10 @@ function expandedPlayerToRow(player: ExpandedPlayer): PlayerRow {
     return placement.placement === 1 || (totalPlayers === 5 && placement.placement === 2);
   }).length;
 
+  // Find player's rating from the ratings calculation
+  const playerRating = playerRatings?.find(p => p.playerId === player.id);
+  const elo = playerRating ? toElo(playerRating.rating) : 1500;
+
   return {
     id: player.id,
     name: player.name || "Unknown",
@@ -47,6 +54,7 @@ function expandedPlayerToRow(player: ExpandedPlayer): PlayerRow {
     gamesPlayed,
     gamesWon,
     winRate: gamesPlayed > 0 ? Math.round((gamesWon / gamesPlayed) * 100) : 0,
+    elo,
   };
 }
 
@@ -63,6 +71,11 @@ const columns = [
         {info.getValue()}
       </StyledLink>
     ),
+    footer: (info) => info.column.id,
+  }),
+  columnHelper.accessor("elo", {
+    header: "ELO Rating",
+    cell: (info) => info.getValue(),
     footer: (info) => info.column.id,
   }),
   columnHelper.accessor("defaultColor", {
@@ -104,25 +117,55 @@ const columns = [
 ];
 
 function RouteComponent() {
-  const { data } = useQuery({
+  const [dateRange, setDateRange] = useState<string>("all");
+  
+  // Calculate date ranges
+  const now = new Date();
+  const startOfYear = new Date(now.getFullYear(), 0, 1).toISOString();
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+  
+  // Get ratings based on selected date range
+  const { ratings, isLoading: ratingsLoading } = useRatings({
+    startDate: dateRange === "year" ? startOfYear : 
+               dateRange === "month" ? startOfMonth : 
+               undefined,
+  });
+
+  const { data, isLoading: playersLoading } = useQuery({
     ...collection(Collections.Players, {
       sort: "name",
       expand: "placements(player),placements(player).game,placements(player).game.placements(game)",
     }),
-    select: (x) => x.map((p) => expandedPlayerToRow(p as ExpandedPlayer)),
+    select: (x) => x.map((p) => expandedPlayerToRow(p as ExpandedPlayer, ratings)),
   });
+
+  const isLoading = ratingsLoading || playersLoading;
 
   return (
     <>
       <Title>Players</Title>
       <div>
-        <Box mb={"4"}>
+        <Flex justify="between" align="center" mb="4">
           <Text color={"gray"}>
             A game is considered won if on the first place, or in a game with
             five players, on the first or second place.
           </Text>
-        </Box>
-        {data && <DataTable columns={columns} data={data} />}
+          
+          <Select.Root value={dateRange} onValueChange={setDateRange}>
+            <Select.Trigger placeholder="Select date range" />
+            <Select.Content>
+              <Select.Item value="all">All time</Select.Item>
+              <Select.Item value="year">This year</Select.Item>
+              <Select.Item value="month">This month</Select.Item>
+            </Select.Content>
+          </Select.Root>
+        </Flex>
+        
+        {isLoading ? (
+          <Text>Loading player data...</Text>
+        ) : (
+          data && <DataTable columns={columns} data={data} />
+        )}
       </div>
     </>
   );

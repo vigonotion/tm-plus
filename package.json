@@ -15,6 +15,7 @@
     "@fontsource-variable/exo-2": "^5.1.1",
     "@fontsource-variable/hubot-sans": "^5.0.1",
     "@fontsource-variable/public-sans": "^5.1.2",
+    "@openskilldevelopment/openskill": "^0.2.0",
     "@radix-ui/themes": "^3.2.0",
     "@remixicon/react": "^4.6.0",
     "@tanstack/react-query": "^5.66.0",
