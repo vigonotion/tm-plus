@@ -39,7 +39,7 @@ function expandedPlayerToRow(player: ExpandedPlayer, playerRatings?: any[]): Pla
   
   // A game is considered won if on the first place, or in a game with five players, on the first or second place
   const gamesWon = placements.filter(placement => {
-    const totalPlayers = placement.expand?.game?.expand?.["placements(game)"]?.length || 0;
+    const totalPlayers = placement.expand?.game.expand?.["placements(game)"]?.length || 0;
     return placement.placement === 1 || (totalPlayers === 5 && placement.placement === 2);
   }).length;
 

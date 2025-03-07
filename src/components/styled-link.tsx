@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 import * as React from "react";
-import { createLink, LinkComponent } from "@tanstack/react-router";
+import { createLink } from "@tanstack/react-router";
 import { forwardRef } from "react";
 import { Link as RadixLink } from "@radix-ui/themes";
 

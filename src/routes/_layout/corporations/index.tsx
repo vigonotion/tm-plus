@@ -41,7 +41,7 @@ function toTitleCase(str: string): string {
 function expandedCorporationToRow(
   corporation: ExpandedCorporation,
 ): CorporationRow {
-  const placements = corporation.expand?.["placements(corp)"] || [];
+  const placements = corporation.expand?.["placements(corp)"] ?? [];
   const timesPlayed = placements.length;
 
   // A game is considered won if on the first place, or in a game with five players, on the first or second place
@@ -110,7 +110,7 @@ const columns = [
   }),
   columnHelper.accessor("winRate", {
     header: "Win Rate",
-    cell: (info) => `${info.getValue()}%`,
+    cell: (info) => `${info.getValue().toString()}%`,
     footer: (info) => info.column.id,
   }),
 ];
