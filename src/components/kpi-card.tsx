@@ -44,7 +44,7 @@ export function KpiCard({ title, value, icon, color = "default" }: KpiCardProps)
         backgroundColor: colorStyles.backgroundColor,
         borderRadius: "var(--radius-3)",
         border: `1px solid ${colorStyles.borderColor}`,
-        minWidth: "150px",
+        minWidth: "200px",
       }}
     >
       <Flex direction="column" gap="1">
@@ -52,7 +52,11 @@ export function KpiCard({ title, value, icon, color = "default" }: KpiCardProps)
           <Text size="2" color="gray" weight="medium">
             {title}
           </Text>
-          {icon && <Box>{icon}</Box>}
+          {icon && (
+            <Box style={{ color: `var(--${color}-11)` }}>
+              {React.cloneElement(icon as React.ReactElement, { size: 14 })}
+            </Box>
+          )}
         </Flex>
         <Text size="7" weight="bold">
           {value}
