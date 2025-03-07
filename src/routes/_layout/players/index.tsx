@@ -171,26 +171,29 @@ function RouteComponent() {
           ? startOfThreeMonths 
           : undefined;
 
-    return playersData.map((p) => {
-      const player = p as ExpandedPlayer;
-      
-      // Filter placements by date if a date range is selected
-      const filteredPlacements = player.expand?.["placements(player)"]?.filter(placement => {
-        const gameDate = placement.expand?.game?.date;
-        return !dateLimit || (gameDate && gameDate >= dateLimit);
-      }) || [];
-      
-      // Create a modified player object with filtered placements
-      const filteredPlayer: ExpandedPlayer = {
-        ...player,
-        expand: {
-          ...player.expand,
-          "placements(player)": filteredPlacements
-        }
-      };
-      
-      return expandedPlayerToRow(filteredPlayer, ratings);
-    });
+    return playersData
+      .map((p) => {
+        const player = p as ExpandedPlayer;
+        
+        // Filter placements by date if a date range is selected
+        const filteredPlacements = player.expand?.["placements(player)"]?.filter(placement => {
+          const gameDate = placement.expand?.game?.date;
+          return !dateLimit || (gameDate && gameDate >= dateLimit);
+        }) || [];
+        
+        // Create a modified player object with filtered placements
+        const filteredPlayer: ExpandedPlayer = {
+          ...player,
+          expand: {
+            ...player.expand,
+            "placements(player)": filteredPlacements
+          }
+        };
+        
+        return expandedPlayerToRow(filteredPlayer, ratings);
+      })
+      // Filter out players with 0 games played in the selected time frame
+      .filter(player => player.gamesPlayed > 0);
   }, [playersData, dateRange, startOfYear, startOfThreeMonths, ratings]);
 
   return (
