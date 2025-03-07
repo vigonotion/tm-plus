@@ -33,9 +33,9 @@ interface CorporationRow {
 function toTitleCase(str: string): string {
   return str
     .toLowerCase()
-    .split(' ')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 }
 
 function expandedCorporationToRow(
@@ -69,7 +69,7 @@ const columns = [
     cell: (info) => {
       const name = toTitleCase(info.getValue());
       const description = info.row.original.description;
-      
+
       return (
         <HoverCard.Root>
           <HoverCard.Trigger>
@@ -80,11 +80,16 @@ const columns = [
               {name}
             </StyledLink>
           </HoverCard.Trigger>
-          <HoverCard.Content>
+          <HoverCard.Content side={"top"}>
             <Flex direction="column" gap="2" style={{ maxWidth: "300px" }}>
-              <Text weight="bold" size="3">{name}</Text>
+              <Text weight="bold" size="3">
+                {name}
+              </Text>
               {description && (
-                <Text size="2" dangerouslySetInnerHTML={{ __html: description }} />
+                <Text
+                  size="2"
+                  dangerouslySetInnerHTML={{ __html: description }}
+                />
               )}
             </Flex>
           </HoverCard.Content>
