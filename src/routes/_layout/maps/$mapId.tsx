@@ -4,6 +4,8 @@ import { Title } from "../../../components/title.tsx";
 import { useParams } from "@tanstack/react-router";
 import { Box, Flex, Text } from "@radix-ui/themes";
 import { MapLabel } from "../../../components/maplabel.tsx";
+import { KpiCard } from "../../../components/kpi-card.tsx";
+import { RiGamepadLine, RiTimeLine } from "@remixicon/react";
 import { useQuery } from "@tanstack/react-query";
 import { collection } from "../../../client/conn.ts";
 import {
@@ -179,25 +181,21 @@ function RouteComponent() {
           </Flex>
         </Box>
 
-        <Box mb="4">
+        <Box mb="6">
           <Flex gap="4">
-            <Box>
-              <Text size="2" color="gray">
-                Games played
-              </Text>
-              <Text size="5" weight="bold">
-                {gamesCount}
-              </Text>
-            </Box>
+            <KpiCard 
+              title="Games played" 
+              value={gamesCount} 
+              icon={<RiGamepadLine />} 
+              color="orange"
+            />
             {gamesCount > 0 && (
-              <Box>
-                <Text size="2" color="gray">
-                  Avg. generations
-                </Text>
-                <Text size="5" weight="bold">
-                  {avgGenerations}
-                </Text>
-              </Box>
+              <KpiCard 
+                title="Avg. generations" 
+                value={avgGenerations} 
+                icon={<RiTimeLine />} 
+                color="blue"
+              />
             )}
           </Flex>
         </Box>
