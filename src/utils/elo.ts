@@ -65,18 +65,15 @@ export function groupBy<T>(
   array: T[],
   keyFn: (item: T) => string,
 ): Record<string, T[]> {
-  return array.reduce<Record<string, T[]>>(
-    (result, item) => {
-      const key = keyFn(item);
-      // Initialize array if it doesn't exist
-      if (!result[key]) {
-        result[key] = [];
-      }
-      result[key].push(item);
-      return result;
-    },
-    {},
-  );
+  return array.reduce<Record<string, T[]>>((result, item) => {
+    const key = keyFn(item);
+    // Initialize array if it doesn't exist
+    if (!result[key]) {
+      result[key] = [];
+    }
+    result[key].push(item);
+    return result;
+  }, {});
 }
 
 /**
@@ -120,8 +117,8 @@ export function calculateRatings(
   // Group placements by game and sort by date
   const games = Object.values(groupBy(placements, (d) => d.game)).sort(
     (x, y) => {
-      const dateX = x[0].expand?.game?.date || "";
-      const dateY = y[0].expand?.game?.date || "";
+      const dateX = x[0].expand?.game?.date ?? "";
+      const dateY = y[0].expand?.game?.date ?? "";
       return dateX.localeCompare(dateY);
     },
   );
