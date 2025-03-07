@@ -1,8 +1,40 @@
 import { rate, rating, ordinal, Rating } from "openskill";
 import { useQuery } from "@tanstack/react-query";
 import { collection } from "../client/conn";
-import { Collections } from "../client/types.gen";
+import { Collections, PlacementsResponse } from "../client/types.gen";
 import { useMemo } from "react";
+
+/**
+ * Player rating information
+ */
+export interface PlayerRating {
+  playerId: string;
+  playerName: string | undefined;
+  rating: Rating;
+  ratings: Rating[];
+  wins: number;
+  losses: number;
+  gamesPlayed: number;
+}
+
+/**
+ * Placement with expanded data
+ */
+interface ExpandedPlacement extends PlacementsResponse {
+  expand?: {
+    player?: {
+      id: string;
+      name?: string;
+    };
+    game?: {
+      id: string;
+      date?: string;
+      expand?: {
+        "placements(game)"?: PlacementsResponse[];
+      };
+    };
+  };
+}
 
 /**
  * Convert an OpenSkill rating to a more familiar ELO-like number
@@ -36,7 +68,10 @@ export function groupBy<T>(
   return array.reduce<Record<string, T[]>>(
     (result, item) => {
       const key = keyFn(item);
-      result[key] = result[key] || [];
+      // Initialize array if it doesn't exist
+      if (!result[key]) {
+        result[key] = [];
+      }
       result[key].push(item);
       return result;
     },
@@ -51,39 +86,44 @@ export function groupBy<T>(
  * @returns Player ratings information
  */
 export function calculateRatings(
-  placements: any[],
+  placements: ExpandedPlacement[],
   options: {
     startDate?: string;
     endDate?: string;
     untilGameId?: string;
   } = {},
-) {
+): PlayerRating[] {
   const { startDate, endDate, untilGameId } = options;
 
   // Group placements by player
   const playerGroups = groupBy(placements, (d) => d.player);
 
   // Initialize player ratings
-  const players = Object.fromEntries(
-    Object.entries(playerGroups).map(([playerId, playerPlacements]) => [
-      playerId,
-      {
+  const players: Record<string, PlayerRating> = Object.fromEntries(
+    Object.entries(playerGroups).map(([playerId, playerPlacements]) => {
+      const placement = playerPlacements[0];
+      return [
         playerId,
-        playerName: playerPlacements[0].expand?.player?.name,
-        rating: rating(),
-        ratings: [rating()],
-        wins: 0,
-        losses: 0,
-        gamesPlayed: 0,
-      },
-    ]),
+        {
+          playerId,
+          playerName: placement.expand?.player?.name,
+          rating: rating(),
+          ratings: [rating()],
+          wins: 0,
+          losses: 0,
+          gamesPlayed: 0,
+        },
+      ];
+    }),
   );
 
   // Group placements by game and sort by date
   const games = Object.values(groupBy(placements, (d) => d.game)).sort(
-    (x, y) =>
-      x[0].expand?.game?.date?.localeCompare(y[0].expand?.game?.date ?? "") ??
-      0,
+    (x, y) => {
+      const dateX = x[0].expand?.game?.date || "";
+      const dateY = y[0].expand?.game?.date || "";
+      return dateX.localeCompare(dateY);
+    },
   );
 
   // Process each game
@@ -91,12 +131,15 @@ export function calculateRatings(
     const gameDate = gamePlacements[0].expand?.game?.date;
 
     // Skip games outside the date range
-    if (startDate && gameDate < startDate) continue;
-    if (endDate && gameDate > endDate) continue;
+    if (startDate && gameDate && gameDate < startDate) continue;
+    if (endDate && gameDate && gameDate > endDate) continue;
 
     // Calculate new ratings
     const R = rate(
-      gamePlacements.map((x) => [players[x.player].rating]),
+      gamePlacements.map((x) => {
+        const player = players[x.player];
+        return player ? [player.rating] : [rating()];
+      }),
       {
         rank: gamePlacements.map((x) => x.placement),
       },
@@ -104,16 +147,19 @@ export function calculateRatings(
 
     // Update player stats
     gamePlacements.forEach((p, i) => {
-      players[p.player].gamesPlayed += 1;
+      const player = players[p.player];
+      if (!player) return;
+
+      player.gamesPlayed += 1;
 
       if (isWin(p.placement, gamePlacements.length)) {
-        players[p.player].wins += 1;
+        player.wins += 1;
       } else {
-        players[p.player].losses += 1;
+        player.losses += 1;
       }
 
-      players[p.player].rating = R[i][0];
-      players[p.player].ratings.push(R[i][0]);
+      player.rating = R[i][0];
+      player.ratings.push(R[i][0]);
     });
 
     // Stop if untilGameId is reached
@@ -138,7 +184,7 @@ export function useRatings(
     endDate?: string;
     untilGameId?: string;
   } = {},
-) {
+): { ratings: PlayerRating[] | undefined; isLoading: boolean } {
   const { data: placements, isLoading } = useQuery({
     queryKey: ["placements", "ratings", options],
     queryFn: async () => {
@@ -146,7 +192,7 @@ export function useRatings(
         sort: "placement",
         expand: "player,game,game.placements(game)",
       }).queryFn();
-      return response;
+      return response as ExpandedPlacement[];
     },
   });
 

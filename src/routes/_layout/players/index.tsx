@@ -12,7 +12,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { DataTable } from "../../../components/datatable.tsx";
 import { StyledLink } from "../../../components/styled-link.tsx";
 import { Box, Flex, Text, Select } from "@radix-ui/themes";
-import { useRatings, toElo } from "../../../utils/elo.ts";
+import { useRatings, toElo, PlayerRating } from "../../../utils/elo.ts";
 import { useState } from "react";
 
 export const Route = createFileRoute("/_layout/players/")({
@@ -33,7 +33,7 @@ interface PlayerRow {
   elo: number;
 }
 
-function expandedPlayerToRow(player: ExpandedPlayer, playerRatings?: any[]): PlayerRow {
+function expandedPlayerToRow(player: ExpandedPlayer, playerRatings?: PlayerRating[]): PlayerRow {
   const placements = player.expand?.["placements(player)"] || [];
   const gamesPlayed = placements.length;
   
