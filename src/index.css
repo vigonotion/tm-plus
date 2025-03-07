@@ -35,3 +35,9 @@
 
   font-family: var(--font-body);
 }
+
+/* Add these styles to remove margin and padding from body */
+body {
+  margin: 0;
+  padding: 0;
+}
