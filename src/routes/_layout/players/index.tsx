@@ -16,8 +16,16 @@ import { Box, Flex, Text } from "@radix-ui/themes";
 import { useRatings, toElo, PlayerRating } from "../../../utils/elo.ts";
 import { useMemo } from "react";
 import { useAtom } from "jotai";
-import { dateRangeAtom, getDateRanges, getDateRangeDisplayName } from "../../../atoms/dateRange.ts";
-import { groupFilterAtom, getGroupDisplayName, useGroups } from "../../../atoms/groupFilter.ts";
+import {
+  dateRangeAtom,
+  getDateRanges,
+  getDateRangeDisplayName,
+} from "../../../atoms/dateRange.ts";
+import {
+  groupFilterAtom,
+  getGroupDisplayName,
+  useGroups,
+} from "../../../atoms/groupFilter.ts";
 
 export const Route = createFileRoute("/_layout/players/")({
   component: RouteComponent,
@@ -67,6 +75,7 @@ function expandedPlayerToRow(
 
   return {
     id: player.id,
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     name: player.name ?? "Unknown",
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     defaultColor: player.default_color ?? "none",
@@ -148,37 +157,42 @@ function RouteComponent() {
     // Get date limit based on selected range
     const dateLimit = dateRanges[dateRange];
 
-    return playersData
-      .map((p) => {
-        const player = p as ExpandedPlayer;
-        
-        // Filter placements by date and group
-        const filteredPlacements = player.expand?.["placements(player)"]?.filter(placement => {
-          const gameDate = placement.expand?.game.date;
-          const gameGroup = placement.expand?.game.group;
-          
-          // Apply date filter
-          const passesDateFilter = !dateLimit || (gameDate && gameDate >= dateLimit);
-          
-          // Apply group filter if active
-          const passesGroupFilter = !groupFilter || gameGroup === groupFilter;
-          
-          return passesDateFilter && passesGroupFilter;
-        }) || [];
-        
-        // Create a modified player object with filtered placements
-        const filteredPlayer: ExpandedPlayer = {
-          ...player,
-          expand: {
-            ...player.expand,
-            "placements(player)": filteredPlacements
-          }
-        };
-        
-        return expandedPlayerToRow(filteredPlayer, ratings);
-      })
-      // Filter out players with 0 games played in the selected time frame
-      .filter(player => player.gamesPlayed > 0);
+    return (
+      playersData
+        .map((p) => {
+          const player = p as ExpandedPlayer;
+
+          // Filter placements by date and group
+          const filteredPlacements =
+            player.expand?.["placements(player)"]?.filter((placement) => {
+              const gameDate = placement.expand?.game.date;
+              const gameGroup = placement.expand?.game.group;
+
+              // Apply date filter
+              const passesDateFilter =
+                !dateLimit || (gameDate && gameDate >= dateLimit);
+
+              // Apply group filter if active
+              const passesGroupFilter =
+                !groupFilter || gameGroup === groupFilter;
+
+              return passesDateFilter && passesGroupFilter;
+            }) ?? [];
+
+          // Create a modified player object with filtered placements
+          const filteredPlayer: ExpandedPlayer = {
+            ...player,
+            expand: {
+              ...player.expand,
+              "placements(player)": filteredPlacements,
+            },
+          };
+
+          return expandedPlayerToRow(filteredPlayer, ratings);
+        })
+        // Filter out players with 0 games played in the selected time frame
+        .filter((player) => player.gamesPlayed > 0)
+    );
   }, [playersData, dateRange, dateRanges, ratings, groupFilter]);
 
   return (
@@ -192,8 +206,8 @@ function RouteComponent() {
               five players, on the first or second place.
             </Text>
             <Text size="2" color="gray">
-              Showing data for: {getDateRangeDisplayName(dateRange)}, 
-              Group: {getGroupDisplayName(groupFilter, groups)}
+              Showing data for: {getDateRangeDisplayName(dateRange)}, Group:{" "}
+              {getGroupDisplayName(groupFilter, groups)}
             </Text>
           </Flex>
         </Box>

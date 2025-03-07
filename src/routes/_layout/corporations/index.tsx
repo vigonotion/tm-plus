@@ -12,8 +12,15 @@ import { DataTable } from "../../../components/datatable.tsx";
 import { StyledLink } from "../../../components/styled-link.tsx";
 import { Box, Text, HoverCard, Flex } from "@radix-ui/themes";
 import { useAtom } from "jotai";
-import { dateRangeAtom, getDateRangeDisplayName } from "../../../atoms/dateRange.ts";
-import { groupFilterAtom, getGroupDisplayName, useGroups } from "../../../atoms/groupFilter.ts";
+import {
+  dateRangeAtom,
+  getDateRangeDisplayName,
+} from "../../../atoms/dateRange.ts";
+import {
+  groupFilterAtom,
+  getGroupDisplayName,
+  useGroups,
+} from "../../../atoms/groupFilter.ts";
 
 export const Route = createFileRoute("/_layout/corporations/")({
   component: RouteComponent,
@@ -52,7 +59,7 @@ function toTitleCase(str: string): string {
 }
 
 function expandedCorporationToRow(
-  corporation: ExpandedCorporation
+  corporation: ExpandedCorporation,
 ): CorporationRow {
   const placements = corporation.expand?.["placements(corp)"] ?? [];
   const timesPlayed = placements.length;
@@ -66,6 +73,7 @@ function expandedCorporationToRow(
 
   return {
     id: corporation.id,
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     name: corporation.name ?? "Unknown",
     description: corporation.description || "",
     timesPlayed,
@@ -132,19 +140,19 @@ function RouteComponent() {
   const [dateRange] = useAtom(dateRangeAtom);
   const [groupFilter] = useAtom(groupFilterAtom);
   const { data: groups = [] } = useGroups();
-  
+
   // Define date ranges here since we're not importing getDateRanges
   const dateRanges = {
     all: undefined,
     year: new Date(
       new Date().getFullYear() - 1,
       new Date().getMonth(),
-      new Date().getDate()
+      new Date().getDate(),
     ).toISOString(),
     three_months: new Date(
       new Date().getFullYear(),
       new Date().getMonth() - 3,
-      new Date().getDate()
+      new Date().getDate(),
     ).toISOString(),
   };
 
@@ -156,33 +164,35 @@ function RouteComponent() {
     select: (x) => {
       const corporations = x;
       const dateLimit = dateRanges[dateRange as keyof typeof dateRanges];
-      
+
       return corporations.map((c) => {
         const corp = c as ExpandedCorporation;
-        
+
         // Filter placements by date and group
-        const filteredPlacements = corp.expand?.["placements(corp)"]?.filter(placement => {
-          const gameDate = placement.expand?.game.date;
-          const gameGroup = placement.expand?.game.group;
-          
-          // Apply date filter
-          const passesDateFilter = !dateLimit || (gameDate && gameDate >= dateLimit);
-          
-          // Apply group filter if active
-          const passesGroupFilter = !groupFilter || gameGroup === groupFilter;
-          
-          return passesDateFilter && passesGroupFilter;
-        }) || [];
-        
+        const filteredPlacements =
+          corp.expand?.["placements(corp)"]?.filter((placement) => {
+            const gameDate = placement.expand?.game.date;
+            const gameGroup = placement.expand?.game.group;
+
+            // Apply date filter
+            const passesDateFilter =
+              !dateLimit || (gameDate && gameDate >= dateLimit);
+
+            // Apply group filter if active
+            const passesGroupFilter = !groupFilter || gameGroup === groupFilter;
+
+            return passesDateFilter && passesGroupFilter;
+          }) || [];
+
         // Create a modified corporation object with filtered placements
         const filteredCorp: ExpandedCorporation = {
           ...corp,
           expand: {
             ...corp.expand,
-            "placements(corp)": filteredPlacements
-          }
+            "placements(corp)": filteredPlacements,
+          },
         };
-        
+
         return expandedCorporationToRow(filteredCorp);
       });
     },
@@ -199,8 +209,8 @@ function RouteComponent() {
               five players, on the first or second place.
             </Text>
             <Text size="2" color="gray">
-              Showing data for: {getDateRangeDisplayName(dateRange)}, 
-              Group: {getGroupDisplayName(groupFilter, groups)}
+              Showing data for: {getDateRangeDisplayName(dateRange)}, Group:{" "}
+              {getGroupDisplayName(groupFilter, groups)}
             </Text>
           </Flex>
         </Box>

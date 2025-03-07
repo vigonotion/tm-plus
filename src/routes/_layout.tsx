@@ -80,7 +80,7 @@ function RouteComponent() {
             </Select.Root>
 
             <Select.Root
-              value={groupFilter || "all_groups"}
+              value={groupFilter ?? "all_groups"}
               onValueChange={(value) => {
                 setGroupFilter(value === "all_groups" ? null : value);
               }}
