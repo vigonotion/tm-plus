@@ -1,19 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Title } from "../../../components/title.tsx";
-
-export const Route = createFileRoute("/_layout/corporations/")({
-  component: RouteComponent,
-});
-
-function RouteComponent() {
-  return (
-    <>
-      <Title>Corporations</Title>Hello "/corporations/"!
-    </>
-  );
-}
-import { createFileRoute } from "@tanstack/react-router";
-import { Title } from "../../../components/title.tsx";
 import { useQuery } from "@tanstack/react-query";
 import { collection } from "../../../client/conn.ts";
 import {
@@ -42,13 +28,17 @@ interface CorporationRow {
   winRate: number;
 }
 
-function expandedCorporationToRow(corporation: ExpandedCorporation): CorporationRow {
+function expandedCorporationToRow(
+  corporation: ExpandedCorporation,
+): CorporationRow {
   const placements = corporation.expand?.["placements(corp)"] || [];
   const timesPlayed = placements.length;
-  
+
   // A game is considered won if on the first place, or in a game with five players, on the first or second place
-  const timesWon = placements.filter(placement => {
-    return placement.placement === 1 || (placement.game && placement.placement === 2);
+  const timesWon = placements.filter((placement) => {
+    return (
+      placement.placement === 1 || (placement.game && placement.placement === 2)
+    );
   }).length;
 
   return {
@@ -98,7 +88,8 @@ function RouteComponent() {
       sort: "name",
       expand: "placements(corp)",
     }),
-    select: (x) => x.map((c) => expandedCorporationToRow(c as ExpandedCorporation)),
+    select: (x) =>
+      x.map((c) => expandedCorporationToRow(c as ExpandedCorporation)),
   });
 
   return (
