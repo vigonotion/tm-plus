@@ -125,9 +125,10 @@ function RouteComponent() {
   const { data: groups = [] } = useGroups();
   const dateRanges = getDateRanges();
 
-  // Get ratings based on selected date range
+  // Get ratings based on selected date range and group filter
   const { ratings, isLoading: ratingsLoading } = useRatings({
     startDate: dateRanges[dateRange],
+    groupId: groupFilter,
   });
 
   const { data: playersData, isLoading: playersLoading } = useQuery({

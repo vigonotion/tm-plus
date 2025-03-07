@@ -180,6 +180,7 @@ export function useRatings(
     startDate?: string;
     endDate?: string;
     untilGameId?: string;
+    groupId?: string | null;
   } = {},
 ): { ratings: PlayerRating[] | undefined; isLoading: boolean } {
   const { data: placements, isLoading } = useQuery({
@@ -198,7 +199,15 @@ export function useRatings(
       return undefined;
     }
 
-    return calculateRatings(placements, options);
+    // Filter placements by group if groupId is provided
+    let filteredPlacements = placements;
+    if (options.groupId) {
+      filteredPlacements = placements.filter(
+        (p) => p.expand?.game?.group === options.groupId
+      );
+    }
+
+    return calculateRatings(filteredPlacements, options);
   }, [placements, isLoading, options]);
 
   return { ratings, isLoading };
