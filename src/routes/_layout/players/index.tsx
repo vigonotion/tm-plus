@@ -1,14 +1,129 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Title } from "../../../components/title.tsx";
+import { useQuery } from "@tanstack/react-query";
+import { collection } from "../../../client/conn.ts";
+import {
+  Collections,
+  PlayersResponse,
+  PlacementsResponse,
+  GamesResponse,
+} from "../../../client/types.gen.ts";
+import { createColumnHelper } from "@tanstack/react-table";
+import { DataTable } from "../../../components/datatable.tsx";
+import { StyledLink } from "../../../components/styled-link.tsx";
+import { Box, Flex, Text } from "@radix-ui/themes";
 
 export const Route = createFileRoute("/_layout/players/")({
   component: RouteComponent,
 });
 
+type ExpandedPlayer = PlayersResponse<{
+  "placements(player)": PlacementsResponse<{ game: GamesResponse }>[];
+}>;
+
+interface PlayerRow {
+  id: string;
+  name: string;
+  defaultColor: string;
+  gamesPlayed: number;
+  gamesWon: number;
+  winRate: number;
+}
+
+function expandedPlayerToRow(player: ExpandedPlayer): PlayerRow {
+  const placements = player.expand?.["placements(player)"] || [];
+  const gamesPlayed = placements.length;
+  
+  // A game is considered won if on the first place, or in a game with five players, on the first or second place
+  const gamesWon = placements.filter(placement => {
+    const totalPlayers = placement.expand?.game?.expand?.["placements(game)"]?.length || 0;
+    return placement.placement === 1 || (totalPlayers === 5 && placement.placement === 2);
+  }).length;
+
+  return {
+    id: player.id,
+    name: player.name || "Unknown",
+    defaultColor: player.default_color || "none",
+    gamesPlayed,
+    gamesWon,
+    winRate: gamesPlayed > 0 ? Math.round((gamesWon / gamesPlayed) * 100) : 0,
+  };
+}
+
+const columnHelper = createColumnHelper<PlayerRow>();
+
+const columns = [
+  columnHelper.accessor("name", {
+    header: "Name",
+    cell: (info) => (
+      <StyledLink
+        to={"/players/$playerId"}
+        params={{ playerId: info.row.original.id }}
+      >
+        {info.getValue()}
+      </StyledLink>
+    ),
+    footer: (info) => info.column.id,
+  }),
+  columnHelper.accessor("defaultColor", {
+    header: "Default Color",
+    cell: (info) => {
+      const color = info.getValue();
+      return (
+        <Flex align="center" gap="2">
+          <Box 
+            style={{ 
+              width: '16px', 
+              height: '16px', 
+              backgroundColor: color, 
+              borderRadius: '50%',
+              border: '1px solid #ccc'
+            }} 
+          />
+          <Text>{color}</Text>
+        </Flex>
+      );
+    },
+    footer: (info) => info.column.id,
+  }),
+  columnHelper.accessor("gamesPlayed", {
+    header: "Games Played",
+    cell: (info) => info.getValue(),
+    footer: (info) => info.column.id,
+  }),
+  columnHelper.accessor("gamesWon", {
+    header: "Games Won",
+    cell: (info) => info.getValue(),
+    footer: (info) => info.column.id,
+  }),
+  columnHelper.accessor("winRate", {
+    header: "Win Rate",
+    cell: (info) => `${info.getValue()}%`,
+    footer: (info) => info.column.id,
+  }),
+];
+
 function RouteComponent() {
+  const { data } = useQuery({
+    ...collection(Collections.Players, {
+      sort: "name",
+      expand: "placements(player),placements(player).game,placements(player).game.placements(game)",
+    }),
+    select: (x) => x.map((p) => expandedPlayerToRow(p as ExpandedPlayer)),
+  });
+
   return (
     <>
-      <Title>Players</Title>Hello "/players/"!
+      <Title>Players</Title>
+      <div>
+        <Box mb={"4"}>
+          <Text color={"gray"}>
+            A game is considered won if on the first place, or in a game with
+            five players, on the first or second place.
+          </Text>
+        </Box>
+        {data && <DataTable columns={columns} data={data} />}
+      </div>
     </>
   );
 }
